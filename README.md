@@ -41,10 +41,39 @@ node scripts/build.mjs
 このダッシュボードは**自動でスコアを取りに行きません**。理由は2つあります。
 
 - 公開ページ側：配信環境のCSPが外部ホストへの通信（fetch / XHR / WebSocket）を一律ブロックするため、ブラウザからスコアAPIを叩けない
-- 生成側：この開発環境のネットワークポリシーが JLPGA・ALBA・GDO・スポーツナビ等への直接アクセスを遮断しているため、スクレイパーを常駐させられない
+- 生成側：この開発環境のegressポリシーが、ゴルフ情報サイトおよびスコアAPIへの直接アクセスを遮断しているため、スクレイパーを常駐させられない
 
 そのため、**データの更新はエージェントが検索経由で取得し直して `data/tournament.json` を書き換える運用**にしています。
 定期的に回したい場合は、更新→`node scripts/build.mjs`→再公開、を1サイクルとしてスケジュールしてください。
+
+### スコアAPIを使いたい場合
+
+`scripts/fetch-live.mjs` を取り込み口として置いてあります。
+
+```bash
+NODE_USE_ENV_PROXY=1 GOLF_API_KEY=xxxx \
+  node scripts/fetch-live.mjs "https://api.sportradar.com/golf/trial/v3/en/lpga/2026/tournaments/schedule.json?api_key=\$GOLF_API_KEY"
+```
+
+レスポンスを `data/raw/` に生のまま保存し、トップレベルの構造を表示します。
+**フィールドのマッピングは意図的に未実装**です。レスポンスの実物を一度も観測できていない状態で
+マッピングを書くと、動いていないのに動いて見えるコードになるためです。実物が1件取れた時点で変換を書き起こします。
+
+現在、以下のホストは egress ポリシーによって拒否されています（`403 to CONNECT`）。
+
+```
+api.sportradar.com
+developer.sportradar.com
+lpga-api.azurewebsites.net
+```
+
+使うには、環境のネットワークポリシーでこれらのホストを許可する必要があります
+（参照：https://code.claude.com/docs/en/claude-code-on-the-web ）。
+状態は `curl -sS "$HTTPS_PROXY/__agentproxy/status"` で確認できます。
+
+なお、**許可されても目的のデータが取れるとは限りません**。Sportradar Golf API および LPGA の API が
+カバーするのは主に米国LPGAツアーで、NEC軽井沢72は**JLPGA（日本女子プロゴルフ協会）ツアー**の大会です。
+JLPGAが対象に含まれるかは、実際にスケジュールのエンドポイントを叩いて確認する必要があります。
 
 ## デザインの決めごと
 
