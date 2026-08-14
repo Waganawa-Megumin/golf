@@ -1,0 +1,1226 @@
+<title>ゆかちーダッシュボード</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg:        #eceee9;
+    --surface:   #ffffff;
+    --surface-2: #f5f6f3;
+    --ink:       #0d1218;
+    --ink-2:     #4d5661;
+    --ink-3:     #7f8892;
+    --brand:     #1428a0;
+    --mark:      #2c5ce6;
+    --under:     #d1273a;
+    --green:     #0f8055;
+    --line:      rgba(13,18,24,.10);
+    --line-2:    rgba(13,18,24,.05);
+    --shadow:    0 1px 2px rgba(13,18,24,.05), 0 8px 24px -16px rgba(13,18,24,.28);
+    --par-fill:  #dfe2dd;
+    --glow:      rgba(209,39,58,.14);
+    --on-brand:  #ffffff;
+
+    --f-jp: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Yu Gothic", "Noto Sans JP", Meiryo, system-ui, sans-serif;
+    --f-num: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+
+    --pad: clamp(16px, 4vw, 40px);
+    --maxw: 1180px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg:        #080d13;
+      --surface:   #111923;
+      --surface-2: #16202c;
+      --ink:       #f1f4f8;
+      --ink-2:     #a3aeba;
+      --ink-3:     #77828e;
+      --brand:     #8aa8ff;
+      --mark:      #5a86f0;
+      --under:     #f2555f;
+      --green:     #31a276;
+      --line:      rgba(255,255,255,.12);
+      --line-2:    rgba(255,255,255,.06);
+      --shadow:    0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.9);
+      --par-fill:  #232f3d;
+      --glow:      rgba(242,85,95,.18);
+      --on-brand:  #08101f;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg:        #080d13;
+    --surface:   #111923;
+    --surface-2: #16202c;
+    --ink:       #f1f4f8;
+    --ink-2:     #a3aeba;
+    --ink-3:     #77828e;
+    --brand:     #8aa8ff;
+    --mark:      #5a86f0;
+    --under:     #f2555f;
+    --green:     #31a276;
+    --line:      rgba(255,255,255,.12);
+    --line-2:    rgba(255,255,255,.06);
+    --shadow:    0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.9);
+    --par-fill:  #232f3d;
+    --glow:      rgba(242,85,95,.18);
+    --on-brand:  #08101f;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--f-jp);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad); }
+
+  /* ---------- utility type ---------- */
+  .eyebrow {
+    font-family: var(--f-num);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .num { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; letter-spacing: -.02em; }
+  h2 { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.35; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+  h3 { font-size: 15px; margin: 0; line-height: 1.5; text-wrap: balance; }
+  p  { margin: 0; }
+  a  { color: var(--mark); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--mark); outline-offset: 3px; border-radius: 4px; }
+
+  /* ---------- status rail ---------- */
+  .rail {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .rail-in {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    min-height: 52px; padding-top: 8px; padding-bottom: 8px;
+  }
+  .badge-nec {
+    font-family: var(--f-num); font-weight: 800; font-size: 12px; letter-spacing: .1em;
+    color: var(--on-brand); background: var(--brand); padding: 3px 8px; border-radius: 3px;
+  }
+  .rail-title { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+  .rail-spacer { flex: 1 1 auto; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--f-num); font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line);
+    color: var(--ink-2); background: var(--surface);
+  }
+  .chip.final { color: var(--under); border-color: color-mix(in srgb, var(--under) 45%, transparent); }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--under);
+    box-shadow: 0 0 0 0 var(--glow); animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 var(--glow); } 70%,100% { box-shadow: 0 0 0 9px transparent; } }
+  .stamp { font-size: 11px; color: var(--ink-3); font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: clamp(24px, 5vw, 48px) 0 clamp(20px, 3vw, 32px); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(20px, 3vw, 32px); }
+  @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(300px, 380px) minmax(0,1fr); align-items: start; } }
+
+  .slab { display: flex; flex-direction: column; gap: 10px; }
+  .name-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .name { font-size: clamp(28px, 5vw, 40px); font-weight: 800; letter-spacing: .02em; line-height: 1.15; }
+  .name-sub { font-size: 12px; color: var(--ink-3); }
+  .topar {
+    font-family: var(--f-num); font-weight: 800;
+    font-size: clamp(84px, 17vw, 148px); line-height: .82;
+    letter-spacing: -.05em; color: var(--under);
+    display: block; margin: 6px 0 2px;
+  }
+  .topar-legend { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .kv { display: flex; align-items: baseline; gap: 7px; }
+  .kv .k { font-family: var(--f-num); font-size: 10px; font-weight: 700; letter-spacing: .14em; color: var(--ink-3); }
+  .kv .v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 26px; letter-spacing: -.02em; }
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+  .pill {
+    font-size: 12px; font-weight: 700; padding: 4px 11px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+  }
+  .pill.hot { border-color: color-mix(in srgb, var(--under) 45%, transparent); color: var(--under); background: color-mix(in srgb, var(--under) 8%, var(--surface)); }
+  .pill.cool { border-color: color-mix(in srgb, var(--green) 45%, transparent); color: var(--green); background: color-mix(in srgb, var(--green) 8%, var(--surface)); }
+
+  /* ---------- card ---------- */
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; box-shadow: var(--shadow);
+  }
+  .card-pad { padding: clamp(16px, 2.4vw, 22px); }
+  .card-head {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 14px clamp(16px, 2.4vw, 22px); border-bottom: 1px solid var(--line-2);
+  }
+  .card-head .eyebrow { flex: 1 1 auto; }
+
+  /* ---------- replay ---------- */
+  .replay-strip { display: grid; grid-template-columns: repeat(18, minmax(0, 1fr)); gap: 3px; }
+  .hcell {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 8px 0 7px; border-radius: 6px;
+    background: var(--surface-2); border: 1px solid transparent;
+    opacity: .34; transition: opacity .22s ease, background .22s ease, border-color .22s ease, transform .22s ease;
+  }
+  .hcell.on { opacity: 1; }
+  .hcell.on.birdie {
+    background: color-mix(in srgb, var(--under) 11%, var(--surface));
+    border-color: color-mix(in srgb, var(--under) 42%, transparent);
+  }
+  .hcell.now { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--mark); }
+  .hcell .hno { font-family: var(--f-num); font-size: 9px; font-weight: 700; letter-spacing: .06em; color: var(--ink-3); }
+  .hcell .glyph { font-family: var(--f-num); font-size: 15px; font-weight: 800; line-height: 1; color: var(--ink-3); }
+  .hcell.on.birdie .glyph { color: var(--under); }
+  .hcell .cum { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-size: 10px; font-weight: 700; color: var(--ink-3); }
+  .hcell.on .cum { color: var(--ink-2); }
+  .strip-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 11px; color: var(--ink-3); }
+  .strip-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; border: 1px solid var(--line); display: inline-block; }
+  .swatch.b { background: color-mix(in srgb, var(--under) 30%, var(--surface)); border-color: var(--under); }
+  .swatch.p { background: var(--par-fill); }
+
+  .halves { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .half {
+    flex: 1 1 130px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+    padding: 9px 13px; border-radius: 8px; background: var(--surface-2);
+  }
+  .half .k { font-family: var(--f-num); font-size: 10px; font-weight: 700; letter-spacing: .14em; color: var(--ink-3); }
+  .half .v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 21px; }
+  .half.hi .v { color: var(--under); }
+
+  .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  button.ctl {
+    font-family: var(--f-jp); font-size: 12px; font-weight: 700;
+    padding: 6px 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    transition: background .16s ease, border-color .16s ease;
+  }
+  button.ctl:hover { background: var(--surface-2); border-color: var(--ink-3); }
+  button.ctl.primary { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+  button.ctl.primary:hover { filter: brightness(1.08); }
+
+  /* ---------- ticker ---------- */
+  .ticker { margin-top: 16px; border-top: 1px solid var(--line-2); padding-top: 14px; }
+  .ticker-list { display: flex; flex-direction: column; gap: 0; max-height: 232px; overflow-y: auto; }
+  .tick {
+    display: grid; grid-template-columns: 44px 62px minmax(0,1fr); gap: 12px; align-items: baseline;
+    padding: 9px 2px; border-bottom: 1px solid var(--line-2); font-size: 13px;
+    animation: slidein .3s ease;
+  }
+  @keyframes slidein { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+  .tick .th { font-family: var(--f-num); font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--ink-3); }
+  .tick .tr { font-family: var(--f-num); font-size: 12px; font-weight: 800; letter-spacing: .04em; }
+  .tick .tr.birdie { color: var(--under); }
+  .tick .tr.par { color: var(--ink-3); }
+  .tick .tt { color: var(--ink-2); line-height: 1.6; }
+  .tick.lead { background: color-mix(in srgb, var(--mark) 7%, transparent); border-radius: 6px; padding-left: 8px; padding-right: 8px; }
+  .empty { color: var(--ink-3); font-size: 13px; padding: 10px 2px; }
+
+  /* ---------- chart ---------- */
+  .chart-wrap { overflow-x: auto; margin-top: 6px; }
+  svg.chart { display: block; width: 100%; height: auto; min-width: 520px; }
+  .grid-line { stroke: var(--line-2); stroke-width: 1; }
+  .axis-line { stroke: var(--line); stroke-width: 1; }
+  .tick-txt { font-family: var(--f-num); font-size: 9px; font-weight: 700; fill: var(--ink-3); letter-spacing: .06em; }
+  .trace { fill: none; stroke: var(--under); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .trace-fill { fill: color-mix(in srgb, var(--under) 13%, transparent); stroke: none; }
+  .endcap { fill: var(--under); stroke: var(--surface); stroke-width: 2; }
+  .endlabel { font-family: var(--f-num); font-size: 12px; font-weight: 800; fill: var(--under); }
+
+  /* ---------- sections ---------- */
+  section { padding: clamp(28px, 4.5vw, 52px) 0; border-top: 1px solid var(--line); }
+  .sec-head { display: flex; flex-direction: column; gap: 5px; margin-bottom: clamp(16px, 2.5vw, 24px); }
+  .sec-head .lede { color: var(--ink-2); font-size: 13.5px; max-width: 62ch; }
+  .two-col { display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(18px, 2.6vw, 26px); }
+  @media (min-width: 900px) { .two-col { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: start; } }
+
+  /* ---------- leaderboard ---------- */
+  table.lb { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.lb th {
+    font-family: var(--f-num); font-size: 10px; font-weight: 700; letter-spacing: .13em;
+    color: var(--ink-3); text-align: left; padding: 0 10px 9px; border-bottom: 1px solid var(--line);
+  }
+  table.lb th.r, table.lb td.r { text-align: right; }
+  table.lb td { padding: 11px 10px; border-bottom: 1px solid var(--line-2); vertical-align: baseline; }
+  table.lb tr.me td { background: color-mix(in srgb, var(--under) 7%, transparent); }
+  table.lb tr.me td:first-child { border-left: 3px solid var(--under); }
+  table.lb tr.watch td { background: color-mix(in srgb, var(--mark) 6%, transparent); }
+  .pos { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 15px; color: var(--ink-2); }
+  tr.me .pos { color: var(--under); }
+  .pname { font-weight: 700; }
+  tr.mutedrow .pname { font-weight: 400; color: var(--ink-3); }
+  .pnote { display: block; font-size: 11.5px; color: var(--ink-3); font-weight: 400; line-height: 1.5; margin-top: 1px; }
+  .tp { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 16px; }
+  .tp.under { color: var(--under); }
+  .tp.over { color: var(--ink-2); }
+  .sc { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ink-2); }
+  .foot { font-size: 11.5px; color: var(--ink-3); margin-top: 12px; line-height: 1.6; }
+
+  /* ---------- insight cards ---------- */
+  .insights { display: grid; grid-template-columns: minmax(0,1fr); gap: 12px; }
+  .ins { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-left: 3px solid var(--mark); }
+  .ins.stat { border-left-color: var(--under); }
+  .ins.gear { border-left-color: var(--green); }
+  .ins.warning { border-left-color: var(--ink-3); }
+  .ins .tag { font-family: var(--f-num); font-size: 10px; font-weight: 700; letter-spacing: .14em; color: var(--ink-3); }
+  .ins p { font-size: 13.5px; color: var(--ink-2); line-height: 1.75; }
+
+  /* ---------- stat rails ---------- */
+  .rails { display: flex; flex-direction: column; gap: 2px; }
+  .railrow {
+    display: grid; grid-template-columns: minmax(120px, 1.1fr) 74px minmax(120px, 1.6fr) 46px;
+    gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line-2);
+  }
+  @media (max-width: 640px) { .railrow { grid-template-columns: minmax(0,1fr) 66px; grid-row-gap: 4px; } .railrow .track-cell, .railrow .rank-cell { grid-column: 1 / -1; } }
+  .rl { font-size: 13px; }
+  .rl small { display: block; font-size: 11px; color: var(--ink-3); line-height: 1.5; }
+  .rv { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 16px; text-align: right; }
+  .track { position: relative; height: 6px; border-radius: 999px; background: var(--par-fill); }
+  .track::after {
+    content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    height: 10px; width: 10px; border-radius: 50%; background: var(--mark);
+    border: 2px solid var(--surface); left: var(--p, 0%); margin-left: -5px;
+  }
+  .rank-cell { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 13px; color: var(--ink-2); text-align: right; }
+  .rank-cell.best { color: var(--green); }
+  .railaxis { display: flex; justify-content: space-between; font-family: var(--f-num); font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--ink-3); padding-top: 8px; }
+
+  /* ---------- generic grids ---------- */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(228px, 1fr)); gap: 12px; }
+  .gear { display: flex; flex-direction: column; gap: 6px; padding: 15px 17px; }
+  .gear .cat {
+    align-self: flex-start; font-family: var(--f-num); font-size: 10px; font-weight: 800; letter-spacing: .12em;
+    color: var(--surface); background: var(--ink-2); padding: 2px 7px; border-radius: 3px;
+  }
+  .gear.unknown .cat { background: var(--ink-3); }
+  .gear .gname { font-weight: 700; font-size: 14.5px; line-height: 1.5; }
+  .gear.unknown .gname { color: var(--ink-3); font-weight: 400; }
+  .gear .gspec { font-size: 12px; color: var(--ink-2); }
+  .gear .gnote { font-size: 11.5px; color: var(--ink-3); line-height: 1.6; }
+
+  .form-row { display: grid; grid-template-columns: 92px minmax(0,1fr) 74px; gap: 14px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid var(--line-2); }
+  .form-row .fd { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-size: 11.5px; font-weight: 700; color: var(--ink-3); }
+  .form-row .fe { font-size: 13.5px; }
+  .form-row .fe small { display: block; font-size: 11.5px; color: var(--ink-3); line-height: 1.6; margin-top: 2px; }
+  .form-row .fr { font-family: var(--f-num); font-weight: 800; font-size: 15px; text-align: right; }
+  .form-row.cur .fr { color: var(--under); }
+
+  .profile { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px 20px; }
+  .pf .k { font-family: var(--f-num); font-size: 10px; font-weight: 700; letter-spacing: .13em; color: var(--ink-3); }
+  .pf .v { font-size: 14px; font-weight: 700; }
+  ul.plain { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 5px; }
+  ul.plain li { font-size: 13.5px; color: var(--ink-2); line-height: 1.7; }
+
+  .cheers { display: grid; grid-template-columns: repeat(auto-fill, minmax(258px, 1fr)); gap: 12px; }
+  .cheer { display: flex; flex-direction: column; gap: 8px; padding: 17px 19px; }
+  .cheer .ct { font-size: 14.5px; font-weight: 700; line-height: 1.65; text-wrap: balance; }
+  .cheer .cg { font-family: var(--f-num); font-size: 10px; font-weight: 700; letter-spacing: .13em; color: var(--under); }
+
+  .sources { display: flex; flex-direction: column; gap: 7px; }
+  .sources a { font-size: 12.5px; color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 5px; display: block; }
+  .sources a:hover { color: var(--mark); border-bottom-color: var(--mark); }
+  footer { padding: 32px 0 56px; color: var(--ink-3); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--line); }
+
+  .notice {
+    display: flex; gap: 10px; padding: 13px 16px; border-radius: 8px;
+    background: var(--surface-2); border: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); line-height: 1.7;
+  }
+  .notice b { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  }
+</style>
+
+<script type="application/json" id="dataset">
+{
+  "meta": {
+    "generatedAt": "2026-08-14T21:40+09:00",
+    "roundStatus": "R1 FINAL",
+    "note": "第1ラウンド終了時点。第2ラウンドは8/15(土)、最終ラウンドは8/16(日)。"
+  },
+  "tournament": {
+    "name": "NEC軽井沢72ゴルフトーナメント",
+    "edition": "第35回",
+    "season": 2026,
+    "dates": "2026年8月14日(金)〜16日(日)",
+    "format": "3日間54ホール ストロークプレー",
+    "course": "軽井沢72ゴルフ 北コース（長野県軽井沢町）",
+    "par": 72,
+    "yards": 6590,
+    "purse": "1億円",
+    "winnerPrize": "1,800万円",
+    "field": 108,
+    "cut": "2R終了時 上位50位タイまで",
+    "host": "NECグループ（1992年から冠大会として開催、今年で35回目）",
+    "recordNote": "大会コースレコードは61（2023年 神谷そら）。安田祐香が初日にこれに並んだ。"
+  },
+  "player": {
+    "name": "安田 祐香",
+    "kana": "やすだ ゆうか",
+    "nickname": "ゆかちー",
+    "birth": "2000年12月24日",
+    "age": 25,
+    "from": "兵庫県",
+    "height": "164cm",
+    "affiliation": "NEC",
+    "turnedPro": "2020年（プロテスト合格）",
+    "tourWins": 2,
+    "winList": [
+      {
+        "year": 2024,
+        "event": "ミヤギテレビ杯ダンロップ女子オープン",
+        "note": "ツアー初優勝"
+      },
+      {
+        "year": 2025,
+        "event": "富士フイルム・スタジオアリス女子オープン",
+        "note": "ツアー2勝目"
+      }
+    ],
+    "amateur": [
+      "滝川第二高校2年時に日本女子アマチュアゴルフ選手権 優勝",
+      "JGAナショナルチーム（2017年7月〜2019年）",
+      "2018年 全国高等学校ゴルフ選手権 優勝／トヨタジュニアワールドカップ 個人・団体2冠",
+      "2019年 オーガスタナショナル女子アマチュア選手権 3位",
+      "2019年 アジアパシフィック女子アマチュア選手権 優勝"
+    ],
+    "hostessNote": "NEC所属のホステスプロとして自社主催大会に出場"
+  },
+  "round1": {
+    "date": "2026年8月14日(金)",
+    "score": 61,
+    "toPar": -11,
+    "out": 31,
+    "in": 30,
+    "birdies": 11,
+    "bogeys": 0,
+    "position": "単独首位",
+    "margin": 2,
+    "records": [
+      "大会コースレコードタイ（2023年 神谷そらの61に並ぶ）",
+      "レギュラーツアー自己ベスト更新（従来65を4打更新）"
+    ],
+    "quote": "気付けば、という感じ。集中してできたのは良かった",
+    "quoteExtra": "自己採点は99点",
+    "backstory": "前日、コーチの大西翔太に「ショットが右に出る」と相談。トラックマンを使い『狙った距離に合わせる』練習に切り替えたことが一撃の修正になった。",
+    "holes": [
+      {
+        "h": 1,
+        "result": "par",
+        "cum": 0,
+        "note": "ティーショットは右へ。それでもパーセーブでしのぐ、静かな立ち上がり。"
+      },
+      {
+        "h": 2,
+        "result": "birdie",
+        "cum": -1,
+        "note": "この日最初のバーディ。ここからスイッチが入る。"
+      },
+      {
+        "h": 3,
+        "result": "birdie",
+        "cum": -2,
+        "note": "連続バーディ。前半のリズムを一気につかむ。"
+      },
+      {
+        "h": 4,
+        "result": "par",
+        "cum": -2,
+        "note": "落ち着いてパー。無理をしない。"
+      },
+      {
+        "h": 5,
+        "result": "par",
+        "cum": -2,
+        "note": "パーキープ。次の爆発へ助走。"
+      },
+      {
+        "h": 6,
+        "result": "birdie",
+        "cum": -3,
+        "note": "3連続バーディの1つ目。"
+      },
+      {
+        "h": 7,
+        "result": "birdie",
+        "cum": -4,
+        "note": "2つ目。ショットが完全にかみ合ってきた。"
+      },
+      {
+        "h": 8,
+        "result": "birdie",
+        "cum": -5,
+        "note": "3つ目。前半だけで5バーディ。"
+      },
+      {
+        "h": 9,
+        "result": "par",
+        "cum": -5,
+        "note": "OUT 31で折り返し。すでに好スコアだった、ここまでは。"
+      },
+      {
+        "h": 10,
+        "result": "par",
+        "cum": -5,
+        "note": "後半の入りはパー。嵐の前の静けさ。"
+      },
+      {
+        "h": 11,
+        "result": "birdie",
+        "cum": -6,
+        "note": "ここから怒濤の5連続バーディが始まる。"
+      },
+      {
+        "h": 12,
+        "result": "birdie",
+        "cum": -7,
+        "note": "2つ目。ギャラリーがざわつき出す。"
+      },
+      {
+        "h": 13,
+        "result": "birdie",
+        "cum": -8,
+        "note": "3つ目。単独首位が見えてくる。"
+      },
+      {
+        "h": 14,
+        "result": "birdie",
+        "cum": -9,
+        "note": "4つ目。二桁アンダーが射程に。"
+      },
+      {
+        "h": 15,
+        "result": "birdie",
+        "cum": -10,
+        "note": "5連続で締めて二桁アンダー到達。"
+      },
+      {
+        "h": 16,
+        "result": "par",
+        "cum": -10,
+        "note": "パー。ここでもう自己ベストは大幅更新。"
+      },
+      {
+        "h": 17,
+        "result": "par",
+        "cum": -10,
+        "note": "パー。残り1ホール、記録が視界に入る。"
+      },
+      {
+        "h": 18,
+        "result": "birdie",
+        "cum": -11,
+        "note": "最終18番もバーディ。IN 30、トータル61。大会レコードタイ。"
+      }
+    ]
+  },
+  "leaderboard": {
+    "asOf": "第1ラウンド終了",
+    "rows": [
+      {
+        "pos": "1",
+        "name": "安田 祐香",
+        "toPar": -11,
+        "score": 61,
+        "highlight": true,
+        "note": "NEC所属・ホステスプロ"
+      },
+      {
+        "pos": "2",
+        "name": "横峯 さくら",
+        "toPar": -9,
+        "score": 63,
+        "note": "ツアー通算23勝。13年ぶりの自己ベストタイ"
+      },
+      {
+        "pos": "T3",
+        "name": "佐久間 朱莉",
+        "toPar": -8,
+        "score": 64
+      },
+      {
+        "pos": "T3",
+        "name": "イ・ミニョン",
+        "toPar": -8,
+        "score": 64
+      },
+      {
+        "pos": "T5",
+        "name": "吉澤 柚月",
+        "toPar": -7,
+        "score": 65,
+        "note": "前週・北海道meijiカップでツアー初優勝。7バーディ ノーボギー"
+      },
+      {
+        "pos": "T5",
+        "name": "ほか3名",
+        "toPar": -7,
+        "score": 65,
+        "muted": true
+      },
+      {
+        "pos": "T9",
+        "name": "吉田 鈴",
+        "toPar": -6,
+        "score": 66,
+        "note": "7バーディ1ボギー"
+      },
+      {
+        "pos": "T9",
+        "name": "ほか数名",
+        "toPar": -6,
+        "score": 66,
+        "muted": true
+      },
+      {
+        "pos": "60",
+        "name": "桑木 志帆",
+        "toPar": 1,
+        "score": 73,
+        "note": "全英女王としての国内凱旋初戦",
+        "watch": true
+      }
+    ],
+    "namesNote": "-7／-6グループの一部選手は日本語表記を確認できなかったため人数表記にまとめています。"
+  },
+  "stats2026": {
+    "asOf": "2026年8月（NEC軽井沢72 開幕前時点）",
+    "items": [
+      {
+        "label": "賞金ランキング",
+        "value": "トップ10 2回",
+        "rank": 25,
+        "note": "7月末時点。8月の北海道meijiカップ3位を加えて3回目"
+      },
+      {
+        "label": "平均ストローク",
+        "value": "72.7",
+        "rank": 32
+      },
+      {
+        "label": "パーオン率",
+        "value": "63.2%",
+        "rank": 33
+      },
+      {
+        "label": "平均パット数（1ラウンド／パーオンH）",
+        "value": "1.84",
+        "rank": 34
+      },
+      {
+        "label": "平均飛距離",
+        "value": "242yd",
+        "rank": 20,
+        "note": "7月時点では243ydまで伸長。前年比 約+4yd"
+      },
+      {
+        "label": "フェアウェイキープ率",
+        "value": "66.9%",
+        "rank": 53
+      },
+      {
+        "label": "パーセーブ率",
+        "value": "80.9%",
+        "rank": 49
+      },
+      {
+        "label": "平均バーディ数",
+        "value": "2.91",
+        "rank": 15
+      }
+    ],
+    "top10": 2
+  },
+  "recentForm": [
+    {
+      "date": "2026/08/14",
+      "event": "NEC軽井沢72（第1R）",
+      "result": "首位",
+      "toPar": -11,
+      "current": true
+    },
+    {
+      "date": "2026/08/07-09",
+      "event": "北海道meijiカップ",
+      "result": "3位",
+      "toPar": -5,
+      "note": "2日目終了時は吉澤柚月と首位タイ。優勝は吉澤柚月(-8)、2位 永井花奈(-6)"
+    },
+    {
+      "date": "2026シーズン",
+      "event": "資生堂JALレディスオープン",
+      "result": "4位タイ",
+      "toPar": -7,
+      "note": "今季のトップ10のひとつ"
+    }
+  ],
+  "formNote": "7月末時点でトップ10入り2回。8月の北海道meijiカップ3位を加え、直近2試合はいずれも上位。個別大会の順位はすべて特定できていないため、確認できたものだけを掲載しています。",
+  "equipment": {
+    "asOf": "2026年シーズン",
+    "items": [
+      {
+        "cat": "1W",
+        "name": "スリクソン ZXi",
+        "spec": "シャフト：フジクラ スピーダーNX ゴールド 50g台 (S)",
+        "note": "3シーズン使ったZX5 Mk IIから変更。シャフトもATTAS KINGから“正反対のタイプ”へ大刷新し、平均飛距離が約4yd伸びた"
+      },
+      {
+        "cat": "FW",
+        "name": "スリクソン ZX Mk II",
+        "spec": "3W／5W",
+        "note": "前年から継続"
+      },
+      {
+        "cat": "UT",
+        "name": "スリクソン ZX Mk II",
+        "spec": "4H／5H",
+        "note": "“年季の入ったUT”。手放せない相棒"
+      },
+      {
+        "cat": "IR",
+        "name": "スリクソン ZXi5",
+        "spec": "アイアン",
+        "note": "前年から継続"
+      },
+      {
+        "cat": "WG",
+        "name": "クリーブランド RTZ",
+        "spec": "ウェッジ",
+        "note": "前年から継続"
+      },
+      {
+        "cat": "PT",
+        "name": "オデッセイ",
+        "spec": "パター"
+      },
+      {
+        "cat": "BALL",
+        "name": "スリクソン Z-STAR ◆ DIAMOND",
+        "spec": "2025年モデル"
+      },
+      {
+        "cat": "GRIP",
+        "name": "公開情報なし",
+        "spec": "—",
+        "unknown": true,
+        "note": "各社の公開クラブセッティング情報にグリップの記載が確認できませんでした"
+      }
+    ]
+  },
+  "insights": [
+    {
+      "title": "シーズン平均から −11.7 打の外れ値",
+      "body": "2026年の平均ストロークは72.7。この日の61は自身のシーズン平均を11.7打も下回る。1試合の中の1ラウンドとしては、統計的にほぼ“別人”の域。",
+      "kind": "stat"
+    },
+    {
+      "title": "バーディ数はシーズン平均の3.8倍",
+      "body": "平均バーディ数は2.91／R（ツアー15位）。この日は11バーディ。得意な数字をさらに3.8倍に伸ばした形で、ストレングスが極大化した1日だった。",
+      "kind": "stat"
+    },
+    {
+      "title": "ボギーゼロが本質",
+      "body": "パーセーブ率80.9%（49位）は今季の課題ポイント。その課題日にノーボギーで回った意味は大きい。1番でティーショットを右に曲げながらパーセーブしたのが、この日の“隠れたハイライト”。",
+      "kind": "insight"
+    },
+    {
+      "title": "ドライバー刷新が効いている",
+      "body": "ZX5 Mk II → ZXi、ATTAS KING → スピーダーNX ゴールドへの大刷新で平均飛距離は約4yd増の242-243yd（20位）。軽井沢の標高と涼しい空気の中で、距離のジャッジが決め手になる週にプラス材料。",
+      "kind": "gear"
+    },
+    {
+      "title": "前日の“距離合わせ”ドリルが一撃修正",
+      "body": "前日にコーチ・大西翔太へ「右に出る」と相談。トラックマンで狙った距離に合わせる練習に切り替えた。ショットの不安がその日のうちに消え、翌日11バーディにつながった。",
+      "kind": "insight"
+    },
+    {
+      "title": "追う側も強い。2打差は安全圏ではない",
+      "body": "2位は通算23勝の横峯さくら（63、13年ぶりの自己ベストタイ）、5位に前週初優勝の吉澤柚月。54ホール大会で残り36ホール、2打差は“いつでもひっくり返る”距離。",
+      "kind": "warning"
+    }
+  ],
+  "cheers": [
+    {
+      "text": "ホステスプロが自社主催大会でコースレコードタイ。こんな筋書き、誰が書ける？",
+      "tag": "NECの週"
+    },
+    {
+      "text": "11バーディ・ノーボギー。攻めきって、しかも1つも落とさない。",
+      "tag": "完璧な1日"
+    },
+    {
+      "text": "11番から15番、5連続。軽井沢の空気が変わった時間帯。",
+      "tag": "怒濤の5連続"
+    },
+    {
+      "text": "自己採点99点。残りの1点は、まだ2日残っているから。",
+      "tag": "本人談から"
+    },
+    {
+      "text": "OUT 31 → IN 30。後半でさらにギアを上げられる選手が、強い。",
+      "tag": "尻上がり"
+    },
+    {
+      "text": "ゆかちー、軽井沢の主役はあなたです。あと36ホール、いってらっしゃい！",
+      "tag": "応援"
+    }
+  ],
+  "sources": [
+    {
+      "label": "JLPGA 日本女子プロゴルフ協会：安田祐香 コースレコードタイ61で首位発進",
+      "url": "https://www.lpga.or.jp/news/info/83086"
+    },
+    {
+      "label": "ALBA Net：安田祐香が大会レコードタイ「61」で首位発進",
+      "url": "https://www.alba.co.jp/articles/category/tour/jlpga/post/yb-8atk09/"
+    },
+    {
+      "label": "GDO：ホステスプロの安田祐香がコース記録タイ「61」で単独首位発進",
+      "url": "https://news.golfdigest.co.jp/news/results/jlpga/article/193996/1/"
+    },
+    {
+      "label": "e-GOLF：安田祐香が圧巻「61」で首位発進 2位に横峯さくら",
+      "url": "https://egolf.jp/tournews/250773/"
+    },
+    {
+      "label": "中日スポーツ：「気付けば」大会コース記録に並ぶ『61』で首位発進",
+      "url": "https://www.chunichi.co.jp/article/1296527"
+    },
+    {
+      "label": "THE ANSWER：衝撃スコア「61」の裏にコーチの練習法",
+      "url": "https://news.yahoo.co.jp/articles/5d45c053be9fe837f3071aaf319e73fe38743f74"
+    },
+    {
+      "label": "THE ANSWER：吉澤柚月・吉田鈴が好発進",
+      "url": "https://the-ans.jp/news/715679/"
+    },
+    {
+      "label": "GDO：安田祐香 2026年度スタッツ／ランキング",
+      "url": "https://news.golfdigest.co.jp/players/stats/17793/2026/"
+    },
+    {
+      "label": "GDO：40歳・横峯さくらが13年ぶり自己ベスト",
+      "url": "https://news.golfdigest.co.jp/news/jlpga/article/194007/1/"
+    },
+    {
+      "label": "GDO：22歳・吉澤柚月が待望のツアー初優勝（北海道meijiカップ）",
+      "url": "https://news.golfdigest.co.jp/news/results/jlpga/article/193860/1/"
+    },
+    {
+      "label": "NEC：NEC軽井沢72ゴルフトーナメント 大会概要",
+      "url": "https://jpn.nec.com/nec-karuizawa72/about/index.html"
+    },
+    {
+      "label": "軽井沢72ゴルフ 北コース：2026 NEC軽井沢72ゴルフトーナメント",
+      "url": "https://www.princehotels.co.jp/golf/karu72/north/informations/2026tourment/"
+    },
+    {
+      "label": "サラリーマンゴルファーまさ：【2026】安田祐香のクラブセッティング",
+      "url": "https://www.masa-golf.jp/yuka-yasuda-clubsetting"
+    },
+    {
+      "label": "ALBA Net：安田祐香はエース1W＆シャフトを大刷新【開幕前クラブチェック】",
+      "url": "https://www.alba.co.jp/articles/category/tour/jlpga/post/z_w3rkn6mu95/"
+    },
+    {
+      "label": "NEC プレスリリース：安田祐香 プロフィール",
+      "url": "https://jpn.nec.com/press/202002/images/2103-01-01.pdf"
+    }
+  ]
+}
+</script>
+
+<div class="rail">
+  <div class="wrap rail-in">
+    <span class="badge-nec">NEC</span>
+    <span class="rail-title" id="railTitle"></span>
+    <span class="rail-spacer"></span>
+    <span class="chip final"><span class="dot"></span><span id="railStatus"></span></span>
+    <span class="stamp" id="railStamp"></span>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div class="hero-grid">
+      <div class="slab">
+        <div class="eyebrow" id="heroEyebrow"></div>
+        <div class="name-row">
+          <span class="name">安田 祐香</span>
+          <span class="name-sub">やすだ ゆうか ／ NEC</span>
+        </div>
+        <span class="topar num" id="heroToPar">−11</span>
+        <div class="topar-legend">
+          <span class="kv"><span class="k">SCORE</span><span class="v" id="heroScore">61</span></span>
+          <span class="kv"><span class="k">POS</span><span class="v" id="heroPos">1</span></span>
+          <span class="kv"><span class="k">2位との差</span><span class="v" id="heroLead">2打</span></span>
+        </div>
+        <div class="pills" id="heroPills"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="eyebrow">1日目 ラウンド・リプレイ ／ HOLE BY HOLE</span>
+          <div class="controls">
+            <button class="ctl primary" id="btnPlay" type="button">▶ 再生</button>
+            <button class="ctl" id="btnAll" type="button">全表示</button>
+            <button class="ctl" id="btnReset" type="button">最初から</button>
+          </div>
+        </div>
+        <div class="card-pad">
+          <div class="chart-wrap">
+            <svg class="chart" id="chart" viewBox="0 0 720 168" role="img" aria-label="第1ラウンドの累積スコア推移。1番からのパー・バーディの積み重ねで最終的に11アンダー。"></svg>
+          </div>
+          <div class="replay-strip" id="strip" role="list" aria-label="1番から18番までのホール別結果"></div>
+          <div class="strip-legend">
+            <span><i class="swatch b"></i>バーディ（○）</span>
+            <span><i class="swatch p"></i>パー（−）</span>
+            <span>※ 日本のリーダーボード慣習に合わせ、アンダーパーを赤で表示</span>
+          </div>
+          <div class="halves">
+            <div class="half"><span class="k">OUT</span><span class="v num" id="hOut">31</span></div>
+            <div class="half"><span class="k">IN</span><span class="v num" id="hIn">30</span></div>
+            <div class="half hi"><span class="k">BIRDIE</span><span class="v num" id="hBird">11</span></div>
+            <div class="half"><span class="k">BOGEY</span><span class="v num" id="hBog">0</span></div>
+          </div>
+          <div class="ticker">
+            <div class="eyebrow" style="margin-bottom:8px;">1打1打 実況ログ</div>
+            <div class="ticker-list" id="ticker" aria-live="polite"><p class="empty">「再生」を押すと、1番から18番まで順に振り返ります。</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="two-col">
+      <div>
+        <div class="sec-head">
+          <span class="eyebrow">Leaderboard ／ 第1ラウンド終了</span>
+          <h2>リーダーボード</h2>
+          <p class="lede" id="lbLede"></p>
+        </div>
+        <div class="card card-pad">
+          <table class="lb">
+            <thead><tr><th style="width:56px;">POS</th><th>PLAYER</th><th class="r" style="width:64px;">TO PAR</th><th class="r" style="width:56px;">R1</th></tr></thead>
+            <tbody id="lbBody"></tbody>
+          </table>
+          <p class="foot" id="lbFoot"></p>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head">
+          <span class="eyebrow">Insights ／ 何が起きたのか</span>
+          <h2>この「61」をどう読むか</h2>
+          <p class="lede">シーズンのスタッツと突き合わせると、この1ラウンドの異常値ぶりと、その裏にある準備が見えてきます。</p>
+        </div>
+        <div class="card"><div class="insights" id="insights"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">2026 Season Stats ／ JLPGAツアー</span>
+      <h2>今季のスタッツと、その強み・弱み</h2>
+      <p class="lede" id="statsLede"></p>
+    </div>
+    <div class="card card-pad">
+      <div class="rails" id="rails"></div>
+      <div class="railaxis"><span>ツアー1位</span><span>60位</span></div>
+      <p class="foot">ドットの位置はツアー内順位（左ほど上位）。値そのものではなく“ツアーの中でどこにいるか”を示しています。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="two-col">
+      <div>
+        <div class="sec-head">
+          <span class="eyebrow">Recent Form ／ 直近の成績</span>
+          <h2>ここに来て、明らかに上がってきていた</h2>
+        </div>
+        <div class="card card-pad">
+          <div id="formList"></div>
+          <p class="foot" id="formFoot"></p>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head">
+          <span class="eyebrow">Profile ／ 基本情報</span>
+          <h2>安田 祐香というプレーヤー</h2>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:20px;">
+          <div class="profile" id="profile"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <span class="eyebrow">アマチュア時代・ツアー実績</span>
+            <ul class="plain" id="amateur"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Equipment ／ 2026年 クラブセッティング</span>
+      <h2>道具</h2>
+      <p class="lede">今季の最大の変更はドライバーとシャフトの同時刷新。「替えない」で知られた選手が、3シーズン使ったエースを手放しました。</p>
+    </div>
+    <div class="grid-3" id="gear"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="eyebrow">Cheer ／ 応援</span>
+      <h2>あと36ホール</h2>
+    </div>
+    <div class="cheers" id="cheers"></div>
+  </section>
+
+  <section>
+    <div class="two-col">
+      <div>
+        <div class="sec-head">
+          <span class="eyebrow">Data ／ 更新について</span>
+          <h2>このダッシュボードのデータ</h2>
+        </div>
+        <div class="notice">
+          <p><b>自動更新はしていません。</b>このページのデータは第1ラウンド終了時点のスナップショットで、外部サイトへの通信は行っていません（公開ページのセキュリティ制約と、実行環境のネットワークポリシーの両方により、ライブ取得ができないため）。数値は <code>data/tournament.json</code> に集約してあり、第2ラウンド・最終ラウンドの結果はそのファイルを更新して再ビルド・再公開する運用です。</p>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head">
+          <span class="eyebrow">Sources ／ 出典</span>
+          <h2>参照した情報源</h2>
+        </div>
+        <div class="sources" id="sources"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p id="footNote"></p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var D = JSON.parse(document.getElementById("dataset").textContent);
+  var T = D.tournament, P = D.player, R = D.round1;
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
+  var sign = function (n) { return n === 0 ? "E" : (n > 0 ? "+" + n : "−" + Math.abs(n)); };
+
+  /* ---- rail + hero ---- */
+  $("railTitle").textContent = T.edition + " " + T.name + "　" + T.course + "（Par " + T.par + " / " + T.yards.toLocaleString() + "yd）";
+  $("railStatus").textContent = D.meta.roundStatus;
+  $("railStamp").textContent = "更新 " + D.meta.generatedAt;
+  $("heroEyebrow").textContent = "Round 1 · " + R.date + " · " + R.position;
+  $("heroToPar").textContent = sign(R.toPar);
+  $("heroScore").textContent = R.score;
+  $("heroPos").textContent = "1";
+  $("heroLead").textContent = R.margin + "打";
+  $("hOut").textContent = R.out; $("hIn").textContent = R.in;
+  $("hBird").textContent = R.birdies; $("hBog").textContent = R.bogeys;
+
+  var pills = [
+    { t: R.birdies + "バーディ", c: "hot" },
+    { t: "ノーボギー", c: "hot" }
+  ].concat(R.records.map(function (r) { return { t: r, c: "cool" }; }))
+   .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }]);
+  $("heroPills").innerHTML = pills.map(function (p) {
+    return '<span class="pill ' + p.c + '">' + esc(p.t) + "</span>";
+  }).join("");
+
+  /* ---- hole strip ---- */
+  var strip = $("strip");
+  strip.innerHTML = R.holes.map(function (h) {
+    return '<div class="hcell ' + h.result + '" data-h="' + h.h + '" role="listitem" ' +
+      'aria-label="' + h.h + '番 ' + (h.result === "birdie" ? "バーディ" : "パー") + ' 通算' + sign(h.cum) + '">' +
+      '<span class="hno">' + h.h + "</span>" +
+      '<span class="glyph">' + (h.result === "birdie" ? "○" : "−") + "</span>" +
+      '<span class="cum">' + sign(h.cum) + "</span></div>";
+  }).join("");
+  var cells = Array.prototype.slice.call(strip.children);
+
+  /* ---- chart ---- */
+  var svg = $("chart");
+  var W = 720, H = 168, ML = 34, MR = 46, MT = 16, MB = 24;
+  var minY = -12, maxY = 0.6;
+  var xAt = function (i) { return ML + (W - ML - MR) * (i / 17); };
+  var yAt = function (v) { return MT + (H - MT - MB) * ((maxY - v) / (maxY - minY)); };
+  var pts = R.holes.map(function (h, i) { return [xAt(i), yAt(h.cum)]; });
+
+  var chrome = "";
+  [0, -3, -6, -9, -12].forEach(function (v) {
+    chrome += '<line class="grid-line" x1="' + ML + '" y1="' + yAt(v) + '" x2="' + (W - MR) + '" y2="' + yAt(v) + '"/>';
+    chrome += '<text class="tick-txt" x="' + (ML - 8) + '" y="' + (yAt(v) + 3) + '" text-anchor="end">' + sign(v) + "</text>";
+  });
+  chrome += '<line class="axis-line" x1="' + ML + '" y1="' + yAt(0) + '" x2="' + (W - MR) + '" y2="' + yAt(0) + '"/>';
+  [1, 5, 9, 14, 18].forEach(function (n) {
+    chrome += '<text class="tick-txt" x="' + xAt(n - 1) + '" y="' + (H - 7) + '" text-anchor="middle">' + n + "H</text>";
+  });
+  svg.innerHTML = chrome +
+    '<path class="trace-fill" id="tFill" d=""/>' +
+    '<path class="trace" id="tLine" d=""/>' +
+    '<circle class="endcap" id="tCap" r="4.5" cx="0" cy="0" style="display:none"/>' +
+    '<text class="endlabel" id="tLbl" x="0" y="0" style="display:none"></text>';
+  var tFill = $("tFill"), tLine = $("tLine"), tCap = $("tCap"), tLbl = $("tLbl");
+
+  function drawChart(upTo) {
+    if (upTo < 0) { tLine.setAttribute("d", ""); tFill.setAttribute("d", ""); tCap.style.display = "none"; tLbl.style.display = "none"; return; }
+    var seg = pts.slice(0, upTo + 1);
+    var d = seg.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    tLine.setAttribute("d", d);
+    tFill.setAttribute("d", d + " L" + seg[seg.length - 1][0].toFixed(1) + " " + yAt(0) + " L" + seg[0][0].toFixed(1) + " " + yAt(0) + " Z");
+    var last = seg[seg.length - 1];
+    tCap.setAttribute("cx", last[0]); tCap.setAttribute("cy", last[1]); tCap.style.display = "";
+    tLbl.setAttribute("x", Math.min(last[0] + 10, W - 6)); tLbl.setAttribute("y", last[1] + 4);
+    tLbl.textContent = sign(R.holes[upTo].cum); tLbl.style.display = "";
+  }
+
+  /* ---- ticker ---- */
+  var ticker = $("ticker");
+  function resetTicker() { ticker.innerHTML = '<p class="empty">「再生」を押すと、1番から18番まで順に振り返ります。</p>'; }
+  function pushTick(h, lead) {
+    if (ticker.querySelector(".empty")) ticker.innerHTML = "";
+    var row = document.createElement("div");
+    row.className = "tick" + (lead ? " lead" : "");
+    row.innerHTML = '<span class="th">' + h.h + "H</span>" +
+      '<span class="tr ' + h.result + '">' + (h.result === "birdie" ? "BIRDIE" : "PAR") + "</span>" +
+      '<span class="tt">' + esc(h.note) + '　<b class="num" style="color:var(--under)">' + sign(h.cum) + "</b></span>";
+    ticker.insertBefore(row, ticker.firstChild);
+    Array.prototype.slice.call(ticker.children).forEach(function (c, i) { c.classList.toggle("lead", i === 0); });
+  }
+
+  /* ---- replay engine ---- */
+  var idx = -1, timer = null, playing = false;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var btnPlay = $("btnPlay");
+
+  function paint(i) {
+    cells.forEach(function (c, k) { c.classList.toggle("on", k <= i); c.classList.toggle("now", k === i && playing); });
+    drawChart(i);
+  }
+  function step() {
+    idx++;
+    if (idx > 17) { stop(true); return; }
+    paint(idx);
+    pushTick(R.holes[idx], true);
+  }
+  function stop(done) {
+    playing = false; clearInterval(timer); timer = null;
+    cells.forEach(function (c) { c.classList.remove("now"); });
+    btnPlay.textContent = done ? "▶ もう一度" : "▶ 再生";
+    if (done) idx = 17;
+  }
+  function play() {
+    if (idx >= 17) { reset(); }
+    playing = true; btnPlay.textContent = "❚❚ 一時停止";
+    step();
+    timer = setInterval(step, 620);
+  }
+  function reset() { stop(false); idx = -1; paint(-1); resetTicker(); }
+  function showAll() {
+    stop(true); resetTicker();
+    R.holes.forEach(function (h) { pushTick(h, false); });
+    idx = 17; paint(17);
+    btnPlay.textContent = "▶ もう一度";
+  }
+
+  btnPlay.addEventListener("click", function () { playing ? stop(false) : play(); });
+  $("btnAll").addEventListener("click", showAll);
+  $("btnReset").addEventListener("click", reset);
+
+  if (reduced) { showAll(); }
+  else { paint(-1); setTimeout(play, 700); }
+
+  /* ---- leaderboard ---- */
+  $("lbLede").textContent = T.field + "人が出場、" + T.cut + "が決勝ラウンドへ。優勝賞金" + T.winnerPrize + "、賞金総額" + T.purse + "。";
+  $("lbBody").innerHTML = D.leaderboard.rows.map(function (r) {
+    var cls = (r.highlight ? "me " : "") + (r.watch ? "watch " : "") + (r.muted ? "mutedrow" : "");
+    return '<tr class="' + cls + '">' +
+      '<td><span class="pos">' + esc(r.pos) + "</span></td>" +
+      '<td><span class="pname">' + esc(r.name) + "</span>" + (r.note ? '<span class="pnote">' + esc(r.note) + "</span>" : "") + "</td>" +
+      '<td class="r"><span class="tp ' + (r.toPar < 0 ? "under" : "over") + '">' + sign(r.toPar) + "</span></td>" +
+      '<td class="r"><span class="sc">' + r.score + "</span></td></tr>";
+  }).join("");
+  $("lbFoot").textContent = "※ " + D.leaderboard.namesNote;
+
+  /* ---- insights ---- */
+  var kindLabel = { stat: "数字で見る", insight: "背景", gear: "ギア", warning: "留意点" };
+  $("insights").innerHTML = D.insights.map(function (i) {
+    return '<div class="ins ' + i.kind + '"><span class="tag">' + esc(kindLabel[i.kind] || "") + "</span>" +
+      "<h3>" + esc(i.title) + "</h3><p>" + esc(i.body) + "</p></div>";
+  }).join("");
+
+  /* ---- stat rails ---- */
+  $("statsLede").textContent = D.stats2026.asOf + "時点。飛距離と平均バーディ数が上位、フェアウェイキープ率とパーセーブ率が下位という、はっきりした「攻撃型」のプロフィール。";
+  var best = Math.min.apply(null, D.stats2026.items.map(function (i) { return i.rank; }));
+  $("rails").innerHTML = D.stats2026.items.map(function (s) {
+    var p = Math.max(0, Math.min(100, ((s.rank - 1) / 59) * 100));
+    return '<div class="railrow">' +
+      '<div class="rl">' + esc(s.label) + (s.note ? "<small>" + esc(s.note) + "</small>" : "") + "</div>" +
+      '<div class="rv">' + esc(s.value) + "</div>" +
+      '<div class="track-cell"><div class="track" style="--p:' + p.toFixed(1) + '%"></div></div>' +
+      '<div class="rank-cell' + (s.rank === best ? " best" : "") + '">' + s.rank + "位</div></div>";
+  }).join("");
+
+  /* ---- recent form ---- */
+  $("formList").innerHTML = D.recentForm.map(function (f) {
+    return '<div class="form-row' + (f.current ? " cur" : "") + '">' +
+      '<span class="fd">' + esc(f.date) + "</span>" +
+      '<span class="fe">' + esc(f.event) + (f.note ? "<small>" + esc(f.note) + "</small>" : "") + "</span>" +
+      '<span class="fr">' + esc(f.result) + "</span></div>";
+  }).join("");
+  $("formFoot").textContent = D.formNote;
+
+  /* ---- profile ---- */
+  var pf = [
+    ["BORN", P.birth + "（" + P.age + "歳）"],
+    ["FROM", P.from],
+    ["HEIGHT", P.height],
+    ["CLUB", P.affiliation],
+    ["TURNED PRO", P.turnedPro],
+    ["TOUR WINS", P.tourWins + "勝"]
+  ];
+  $("profile").innerHTML = pf.map(function (r) {
+    return '<div class="pf"><div class="k">' + r[0] + '</div><div class="v">' + esc(r[1]) + "</div></div>";
+  }).join("");
+  $("amateur").innerHTML = P.winList.map(function (w) {
+    return "<li>" + w.year + "年 " + esc(w.event) + "（" + esc(w.note) + "）</li>";
+  }).concat(P.amateur.map(function (a) { return "<li>" + esc(a) + "</li>"; })).join("");
+
+  /* ---- gear ---- */
+  $("gear").innerHTML = D.equipment.items.map(function (g) {
+    return '<div class="card gear' + (g.unknown ? " unknown" : "") + '">' +
+      '<span class="cat">' + esc(g.cat) + "</span>" +
+      '<span class="gname">' + esc(g.name) + "</span>" +
+      '<span class="gspec">' + esc(g.spec) + "</span>" +
+      (g.note ? '<span class="gnote">' + esc(g.note) + "</span>" : "") + "</div>";
+  }).join("");
+
+  /* ---- cheers ---- */
+  $("cheers").innerHTML = D.cheers.map(function (c) {
+    return '<div class="card cheer"><span class="cg">' + esc(c.tag) + '</span><span class="ct">' + esc(c.text) + "</span></div>";
+  }).join("");
+
+  /* ---- sources ---- */
+  $("sources").innerHTML = D.sources.map(function (s) {
+    return '<a href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.label) + "</a>";
+  }).join("");
+
+  $("footNote").textContent = T.host + "。" + D.meta.note + "　" + T.recordNote;
+})();
+</script>
