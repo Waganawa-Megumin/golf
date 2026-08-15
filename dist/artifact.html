@@ -258,6 +258,20 @@
   .half .v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 21px; }
   .half.hi .v { color: var(--under); }
 
+  .rtabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  button.rtab {
+    font-family: var(--f-jp); font-size: 12.5px; font-weight: 700;
+    min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+    display: inline-flex; align-items: baseline; gap: 7px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+    transition: background .16s ease, border-color .16s ease, color .16s ease;
+  }
+  button.rtab:hover { border-color: var(--ink-3); }
+  button.rtab[aria-selected="true"] {
+    border-color: var(--under); color: var(--under);
+    background: color-mix(in srgb, var(--under) 8%, var(--surface));
+  }
+  button.rtab .rt-s { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 15px; }
   .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   button.ctl {
     font-family: var(--f-jp); font-size: 12.5px; font-weight: 700;
@@ -474,8 +488,8 @@
 <script type="application/json" id="dataset">
 {
   "meta": {
-    "generatedAt": "2026-08-15T18:00+09:00",
-    "generatedAtLabel": "2026年8月15日(土) 18:00",
+    "generatedAt": "2026-08-15T21:15+09:00",
+    "generatedAtLabel": "2026年8月15日(土) 21:15",
     "roundStatus": "R2 FINAL",
     "roundStatusLabel": "第2ラウンド終了",
     "nextRound": "最終ラウンドは8月16日(日)。7打差の単独首位から、ツアー3勝目に挑みます。",
@@ -531,134 +545,6 @@
     ],
     "hostessNote": "NEC所属のホステスプロとして自社主催大会に出場"
   },
-  "round1": {
-    "date": "2026年8月14日(金)",
-    "score": 61,
-    "toPar": -11,
-    "out": 31,
-    "in": 30,
-    "birdies": 11,
-    "bogeys": 0,
-    "position": "単独首位",
-    "margin": 2,
-    "records": [
-      "大会コースレコードタイ（2023年 神谷そらの61に並ぶ）",
-      "レギュラーツアー自己ベスト更新（従来の65を4打短縮）"
-    ],
-    "quote": "気付けば、という感じ。集中してできたのは良かった",
-    "quoteExtra": "自己採点は99点",
-    "backstory": "前日、コーチの大西翔太に「ショットが右に出る」と相談。トラックマンを使い『狙った距離に合わせる』練習に切り替えたことが一撃の修正になった。",
-    "holes": [
-      {
-        "h": 1,
-        "result": "par",
-        "cum": 0,
-        "note": "ティーショットは右へ。それでもパーセーブでしのぐ、静かな立ち上がり。"
-      },
-      {
-        "h": 2,
-        "result": "birdie",
-        "cum": -1,
-        "note": "2番（パー5）でこの日最初のバーディ。ここからスイッチが入る。"
-      },
-      {
-        "h": 3,
-        "result": "birdie",
-        "cum": -2,
-        "note": "連続バーディ。前半のリズムを一気につかむ。"
-      },
-      {
-        "h": 4,
-        "result": "par",
-        "cum": -2,
-        "note": "無理をしない、落ち着いた1ホール。"
-      },
-      {
-        "h": 5,
-        "result": "par",
-        "cum": -2,
-        "note": "パーセーブ。次の爆発へ助走。"
-      },
-      {
-        "h": 6,
-        "result": "birdie",
-        "cum": -3,
-        "note": "6番から3連続バーディ、その1つ目。"
-      },
-      {
-        "h": 7,
-        "result": "birdie",
-        "cum": -4,
-        "note": "6番から2つ連続。ショットが完全にかみ合ってきた。"
-      },
-      {
-        "h": 8,
-        "result": "birdie",
-        "cum": -5,
-        "note": "3連続で締め、前半だけで5バーディ。"
-      },
-      {
-        "h": 9,
-        "result": "par",
-        "cum": -5,
-        "note": "OUT 31で折り返し。この時点でも十分な好スコア。"
-      },
-      {
-        "h": 10,
-        "result": "par",
-        "cum": -5,
-        "note": "後半の入りはパー。嵐の前の静けさ。"
-      },
-      {
-        "h": 11,
-        "result": "birdie",
-        "cum": -6,
-        "note": "ここから怒濤の5連続バーディが始まる。"
-      },
-      {
-        "h": 12,
-        "result": "birdie",
-        "cum": -7,
-        "note": "連続の2つ目。通算7アンダー、勢いが止まらない。"
-      },
-      {
-        "h": 13,
-        "result": "birdie",
-        "cum": -8,
-        "note": "11番から3連続。ここで通算8アンダーまで伸ばす。"
-      },
-      {
-        "h": 14,
-        "result": "birdie",
-        "cum": -9,
-        "note": "11番から4連続。二桁アンダーが射程に。"
-      },
-      {
-        "h": 15,
-        "result": "birdie",
-        "cum": -10,
-        "note": "5連続で締めて二桁アンダー到達。"
-      },
-      {
-        "h": 16,
-        "result": "par",
-        "cum": -10,
-        "note": "ここでもう自己ベストは大幅更新。"
-      },
-      {
-        "h": 17,
-        "result": "par",
-        "cum": -10,
-        "note": "残り1ホール、記録が視界に入る。"
-      },
-      {
-        "h": 18,
-        "result": "birdie",
-        "cum": -11,
-        "note": "最終18番もバーディ。IN 30、トータル61で大会コースレコードタイ。"
-      }
-    ]
-  },
   "leaderboard": {
     "asOf": "第2ラウンド終了",
     "columnLabel": "トータル",
@@ -695,16 +581,16 @@
         "label": "⋯ カットライン＝通算2アンダー ／ 62人が決勝ラウンドへ進出"
       },
       {
-        "pos": "通過",
+        "pos": "T50",
         "name": "桑木 志帆",
         "toPar": -2,
         "score": 142,
         "watch": true,
-        "note": "AIG全英女子オープン覇者。カットライン上でぎりぎり予選通過"
+        "note": "AIG全英女子オープン覇者。カットライン上の通算2アンダー・50位タイで予選通過"
       }
     ],
     "namesNote": "-12グループの残り2名は日本語表記を確認できなかったため人数表記にまとめています。ストローク数は par144 と対パーから算出しています。",
-    "watchNote": "桑木 志帆はカットライン上で予選通過"
+    "watchNote": "桑木 志帆は50位タイ・カットライン上で予選通過"
   },
   "stats2026": {
     "asOf": "2026年8月（NEC軽井沢72 開幕前時点）",
@@ -845,6 +731,11 @@
       "body": "2003年ミズノクラシックでアニカ・ソレンスタムがマークした126が、JLPGAツアーの36ホール最少ストロークだった。61+64=125。パー72換算で通算19アンダー、2位との差は7打。"
     },
     {
+      "kind": "insight",
+      "title": "バッグを担ぐのは姉・安田美有さん",
+      "body": "この週、キャディを務めているのは姉の安田美有さん。初日18番のバーディ後には2人でグータッチを交わした。“姉妹タッグ”で、自社主催大会での完全優勝に7打差のリードを持って最終日を迎える。"
+    },
+    {
       "title": "シーズン平均から −11.7 打の外れ値",
       "body": "2026年の平均ストロークは72.7。この日の61は自身のシーズン平均を11.7打も下回る。1試合の中の1ラウンドとしては、統計的にほぼ“別人”の域。",
       "kind": "stat"
@@ -855,8 +746,8 @@
       "kind": "stat"
     },
     {
-      "title": "ボギーゼロが本質",
-      "body": "パーセーブ率80.9%（49位）は今季の課題ポイント。その課題日にノーボギーで回った意味は大きい。1番でティーショットを右に曲げながらパーセーブしたのが、この日の“隠れたハイライト”。",
+      "title": "37ホール目まで、ひとつも落とさなかった",
+      "body": "パーセーブ率80.9%（ツアー49位）は今季の課題ポイント。その課題を抱えたまま、初日18ホールと2日目3ホールの計37ホールを無失点で通過した。今大会初のボギーは2日目の4番。しかもその1打は、次の5番のバーディで即座に取り返している。",
       "kind": "insight"
     },
     {
@@ -930,6 +821,24 @@
       "url": "https://www.alba.co.jp/articles/category/tour/jlpga/post/qmisn6ex-rb3/",
       "date": "2026-08-15",
       "kind": "一次媒体"
+    },
+    {
+      "label": "東スポWEB：安田祐香 初日61に続く64で7差独走！ 全英女子制覇・桑木志帆は50位で予選突破",
+      "url": "https://www.tokyo-sports.co.jp/articles/-/399599",
+      "date": "2026-08-15",
+      "kind": "一次媒体"
+    },
+    {
+      "label": "ALBA Net：安田祐香が米ツアー72勝のレジェンドの記録を更新「うれしい」 姉妹タッグで完全Vへ7打リード",
+      "url": "https://news.yahoo.co.jp/articles/9ac334df1503f19a96fd9f95dfb1391c6112f962",
+      "date": "2026-08-15",
+      "kind": "配信先"
+    },
+    {
+      "label": "スポーツナビ：安田祐香 36Hツアー新記録「125」で首位キープ",
+      "url": "https://sports.yahoo.co.jp/official/detail/2026081500015-spnaviow",
+      "date": "2026-08-15",
+      "kind": "配信先"
     },
     {
       "label": "JLPGA 日本女子プロゴルフ協会：安田祐香 コースレコードタイ61で首位発進",
@@ -1035,52 +944,282 @@
     "margin": 7,
     "position": "単独首位",
     "records": [
-      "36ホール125ストロークはJLPGAツアー新記録（2003年ミズノクラシックでアニカ・ソレンスタムがマークした126を23年ぶりに更新）",
+      "36ホール125ストローク（通算19アンダー）はJLPGAツアー新記録。2003年ミズノクラシックでアニカ・ソレンスタムがマークした126（18アンダー）を23年ぶりに更新",
       "初日の61は大会コースレコードタイ（2023年 神谷そら）"
     ]
   },
   "rounds": [
     {
-      "n": 1,
-      "label": "第1ラウンド",
-      "date": "8/14(金)",
+      "date": "2026年8月14日(金)",
       "score": 61,
       "toPar": -11,
+      "out": 31,
+      "in": 30,
       "birdies": 11,
       "bogeys": 0,
-      "note": "大会コースレコードタイ",
-      "hasHoles": true
+      "position": "単独首位",
+      "margin": 2,
+      "records": [
+        "大会コースレコードタイ（2023年 神谷そらの61に並ぶ）",
+        "レギュラーツアー自己ベスト更新（従来の65を4打短縮）"
+      ],
+      "quote": "気付けば、という感じ。集中してできたのは良かった",
+      "quoteExtra": "自己採点は99点",
+      "backstory": "前日、コーチの大西翔太に「ショットが右に出る」と相談。トラックマンを使い『狙った距離に合わせる』練習に切り替えたことが一撃の修正になった。",
+      "holes": [
+        {
+          "h": 1,
+          "result": "par",
+          "cum": 0,
+          "note": "ティーショットは右へ。それでもパーセーブでしのぐ、静かな立ち上がり。"
+        },
+        {
+          "h": 2,
+          "result": "birdie",
+          "cum": -1,
+          "note": "2番（パー5）でこの日最初のバーディ。ここからスイッチが入る。"
+        },
+        {
+          "h": 3,
+          "result": "birdie",
+          "cum": -2,
+          "note": "連続バーディ。前半のリズムを一気につかむ。"
+        },
+        {
+          "h": 4,
+          "result": "par",
+          "cum": -2,
+          "note": "無理をしない、落ち着いた1ホール。"
+        },
+        {
+          "h": 5,
+          "result": "par",
+          "cum": -2,
+          "note": "パーセーブ。次の爆発へ助走。"
+        },
+        {
+          "h": 6,
+          "result": "birdie",
+          "cum": -3,
+          "note": "6番から3連続バーディ、その1つ目。"
+        },
+        {
+          "h": 7,
+          "result": "birdie",
+          "cum": -4,
+          "note": "6番から2つ連続。ショットが完全にかみ合ってきた。"
+        },
+        {
+          "h": 8,
+          "result": "birdie",
+          "cum": -5,
+          "note": "3連続で締め、前半だけで5バーディ。"
+        },
+        {
+          "h": 9,
+          "result": "par",
+          "cum": -5,
+          "note": "OUT 31で折り返し。この時点でも十分な好スコア。"
+        },
+        {
+          "h": 10,
+          "result": "par",
+          "cum": -5,
+          "note": "後半の入りはパー。嵐の前の静けさ。"
+        },
+        {
+          "h": 11,
+          "result": "birdie",
+          "cum": -6,
+          "note": "ここから怒濤の5連続バーディが始まる。"
+        },
+        {
+          "h": 12,
+          "result": "birdie",
+          "cum": -7,
+          "note": "連続の2つ目。通算7アンダー、勢いが止まらない。"
+        },
+        {
+          "h": 13,
+          "result": "birdie",
+          "cum": -8,
+          "note": "11番から3連続。ここで通算8アンダーまで伸ばす。"
+        },
+        {
+          "h": 14,
+          "result": "birdie",
+          "cum": -9,
+          "note": "11番から4連続。二桁アンダーが射程に。"
+        },
+        {
+          "h": 15,
+          "result": "birdie",
+          "cum": -10,
+          "note": "5連続で締めて二桁アンダー到達。"
+        },
+        {
+          "h": 16,
+          "result": "par",
+          "cum": -10,
+          "note": "ここでもう自己ベストは大幅更新。"
+        },
+        {
+          "h": 17,
+          "result": "par",
+          "cum": -10,
+          "note": "残り1ホール、記録が視界に入る。"
+        },
+        {
+          "h": 18,
+          "result": "birdie",
+          "cum": -11,
+          "note": "最終18番もバーディ。IN 30、トータル61で大会コースレコードタイ。"
+        }
+      ],
+      "n": 1,
+      "label": "第1ラウンド",
+      "short": "8/14(金)",
+      "headline": "大会コースレコードタイ"
     },
     {
       "n": 2,
       "label": "第2ラウンド",
-      "date": "8/15(土)",
+      "short": "8/15(土)",
+      "date": "2026年8月15日(土)",
       "score": 64,
       "toPar": -8,
+      "out": 33,
+      "in": 31,
       "birdies": 9,
       "bogeys": 1,
-      "note": "36ホール125＝ツアー新記録",
-      "hasHoles": false
+      "position": "単独首位",
+      "margin": 7,
+      "headline": "36ホール125＝ツアー新記録",
+      "records": [
+        "36ホール125ストロークはJLPGAツアー新記録",
+        "2日間37ホール目まで無失点（4番が今大会初ボギー）"
+      ],
+      "quote": "フフフ、うれしいです",
+      "quoteExtra": "ショットがキレキレで、パットも入ってくれている。最終日はまたイチから頑張りたいです",
+      "holes": [
+        {
+          "h": 1,
+          "result": "par",
+          "cum": 0,
+          "note": "静かな立ち上がり。前日の勢いをいきなりは出さない。"
+        },
+        {
+          "h": 2,
+          "result": "par",
+          "cum": 0,
+          "note": "パー。パー5を無理せずパーで通過。"
+        },
+        {
+          "h": 3,
+          "result": "birdie",
+          "cum": -1,
+          "note": "この日最初のバーディ。"
+        },
+        {
+          "h": 4,
+          "result": "bogey",
+          "cum": 0,
+          "note": "今大会初のボギー。2日間37ホール目にして初めてスコアを落とす。"
+        },
+        {
+          "h": 5,
+          "result": "birdie",
+          "cum": -1,
+          "note": "すぐ取り返すバーディ。落とした1打を1ホールで戻す。"
+        },
+        {
+          "h": 6,
+          "result": "birdie",
+          "cum": -2,
+          "note": "連続バーディ。ここで前日の流れに戻る。"
+        },
+        {
+          "h": 7,
+          "result": "par",
+          "cum": -2,
+          "note": "パー。"
+        },
+        {
+          "h": 8,
+          "result": "par",
+          "cum": -2,
+          "note": "パー。"
+        },
+        {
+          "h": 9,
+          "result": "birdie",
+          "cum": -3,
+          "note": "バーディで締めてOUT 33。ボギー1つを含めて4つ伸ばす。"
+        },
+        {
+          "h": 10,
+          "result": "par",
+          "cum": -3,
+          "note": "後半の入りはパー。"
+        },
+        {
+          "h": 11,
+          "result": "birdie",
+          "cum": -4,
+          "note": "バーディ。前日と同じ11番から動き出す。"
+        },
+        {
+          "h": 12,
+          "result": "par",
+          "cum": -4,
+          "note": "パー。"
+        },
+        {
+          "h": 13,
+          "result": "birdie",
+          "cum": -5,
+          "note": "バーディ。通算15アンダーへ。"
+        },
+        {
+          "h": 14,
+          "result": "par",
+          "cum": -5,
+          "note": "パー。"
+        },
+        {
+          "h": 15,
+          "result": "birdie",
+          "cum": -6,
+          "note": "バーディ。ここから3連続が始まる。"
+        },
+        {
+          "h": 16,
+          "result": "birdie",
+          "cum": -7,
+          "note": "連続の2つ目。通算18アンダー。"
+        },
+        {
+          "h": 17,
+          "result": "birdie",
+          "cum": -8,
+          "note": "3連続で締め、通算19アンダー到達。ツアー新記録が確定的に。"
+        },
+        {
+          "h": 18,
+          "result": "par",
+          "cum": -8,
+          "note": "パー。IN 31、この日は64。36ホール125ストローク。"
+        }
+      ]
     },
     {
       "n": 3,
       "label": "最終ラウンド",
-      "date": "8/16(日)",
+      "short": "8/16(日)",
       "pending": true,
-      "note": "7打差の単独首位から"
+      "headline": "7打差の単独首位から"
     }
-  ],
-  "round2": {
-    "date": "2026年8月15日(土)",
-    "score": 64,
-    "toPar": -8,
-    "birdies": 9,
-    "bogeys": 1,
-    "position": "単独首位",
-    "quote": "フフフ、うれしいです",
-    "quoteExtra": "ショットがキレキレで、パットも入ってくれている。最終日はまたイチから頑張りたいです",
-    "holesNote": "第2ラウンドのホール別スコアは、参照できた公開ソースでは確認できませんでした。ホールごとのリプレイは第1ラウンドのものです。"
-  }
+  ]
 }
 </script>
 
@@ -1136,6 +1275,7 @@
       <div class="card">
         <div class="card-head">
           <span class="eyebrow" id="replayEyebrow"></span>
+          <div class="rtabs" id="rtabs" role="tablist" aria-label="表示するラウンド"></div>
           <div class="controls">
             <button class="ctl primary" id="btnPlay" type="button" aria-pressed="false">▶ 再生</button>
             <button class="ctl" id="btnAll" type="button">全18ホールを表示</button>
@@ -1296,7 +1436,7 @@
 (function () {
   "use strict";
   var D = JSON.parse(document.getElementById("dataset").textContent);
-  var T = D.tournament, P = D.player, R = D.round1;
+  var T = D.tournament, P = D.player, TT = D.total;
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
   var sign = function (n) { return n === 0 ? "E" : (n > 0 ? "+" + n : "−" + Math.abs(n)); };
@@ -1304,9 +1444,16 @@
   /* ---- スコア種別。未知のキーは黙って par に落とさず、そのまま出して警告する ---- */
   var GLYPH = { eagle: "◎", birdie: "○", par: "−", bogey: "□", dbogey: "■" };
   var JA    = { eagle: "イーグル", birdie: "バーディ", par: "パー", bogey: "ボギー", dbogey: "ダブルボギー" };
+  var ORDER = ["eagle", "birdie", "par", "bogey", "dbogey"];
   var seenUnknown = {};
   function glyphOf(r) { if (!GLYPH[r] && !seenUnknown[r]) { seenUnknown[r] = 1; console.warn("unknown result: " + r); } return GLYPH[r] || "?"; }
   function jaOf(r) { return JA[r] || r; }
+
+  /* ---- ラウンド ---- */
+  var PLAYED = D.rounds.filter(function (r) { return !r.pending; });
+  var PLAYABLE = PLAYED.filter(function (r) { return r.holes && r.holes.length; });
+  var R = PLAYABLE[PLAYABLE.length - 1];          // 既定は最新のラウンド
+  var lastRound = PLAYED[PLAYED.length - 1];
 
   /* ---- rail ---- */
   $("railName").textContent = T.edition + " " + T.name;
@@ -1319,11 +1466,8 @@
     "<br><span style=\"color:var(--ink-3)\">" + esc(D.meta.dataAsOf) + "／最終更新 " + esc(D.meta.generatedAtLabel) + "</span>";
 
   /* ---- hero ---- */
-  var TT = D.total;
-  var doneRounds = D.rounds.filter(function (r) { return !r.pending; });
-  var lastRound = doneRounds[doneRounds.length - 1];
   $("heroEyebrow").textContent =
-    "Round " + lastRound.n + " / " + D.rounds.length + " · " + lastRound.date + " 終了 · " + TT.position;
+    "Round " + lastRound.n + " / " + D.rounds.length + " · " + lastRound.short + " 終了 · " + TT.position;
   $("heroName").textContent = P.name;
   $("heroNameSub").textContent = P.kana + "（" + P.nickname + "）／ " + P.affiliation;
   $("heroToPar").textContent = sign(TT.toPar);
@@ -1335,77 +1479,86 @@
 
   $("rounds").innerHTML = D.rounds.map(function (r) {
     if (r.pending) {
-      return '<div class="rd pending"><span class="rd-k">' + esc(r.label) + " " + esc(r.date) + "</span>" +
+      return '<div class="rd pending"><span class="rd-k">' + esc(r.label) + " " + esc(r.short) + "</span>" +
         '<span class="rd-v"><span class="rd-s">明日</span></span>' +
-        (r.note ? '<span class="rd-n">' + esc(r.note) + "</span>" : "") + "</div>";
+        (r.headline ? '<span class="rd-n">' + esc(r.headline) + "</span>" : "") + "</div>";
     }
-    return '<div class="rd"><span class="rd-k">' + esc(r.label) + " " + esc(r.date) + "</span>" +
+    return '<div class="rd"><span class="rd-k">' + esc(r.label) + " " + esc(r.short) + "</span>" +
       '<span class="rd-v"><span class="rd-s">' + r.score + '</span><span class="rd-p">' + sign(r.toPar) + "</span></span>" +
       '<span class="rd-n">' + r.birdies + "バーディ" + (r.bogeys ? " / " + r.bogeys + "ボギー" : " / ノーボギー") +
-      (r.note ? "　" + esc(r.note) : "") + "</span></div>";
+      (r.headline ? "　" + esc(r.headline) : "") + "</span></div>";
   }).join("");
 
-  var pills = [{ t: TT.through, c: "" }]
+  $("heroPills").innerHTML = [{ t: TT.through, c: "" }]
     .concat(TT.records.map(function (r) { return { t: r, c: "cool" }; }))
-    .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }]);
-  $("heroPills").innerHTML = pills.map(function (p) { return '<span class="pill ' + p.c + '">' + esc(p.t) + "</span>"; }).join("");
+    .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }])
+    .map(function (p) { return '<span class="pill ' + p.c + '">' + esc(p.t) + "</span>"; }).join("");
 
-  /* ---- hole strip ---- */
-  var strip = $("strip");
-  strip.innerHTML = R.holes.map(function (h) {
-    return '<div class="hcell ' + esc(h.result) + '" role="listitem" ' +
-      'aria-label="' + h.h + "番 " + esc(jaOf(h.result)) + " 通算" + sign(h.cum) + '">' +
-      '<span class="hno">' + h.h + "</span>" +
-      '<span class="glyph">' + glyphOf(h.result) + "</span>" +
-      '<span class="cum">' + sign(h.cum) + "</span></div>";
+  /* ---- ラウンド切替タブ ---- */
+  $("rtabs").innerHTML = PLAYABLE.map(function (r) {
+    return '<button class="rtab" type="button" role="tab" data-n="' + r.n + '" aria-selected="false">' +
+      esc(r.label.replace("ラウンド", "R")) + '<span class="rt-s">' + r.score + "</span></button>";
   }).join("");
-  var cells = Array.prototype.slice.call(strip.children);
-  $("replayEyebrow").textContent = "Round 1 Replay ／ 初日「" + R.score + "」のホールごとの振り返り";
-  $("replayNote").textContent = D.round2 && D.round2.holesNote ? D.round2.holesNote : "";
+  var tabs = Array.prototype.slice.call($("rtabs").children);
 
-  /* 凡例はデータに実在する種別からだけ作る */
-  var kinds = [];
-  R.holes.forEach(function (h) { if (kinds.indexOf(h.result) === -1) kinds.push(h.result); });
-  var order = ["eagle", "birdie", "par", "bogey", "dbogey"];
-  kinds.sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); });
-  $("stripLegend").innerHTML = kinds.map(function (k) {
-    return '<span><i class="swatch ' + esc(k) + '"></i>' + esc(jaOf(k)) + "（" + glyphOf(k) + "）</span>";
-  }).join("") + "<span>※ 日本のリーダーボード慣習に合わせ、アンダーパーを赤で表示</span>";
+  /* ---- 以下、ラウンドごとに作り直す部分 ---- */
+  var strip = $("strip"), svg = $("chart"), ticker = $("ticker"), tickJump = $("tickJump"), tickLive = $("tickLive");
+  var cells = [], pts = [], yAt = null, W = 0, H = 0;
+  var tFill, tLine, tCap, tLbl;
+  var idx = -1, timer = null, playing = false, started = false, io = null, announce = false;
+  var mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var btnPlay = $("btnPlay");
 
-  /* ---- chart ---- */
-  var svg = $("chart");
-  svg.setAttribute("aria-label",
-    "第1ラウンドの累積スコア推移。1番から18番までの積み重ねで最終的に" + sign(R.toPar) + "。");
-  var narrow = window.matchMedia("(max-width: 640px)").matches;
-  var W = narrow ? Math.max(280, svg.parentNode.clientWidth || 320) : 720;
-  var H = narrow ? 150 : 168;
-  var ML = 34, MR = narrow ? 40 : 46, MT = 16, MB = 24;
-  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  function buildStrip() {
+    strip.innerHTML = R.holes.map(function (h) {
+      return '<div class="hcell ' + esc(h.result) + '" role="listitem" ' +
+        'aria-label="' + h.h + "番 " + esc(jaOf(h.result)) + " 通算" + sign(h.cum) + '">' +
+        '<span class="hno">' + h.h + "</span>" +
+        '<span class="glyph">' + glyphOf(h.result) + "</span>" +
+        '<span class="cum">' + sign(h.cum) + "</span></div>";
+    }).join("");
+    cells = Array.prototype.slice.call(strip.children);
 
-  var cums = R.holes.map(function (h) { return h.cum; });
-  var minY = Math.min.apply(null, cums) - 1;
-  var maxY = Math.max(0.6, Math.max.apply(null, cums) + 0.6);
-  var xAt = function (i) { return ML + (W - ML - MR) * (i / (R.holes.length - 1)); };
-  var yAt = function (v) { return MT + (H - MT - MB) * ((maxY - v) / (maxY - minY)); };
-  var pts = R.holes.map(function (h, i) { return [xAt(i), yAt(h.cum)]; });
+    var kinds = [];
+    R.holes.forEach(function (h) { if (kinds.indexOf(h.result) === -1) kinds.push(h.result); });
+    kinds.sort(function (a, b) { return ORDER.indexOf(a) - ORDER.indexOf(b); });
+    $("stripLegend").innerHTML = kinds.map(function (k) {
+      return '<span><i class="swatch ' + esc(k) + '"></i>' + esc(jaOf(k)) + "（" + glyphOf(k) + "）</span>";
+    }).join("") + "<span>※ 日本のリーダーボード慣習に合わせ、アンダーパーを赤で表示</span>";
+  }
 
-  var ticksY = [];
-  for (var v = 0; v >= Math.ceil(minY); v -= 3) ticksY.push(v);
-  var chrome = "";
-  ticksY.forEach(function (v) {
-    chrome += '<line class="grid-line" x1="' + ML + '" y1="' + yAt(v).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(v).toFixed(1) + '"/>';
-    chrome += '<text class="tick-txt" x="' + (ML - 8) + '" y="' + (yAt(v) + 3).toFixed(1) + '" text-anchor="end">' + sign(v) + "</text>";
-  });
-  chrome += '<line class="axis-line" x1="' + ML + '" y1="' + yAt(0).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(0).toFixed(1) + '"/>';
-  (narrow ? [1, 9, 18] : [1, 5, 9, 14, 18]).forEach(function (n) {
-    chrome += '<text class="tick-txt" x="' + xAt(n - 1).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle">' + n + "H</text>";
-  });
-  svg.innerHTML = chrome +
-    '<path class="trace-fill" id="tFill" d=""/>' +
-    '<path class="trace" id="tLine" d=""/>' +
-    '<circle class="endcap" id="tCap" r="4.5" cx="0" cy="0" style="display:none"/>' +
-    '<text class="endlabel" id="tLbl" x="0" y="0" style="display:none"></text>';
-  var tFill = $("tFill"), tLine = $("tLine"), tCap = $("tCap"), tLbl = $("tLbl");
+  function buildChart() {
+    svg.setAttribute("aria-label",
+      R.label + "の累積スコア推移。1番から18番までの積み重ねで最終的に" + sign(R.toPar) + "。");
+    var narrow = window.matchMedia("(max-width: 640px)").matches;
+    W = narrow ? Math.max(280, svg.parentNode.clientWidth || 320) : 720;
+    H = narrow ? 150 : 168;
+    var ML = 34, MR = narrow ? 40 : 46, MT = 16, MB = 24;
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+
+    var cums = R.holes.map(function (h) { return h.cum; });
+    var minY = Math.min.apply(null, cums) - 1;
+    var maxY = Math.max(0.6, Math.max.apply(null, cums) + 0.6);
+    var xAt = function (i) { return ML + (W - ML - MR) * (i / (R.holes.length - 1)); };
+    yAt = function (v) { return MT + (H - MT - MB) * ((maxY - v) / (maxY - minY)); };
+    pts = R.holes.map(function (h, i) { return [xAt(i), yAt(h.cum)]; });
+
+    var chrome = "";
+    for (var v = 0; v >= Math.ceil(minY); v -= 3) {
+      chrome += '<line class="grid-line" x1="' + ML + '" y1="' + yAt(v).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(v).toFixed(1) + '"/>';
+      chrome += '<text class="tick-txt" x="' + (ML - 8) + '" y="' + (yAt(v) + 3).toFixed(1) + '" text-anchor="end">' + sign(v) + "</text>";
+    }
+    chrome += '<line class="axis-line" x1="' + ML + '" y1="' + yAt(0).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(0).toFixed(1) + '"/>';
+    (narrow ? [1, 9, 18] : [1, 5, 9, 14, 18]).forEach(function (n) {
+      chrome += '<text class="tick-txt" x="' + xAt(n - 1).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle">' + n + "H</text>";
+    });
+    svg.innerHTML = chrome +
+      '<path class="trace-fill" id="tFill" d=""/>' +
+      '<path class="trace" id="tLine" d=""/>' +
+      '<circle class="endcap" id="tCap" r="4.5" cx="0" cy="0" style="display:none"/>' +
+      '<text class="endlabel" id="tLbl" x="0" y="0" style="display:none"></text>';
+    tFill = $("tFill"); tLine = $("tLine"); tCap = $("tCap"); tLbl = $("tLbl");
+  }
 
   function drawChart(upTo) {
     if (upTo < 0) { tLine.setAttribute("d", ""); tFill.setAttribute("d", ""); tCap.style.display = "none"; tLbl.style.display = "none"; return; }
@@ -1420,24 +1573,19 @@
   }
 
   /* ---- ticker ---- */
-  var ticker = $("ticker"), tickJump = $("tickJump"), tickLive = $("tickLive");
-  var announce = false;
   function resetTicker() {
     ticker.innerHTML = '<p class="empty">「再生」を押すと、1番から18番まで順に振り返ります。</p>';
     tickJump.hidden = true;
   }
-  function rowFor(h) {
+  function pushTick(h, lead) {
+    if (ticker.querySelector(".empty")) ticker.innerHTML = "";
     var row = document.createElement("div");
     row.className = "tick";
     row.innerHTML = '<span class="th">' + h.h + "H</span>" +
       '<span class="tr ' + esc(h.result) + '">' + esc(jaOf(h.result)) + "</span>" +
       '<span class="tt">' + esc(h.note) + '　<b class="num" style="color:var(--under)">' + sign(h.cum) + "</b></span>";
-    return row;
-  }
-  function pushTick(h, lead) {
-    if (ticker.querySelector(".empty")) ticker.innerHTML = "";
     var stick = ticker.scrollTop < 8;
-    ticker.insertBefore(rowFor(h), ticker.firstChild);
+    ticker.insertBefore(row, ticker.firstChild);
     if (stick) { ticker.scrollTop = 0; tickJump.hidden = true; }
     else { tickJump.hidden = false; tickJump.textContent = "↑ 最新 " + h.h + "H"; }
     if (lead) {
@@ -1451,10 +1599,6 @@
   });
 
   /* ---- replay engine ---- */
-  var idx = -1, timer = null, playing = false, started = false, io = null;
-  var mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var btnPlay = $("btnPlay");
-
   function tiles(i) {
     var upto = i < 0 ? [] : R.holes.slice(0, i + 1);
     var count = function (kind) { return upto.filter(function (h) { return h.result === kind; }).length; };
@@ -1479,7 +1623,8 @@
   function delayFor(i) {
     if (i === 17) return 1600;
     if (i === 7 || i === 14) return 1300;
-    return R.holes[i].result === "birdie" || R.holes[i].result === "eagle" ? 880 : 520;
+    var r = R.holes[i].result;
+    return r === "birdie" || r === "eagle" || r === "bogey" || r === "dbogey" ? 880 : 520;
   }
   function step() {
     idx++;
@@ -1510,32 +1655,48 @@
     ticker.classList.remove("expanded");
   }
   function showAll() {
-    stop(true); resetTicker(); ticker.innerHTML = "";
+    stop(true); ticker.innerHTML = "";
     R.holes.slice().reverse().forEach(function (h) { pushTick(h, false); });
     ticker.classList.add("expanded");
     tickJump.hidden = true;
     idx = 17; paint(17); tilesFinal();
     btnPlay.textContent = "▶ もう一度";
     btnPlay.setAttribute("aria-pressed", "false");
-    if (announce) tickLive.textContent = "18ホール分を表示しました。トータル" + R.score + "、" + Math.abs(R.toPar) + "アンダー";
+    if (announce) tickLive.textContent = "18ホール分を表示しました。" + R.label + "はトータル" + R.score + "、" + sign(R.toPar);
   }
   function claimUserControl() { started = true; if (io) { io.disconnect(); io = null; } announce = true; }
 
+  /* ---- ラウンドの読み込み ---- */
+  function loadRound(n, autoplay) {
+    stop(false);
+    R = PLAYABLE.filter(function (r) { return r.n === n; })[0] || R;
+    tabs.forEach(function (t) { t.setAttribute("aria-selected", String(+t.dataset.n === R.n)); });
+    $("replayEyebrow").textContent = "Replay ／ " + R.label + "「" + R.score + "」のホールごとの振り返り";
+    $("replayNote").textContent = R.holesNote || "";
+    buildStrip(); buildChart();
+    idx = -1; resetTicker(); paint(-1);
+    if (autoplay) { mqReduce.matches ? showAll() : play(); }
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      claimUserControl();
+      loadRound(+t.dataset.n, true);
+    });
+  });
   btnPlay.addEventListener("click", function () { claimUserControl(); playing ? stop(false) : play(); });
   $("btnAll").addEventListener("click", function () { claimUserControl(); showAll(); });
   $("btnReset").addEventListener("click", function () { claimUserControl(); reset(); play(); });
 
+  loadRound(R.n, false);
   if (mqReduce.matches) {
     showAll();
-  } else {
-    paint(-1);
-    if ("IntersectionObserver" in window) {
-      io = new IntersectionObserver(function (e) {
-        if (e[0].isIntersecting && !started) { started = true; io.disconnect(); io = null; play(); }
-      }, { threshold: 0.6 });
-      io.observe(strip);
-    } else { play(); }
-  }
+  } else if ("IntersectionObserver" in window) {
+    io = new IntersectionObserver(function (e) {
+      if (e[0].isIntersecting && !started) { started = true; io.disconnect(); io = null; play(); }
+    }, { threshold: 0.6 });
+    io.observe(strip);
+  } else { play(); }
 
   /* ---- leaderboard ---- */
   $("lbColHead").textContent = D.leaderboard.columnLabel || "R1";

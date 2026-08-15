@@ -258,6 +258,20 @@
   .half .v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 21px; }
   .half.hi .v { color: var(--under); }
 
+  .rtabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  button.rtab {
+    font-family: var(--f-jp); font-size: 12.5px; font-weight: 700;
+    min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+    display: inline-flex; align-items: baseline; gap: 7px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+    transition: background .16s ease, border-color .16s ease, color .16s ease;
+  }
+  button.rtab:hover { border-color: var(--ink-3); }
+  button.rtab[aria-selected="true"] {
+    border-color: var(--under); color: var(--under);
+    background: color-mix(in srgb, var(--under) 8%, var(--surface));
+  }
+  button.rtab .rt-s { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 15px; }
   .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   button.ctl {
     font-family: var(--f-jp); font-size: 12.5px; font-weight: 700;
@@ -527,6 +541,7 @@ __DATA__
       <div class="card">
         <div class="card-head">
           <span class="eyebrow" id="replayEyebrow"></span>
+          <div class="rtabs" id="rtabs" role="tablist" aria-label="表示するラウンド"></div>
           <div class="controls">
             <button class="ctl primary" id="btnPlay" type="button" aria-pressed="false">▶ 再生</button>
             <button class="ctl" id="btnAll" type="button">全18ホールを表示</button>
@@ -687,7 +702,7 @@ __DATA__
 (function () {
   "use strict";
   var D = JSON.parse(document.getElementById("dataset").textContent);
-  var T = D.tournament, P = D.player, R = D.round1;
+  var T = D.tournament, P = D.player, TT = D.total;
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
   var sign = function (n) { return n === 0 ? "E" : (n > 0 ? "+" + n : "−" + Math.abs(n)); };
@@ -695,9 +710,16 @@ __DATA__
   /* ---- スコア種別。未知のキーは黙って par に落とさず、そのまま出して警告する ---- */
   var GLYPH = { eagle: "◎", birdie: "○", par: "−", bogey: "□", dbogey: "■" };
   var JA    = { eagle: "イーグル", birdie: "バーディ", par: "パー", bogey: "ボギー", dbogey: "ダブルボギー" };
+  var ORDER = ["eagle", "birdie", "par", "bogey", "dbogey"];
   var seenUnknown = {};
   function glyphOf(r) { if (!GLYPH[r] && !seenUnknown[r]) { seenUnknown[r] = 1; console.warn("unknown result: " + r); } return GLYPH[r] || "?"; }
   function jaOf(r) { return JA[r] || r; }
+
+  /* ---- ラウンド ---- */
+  var PLAYED = D.rounds.filter(function (r) { return !r.pending; });
+  var PLAYABLE = PLAYED.filter(function (r) { return r.holes && r.holes.length; });
+  var R = PLAYABLE[PLAYABLE.length - 1];          // 既定は最新のラウンド
+  var lastRound = PLAYED[PLAYED.length - 1];
 
   /* ---- rail ---- */
   $("railName").textContent = T.edition + " " + T.name;
@@ -710,11 +732,8 @@ __DATA__
     "<br><span style=\"color:var(--ink-3)\">" + esc(D.meta.dataAsOf) + "／最終更新 " + esc(D.meta.generatedAtLabel) + "</span>";
 
   /* ---- hero ---- */
-  var TT = D.total;
-  var doneRounds = D.rounds.filter(function (r) { return !r.pending; });
-  var lastRound = doneRounds[doneRounds.length - 1];
   $("heroEyebrow").textContent =
-    "Round " + lastRound.n + " / " + D.rounds.length + " · " + lastRound.date + " 終了 · " + TT.position;
+    "Round " + lastRound.n + " / " + D.rounds.length + " · " + lastRound.short + " 終了 · " + TT.position;
   $("heroName").textContent = P.name;
   $("heroNameSub").textContent = P.kana + "（" + P.nickname + "）／ " + P.affiliation;
   $("heroToPar").textContent = sign(TT.toPar);
@@ -726,77 +745,86 @@ __DATA__
 
   $("rounds").innerHTML = D.rounds.map(function (r) {
     if (r.pending) {
-      return '<div class="rd pending"><span class="rd-k">' + esc(r.label) + " " + esc(r.date) + "</span>" +
+      return '<div class="rd pending"><span class="rd-k">' + esc(r.label) + " " + esc(r.short) + "</span>" +
         '<span class="rd-v"><span class="rd-s">明日</span></span>' +
-        (r.note ? '<span class="rd-n">' + esc(r.note) + "</span>" : "") + "</div>";
+        (r.headline ? '<span class="rd-n">' + esc(r.headline) + "</span>" : "") + "</div>";
     }
-    return '<div class="rd"><span class="rd-k">' + esc(r.label) + " " + esc(r.date) + "</span>" +
+    return '<div class="rd"><span class="rd-k">' + esc(r.label) + " " + esc(r.short) + "</span>" +
       '<span class="rd-v"><span class="rd-s">' + r.score + '</span><span class="rd-p">' + sign(r.toPar) + "</span></span>" +
       '<span class="rd-n">' + r.birdies + "バーディ" + (r.bogeys ? " / " + r.bogeys + "ボギー" : " / ノーボギー") +
-      (r.note ? "　" + esc(r.note) : "") + "</span></div>";
+      (r.headline ? "　" + esc(r.headline) : "") + "</span></div>";
   }).join("");
 
-  var pills = [{ t: TT.through, c: "" }]
+  $("heroPills").innerHTML = [{ t: TT.through, c: "" }]
     .concat(TT.records.map(function (r) { return { t: r, c: "cool" }; }))
-    .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }]);
-  $("heroPills").innerHTML = pills.map(function (p) { return '<span class="pill ' + p.c + '">' + esc(p.t) + "</span>"; }).join("");
+    .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }])
+    .map(function (p) { return '<span class="pill ' + p.c + '">' + esc(p.t) + "</span>"; }).join("");
 
-  /* ---- hole strip ---- */
-  var strip = $("strip");
-  strip.innerHTML = R.holes.map(function (h) {
-    return '<div class="hcell ' + esc(h.result) + '" role="listitem" ' +
-      'aria-label="' + h.h + "番 " + esc(jaOf(h.result)) + " 通算" + sign(h.cum) + '">' +
-      '<span class="hno">' + h.h + "</span>" +
-      '<span class="glyph">' + glyphOf(h.result) + "</span>" +
-      '<span class="cum">' + sign(h.cum) + "</span></div>";
+  /* ---- ラウンド切替タブ ---- */
+  $("rtabs").innerHTML = PLAYABLE.map(function (r) {
+    return '<button class="rtab" type="button" role="tab" data-n="' + r.n + '" aria-selected="false">' +
+      esc(r.label.replace("ラウンド", "R")) + '<span class="rt-s">' + r.score + "</span></button>";
   }).join("");
-  var cells = Array.prototype.slice.call(strip.children);
-  $("replayEyebrow").textContent = "Round 1 Replay ／ 初日「" + R.score + "」のホールごとの振り返り";
-  $("replayNote").textContent = D.round2 && D.round2.holesNote ? D.round2.holesNote : "";
+  var tabs = Array.prototype.slice.call($("rtabs").children);
 
-  /* 凡例はデータに実在する種別からだけ作る */
-  var kinds = [];
-  R.holes.forEach(function (h) { if (kinds.indexOf(h.result) === -1) kinds.push(h.result); });
-  var order = ["eagle", "birdie", "par", "bogey", "dbogey"];
-  kinds.sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); });
-  $("stripLegend").innerHTML = kinds.map(function (k) {
-    return '<span><i class="swatch ' + esc(k) + '"></i>' + esc(jaOf(k)) + "（" + glyphOf(k) + "）</span>";
-  }).join("") + "<span>※ 日本のリーダーボード慣習に合わせ、アンダーパーを赤で表示</span>";
+  /* ---- 以下、ラウンドごとに作り直す部分 ---- */
+  var strip = $("strip"), svg = $("chart"), ticker = $("ticker"), tickJump = $("tickJump"), tickLive = $("tickLive");
+  var cells = [], pts = [], yAt = null, W = 0, H = 0;
+  var tFill, tLine, tCap, tLbl;
+  var idx = -1, timer = null, playing = false, started = false, io = null, announce = false;
+  var mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var btnPlay = $("btnPlay");
 
-  /* ---- chart ---- */
-  var svg = $("chart");
-  svg.setAttribute("aria-label",
-    "第1ラウンドの累積スコア推移。1番から18番までの積み重ねで最終的に" + sign(R.toPar) + "。");
-  var narrow = window.matchMedia("(max-width: 640px)").matches;
-  var W = narrow ? Math.max(280, svg.parentNode.clientWidth || 320) : 720;
-  var H = narrow ? 150 : 168;
-  var ML = 34, MR = narrow ? 40 : 46, MT = 16, MB = 24;
-  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  function buildStrip() {
+    strip.innerHTML = R.holes.map(function (h) {
+      return '<div class="hcell ' + esc(h.result) + '" role="listitem" ' +
+        'aria-label="' + h.h + "番 " + esc(jaOf(h.result)) + " 通算" + sign(h.cum) + '">' +
+        '<span class="hno">' + h.h + "</span>" +
+        '<span class="glyph">' + glyphOf(h.result) + "</span>" +
+        '<span class="cum">' + sign(h.cum) + "</span></div>";
+    }).join("");
+    cells = Array.prototype.slice.call(strip.children);
 
-  var cums = R.holes.map(function (h) { return h.cum; });
-  var minY = Math.min.apply(null, cums) - 1;
-  var maxY = Math.max(0.6, Math.max.apply(null, cums) + 0.6);
-  var xAt = function (i) { return ML + (W - ML - MR) * (i / (R.holes.length - 1)); };
-  var yAt = function (v) { return MT + (H - MT - MB) * ((maxY - v) / (maxY - minY)); };
-  var pts = R.holes.map(function (h, i) { return [xAt(i), yAt(h.cum)]; });
+    var kinds = [];
+    R.holes.forEach(function (h) { if (kinds.indexOf(h.result) === -1) kinds.push(h.result); });
+    kinds.sort(function (a, b) { return ORDER.indexOf(a) - ORDER.indexOf(b); });
+    $("stripLegend").innerHTML = kinds.map(function (k) {
+      return '<span><i class="swatch ' + esc(k) + '"></i>' + esc(jaOf(k)) + "（" + glyphOf(k) + "）</span>";
+    }).join("") + "<span>※ 日本のリーダーボード慣習に合わせ、アンダーパーを赤で表示</span>";
+  }
 
-  var ticksY = [];
-  for (var v = 0; v >= Math.ceil(minY); v -= 3) ticksY.push(v);
-  var chrome = "";
-  ticksY.forEach(function (v) {
-    chrome += '<line class="grid-line" x1="' + ML + '" y1="' + yAt(v).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(v).toFixed(1) + '"/>';
-    chrome += '<text class="tick-txt" x="' + (ML - 8) + '" y="' + (yAt(v) + 3).toFixed(1) + '" text-anchor="end">' + sign(v) + "</text>";
-  });
-  chrome += '<line class="axis-line" x1="' + ML + '" y1="' + yAt(0).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(0).toFixed(1) + '"/>';
-  (narrow ? [1, 9, 18] : [1, 5, 9, 14, 18]).forEach(function (n) {
-    chrome += '<text class="tick-txt" x="' + xAt(n - 1).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle">' + n + "H</text>";
-  });
-  svg.innerHTML = chrome +
-    '<path class="trace-fill" id="tFill" d=""/>' +
-    '<path class="trace" id="tLine" d=""/>' +
-    '<circle class="endcap" id="tCap" r="4.5" cx="0" cy="0" style="display:none"/>' +
-    '<text class="endlabel" id="tLbl" x="0" y="0" style="display:none"></text>';
-  var tFill = $("tFill"), tLine = $("tLine"), tCap = $("tCap"), tLbl = $("tLbl");
+  function buildChart() {
+    svg.setAttribute("aria-label",
+      R.label + "の累積スコア推移。1番から18番までの積み重ねで最終的に" + sign(R.toPar) + "。");
+    var narrow = window.matchMedia("(max-width: 640px)").matches;
+    W = narrow ? Math.max(280, svg.parentNode.clientWidth || 320) : 720;
+    H = narrow ? 150 : 168;
+    var ML = 34, MR = narrow ? 40 : 46, MT = 16, MB = 24;
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+
+    var cums = R.holes.map(function (h) { return h.cum; });
+    var minY = Math.min.apply(null, cums) - 1;
+    var maxY = Math.max(0.6, Math.max.apply(null, cums) + 0.6);
+    var xAt = function (i) { return ML + (W - ML - MR) * (i / (R.holes.length - 1)); };
+    yAt = function (v) { return MT + (H - MT - MB) * ((maxY - v) / (maxY - minY)); };
+    pts = R.holes.map(function (h, i) { return [xAt(i), yAt(h.cum)]; });
+
+    var chrome = "";
+    for (var v = 0; v >= Math.ceil(minY); v -= 3) {
+      chrome += '<line class="grid-line" x1="' + ML + '" y1="' + yAt(v).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(v).toFixed(1) + '"/>';
+      chrome += '<text class="tick-txt" x="' + (ML - 8) + '" y="' + (yAt(v) + 3).toFixed(1) + '" text-anchor="end">' + sign(v) + "</text>";
+    }
+    chrome += '<line class="axis-line" x1="' + ML + '" y1="' + yAt(0).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(0).toFixed(1) + '"/>';
+    (narrow ? [1, 9, 18] : [1, 5, 9, 14, 18]).forEach(function (n) {
+      chrome += '<text class="tick-txt" x="' + xAt(n - 1).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle">' + n + "H</text>";
+    });
+    svg.innerHTML = chrome +
+      '<path class="trace-fill" id="tFill" d=""/>' +
+      '<path class="trace" id="tLine" d=""/>' +
+      '<circle class="endcap" id="tCap" r="4.5" cx="0" cy="0" style="display:none"/>' +
+      '<text class="endlabel" id="tLbl" x="0" y="0" style="display:none"></text>';
+    tFill = $("tFill"); tLine = $("tLine"); tCap = $("tCap"); tLbl = $("tLbl");
+  }
 
   function drawChart(upTo) {
     if (upTo < 0) { tLine.setAttribute("d", ""); tFill.setAttribute("d", ""); tCap.style.display = "none"; tLbl.style.display = "none"; return; }
@@ -811,24 +839,19 @@ __DATA__
   }
 
   /* ---- ticker ---- */
-  var ticker = $("ticker"), tickJump = $("tickJump"), tickLive = $("tickLive");
-  var announce = false;
   function resetTicker() {
     ticker.innerHTML = '<p class="empty">「再生」を押すと、1番から18番まで順に振り返ります。</p>';
     tickJump.hidden = true;
   }
-  function rowFor(h) {
+  function pushTick(h, lead) {
+    if (ticker.querySelector(".empty")) ticker.innerHTML = "";
     var row = document.createElement("div");
     row.className = "tick";
     row.innerHTML = '<span class="th">' + h.h + "H</span>" +
       '<span class="tr ' + esc(h.result) + '">' + esc(jaOf(h.result)) + "</span>" +
       '<span class="tt">' + esc(h.note) + '　<b class="num" style="color:var(--under)">' + sign(h.cum) + "</b></span>";
-    return row;
-  }
-  function pushTick(h, lead) {
-    if (ticker.querySelector(".empty")) ticker.innerHTML = "";
     var stick = ticker.scrollTop < 8;
-    ticker.insertBefore(rowFor(h), ticker.firstChild);
+    ticker.insertBefore(row, ticker.firstChild);
     if (stick) { ticker.scrollTop = 0; tickJump.hidden = true; }
     else { tickJump.hidden = false; tickJump.textContent = "↑ 最新 " + h.h + "H"; }
     if (lead) {
@@ -842,10 +865,6 @@ __DATA__
   });
 
   /* ---- replay engine ---- */
-  var idx = -1, timer = null, playing = false, started = false, io = null;
-  var mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var btnPlay = $("btnPlay");
-
   function tiles(i) {
     var upto = i < 0 ? [] : R.holes.slice(0, i + 1);
     var count = function (kind) { return upto.filter(function (h) { return h.result === kind; }).length; };
@@ -870,7 +889,8 @@ __DATA__
   function delayFor(i) {
     if (i === 17) return 1600;
     if (i === 7 || i === 14) return 1300;
-    return R.holes[i].result === "birdie" || R.holes[i].result === "eagle" ? 880 : 520;
+    var r = R.holes[i].result;
+    return r === "birdie" || r === "eagle" || r === "bogey" || r === "dbogey" ? 880 : 520;
   }
   function step() {
     idx++;
@@ -901,32 +921,48 @@ __DATA__
     ticker.classList.remove("expanded");
   }
   function showAll() {
-    stop(true); resetTicker(); ticker.innerHTML = "";
+    stop(true); ticker.innerHTML = "";
     R.holes.slice().reverse().forEach(function (h) { pushTick(h, false); });
     ticker.classList.add("expanded");
     tickJump.hidden = true;
     idx = 17; paint(17); tilesFinal();
     btnPlay.textContent = "▶ もう一度";
     btnPlay.setAttribute("aria-pressed", "false");
-    if (announce) tickLive.textContent = "18ホール分を表示しました。トータル" + R.score + "、" + Math.abs(R.toPar) + "アンダー";
+    if (announce) tickLive.textContent = "18ホール分を表示しました。" + R.label + "はトータル" + R.score + "、" + sign(R.toPar);
   }
   function claimUserControl() { started = true; if (io) { io.disconnect(); io = null; } announce = true; }
 
+  /* ---- ラウンドの読み込み ---- */
+  function loadRound(n, autoplay) {
+    stop(false);
+    R = PLAYABLE.filter(function (r) { return r.n === n; })[0] || R;
+    tabs.forEach(function (t) { t.setAttribute("aria-selected", String(+t.dataset.n === R.n)); });
+    $("replayEyebrow").textContent = "Replay ／ " + R.label + "「" + R.score + "」のホールごとの振り返り";
+    $("replayNote").textContent = R.holesNote || "";
+    buildStrip(); buildChart();
+    idx = -1; resetTicker(); paint(-1);
+    if (autoplay) { mqReduce.matches ? showAll() : play(); }
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      claimUserControl();
+      loadRound(+t.dataset.n, true);
+    });
+  });
   btnPlay.addEventListener("click", function () { claimUserControl(); playing ? stop(false) : play(); });
   $("btnAll").addEventListener("click", function () { claimUserControl(); showAll(); });
   $("btnReset").addEventListener("click", function () { claimUserControl(); reset(); play(); });
 
+  loadRound(R.n, false);
   if (mqReduce.matches) {
     showAll();
-  } else {
-    paint(-1);
-    if ("IntersectionObserver" in window) {
-      io = new IntersectionObserver(function (e) {
-        if (e[0].isIntersecting && !started) { started = true; io.disconnect(); io = null; play(); }
-      }, { threshold: 0.6 });
-      io.observe(strip);
-    } else { play(); }
-  }
+  } else if ("IntersectionObserver" in window) {
+    io = new IntersectionObserver(function (e) {
+      if (e[0].isIntersecting && !started) { started = true; io.disconnect(); io = null; play(); }
+    }, { threshold: 0.6 });
+    io.observe(strip);
+  } else { play(); }
 
   /* ---- leaderboard ---- */
   $("lbColHead").textContent = D.leaderboard.columnLabel || "R1";

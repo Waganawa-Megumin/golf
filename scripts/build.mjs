@@ -30,8 +30,9 @@ writeFileSync(join(root, "index.html"), doc, "utf8");
 mkdirSync(join(root, "dist"), { recursive: true });
 writeFileSync(join(root, "dist", "artifact.html"), filled.replace(MARKER, "").trim() + "\n", "utf8");
 
-const holes = data.round1?.holes?.length ?? 0;
+const played = (data.rounds ?? []).filter((r) => !r.pending);
+const withHoles = played.filter((r) => r.holes?.length).length;
 console.log(
   `書き出し完了: index.html（完全文書）/ dist/artifact.html（公開用フラグメント）\n` +
-  `  ${holes} ホール · リーダーボード ${data.leaderboard?.rows?.length ?? 0} 行 · 更新 ${data.meta?.generatedAtLabel ?? data.meta?.generatedAt}`
+  `  ${played.length} ラウンド（うちホール別データあり ${withHoles}）· リーダーボード ${data.leaderboard?.rows?.length ?? 0} 行 · 更新 ${data.meta?.generatedAtLabel ?? data.meta?.generatedAt}`
 );
