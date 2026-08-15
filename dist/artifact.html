@@ -495,7 +495,10 @@
     "nextRound": "最終ラウンドは8月16日(日)。7打差の単独首位から、ツアー3勝目に挑みます。",
     "note": "掲載内容は第2ラウンド終了時点のものです。",
     "dataAsOf": "掲載データは第2ラウンド終了時点",
-    "liveNote": "第2ラウンドが終了し、安田祐香が通算19アンダーで7打差の単独首位。36ホール125ストロークはJLPGAツアー新記録です。最終ラウンドは明日8月16日(日)。"
+    "liveNote": "第2ラウンドが終了し、安田祐香が通算19アンダーで7打差の単独首位。36ホール125ストロークはJLPGAツアー新記録です。最終ラウンドは明日8月16日(日)。",
+    "holesPlayed": 36,
+    "holesLeft": 18,
+    "dataNotice": "このページのデータは第2ラウンド終了時点のスナップショットで、外部サイトへの通信は行っていません（公開ページのセキュリティ制約と、実行環境のネットワークポリシーの両方により、ライブ取得ができないため）。数値は data/tournament.json に集約してあり、以降のラウンドの結果はそのファイルを更新して再ビルド・再公開する運用です。"
   },
   "tournament": {
     "name": "NEC軽井沢72ゴルフトーナメント",
@@ -946,7 +949,9 @@
     "records": [
       "36ホール125ストローク（通算19アンダー）はJLPGAツアー新記録。2003年ミズノクラシックでアニカ・ソレンスタムがマークした126（18アンダー）を23年ぶりに更新",
       "初日の61は大会コースレコードタイ（2023年 神谷そら）"
-    ]
+    ],
+    "headline": "この「125」をどう読むか",
+    "cheerHeading": "あと18ホール ─ 応援メッセージ"
   },
   "rounds": [
     {
@@ -1315,13 +1320,13 @@
       <div class="col">
         <div>
           <div class="sec-head">
-            <span class="eyebrow">Leaderboard ／ 第1ラウンド終了</span>
+            <span class="eyebrow" id="lbEyebrow">Leaderboard</span>
             <h2 id="h-lb">リーダーボード</h2>
             <p class="lede" id="lbLede"></p>
           </div>
           <div class="card card-pad">
             <table class="lb">
-              <caption class="visually-hidden">第1ラウンド終了時点の順位表</caption>
+              <caption class="visually-hidden" id="lbCaption">順位表</caption>
               <thead><tr><th scope="col" style="width:56px;">順位</th><th scope="col">選手</th><th scope="col" class="r" style="width:64px;">対パー</th><th scope="col" class="r" style="width:64px;" id="lbColHead">R1</th></tr></thead>
               <tbody id="lbBody"></tbody>
             </table>
@@ -1337,7 +1342,7 @@
       <div>
         <div class="sec-head">
           <span class="eyebrow">Insights ／ 何が起きたのか</span>
-          <h2 id="h-ins">この「61」をどう読むか</h2>
+          <h2 id="h-ins"></h2>
           <p class="lede">シーズンのスタッツと突き合わせると、この1ラウンドの異常値ぶりと、その裏にある準備が見えてきます。</p>
         </div>
         <div class="card" style="display:flex;flex-direction:column;">
@@ -1400,7 +1405,7 @@
   <section id="cheer" aria-labelledby="h-cheer">
     <div class="sec-head">
       <span class="eyebrow">Cheer ／ 応援</span>
-      <h2 id="h-cheer">あと36ホール ─ 応援メッセージ</h2>
+      <h2 id="h-cheer"></h2>
       <p class="lede" id="cheerLede"></p>
     </div>
     <div class="cheers" id="cheers"></div>
@@ -1414,7 +1419,7 @@
           <h2 id="h-data">このダッシュボードのデータ</h2>
         </div>
         <div class="notice">
-          <p><b>自動更新はしていません。</b>このページのデータは第1ラウンド終了時点のスナップショットで、外部サイトへの通信は行っていません（公開ページのセキュリティ制約と、実行環境のネットワークポリシーの両方により、ライブ取得ができないため）。数値は <code>data/tournament.json</code> に集約してあり、第2ラウンド・最終ラウンドの結果はそのファイルを更新して再ビルド・再公開する運用です。</p>
+          <p><b>自動更新はしていません。</b><span id="dataNotice"></span></p>
         </div>
       </div>
       <div>
@@ -1720,8 +1725,8 @@
 
   /* ---- quote + insights ---- */
   var qSrc = D.sources.filter(function (s) { return s.quoteSource; })[0];
-  var Q = D.round2 && D.round2.quote ? D.round2 : R;
-  var qLabel = Q === R ? "第1ラウンド後" : "第2ラウンド後";
+  var Q = PLAYED.slice().reverse().filter(function (r) { return r.quote; })[0] || PLAYED[0];
+  var qLabel = (Q.label || "ラウンド") + "後";
   $("quoteBlock").innerHTML =
     '<span class="q">「' + esc(Q.quote) + '」</span>' +
     '<span class="attr">' + esc(P.name) + "　" + qLabel + "　" + esc(Q.quoteExtra) +
@@ -1780,6 +1785,11 @@
   }).join("");
 
   /* ---- cheers ---- */
+  $("h-ins").textContent = TT.headline;
+  $("h-cheer").textContent = TT.cheerHeading;
+  $("lbEyebrow").textContent = "Leaderboard ／ " + D.leaderboard.asOf;
+  $("lbCaption").textContent = D.leaderboard.asOf + "時点の順位表";
+  $("dataNotice").textContent = D.meta.dataNotice;
   $("cheerLede").textContent = D.meta.nextRound;
   $("cheers").innerHTML = D.cheers.map(function (c) {
     return '<div class="card cheer"><span class="cg">' + esc(c.tag) + '</span><span class="ct">' + esc(c.text) + "</span></div>";
