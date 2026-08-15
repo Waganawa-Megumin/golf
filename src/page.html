@@ -154,6 +154,125 @@
   }
   .livebar b { color: var(--ink); }
 
+  /* ---------- 大会進行メーター・記録置換帯 ---------- */
+  .progress { display: flex; flex-direction: column; gap: 6px; }
+  .progress-bar { display: flex; gap: 3px; height: 10px; }
+  .progress-seg { flex: 1 1 0; border-radius: 3px; background: var(--par-fill); position: relative; overflow: hidden; }
+  .progress-seg.done { background: var(--under); }
+  .progress-seg.todo { background: none; border: 1px dashed var(--line); }
+  .progress-k { font-size: 11.5px; color: var(--ink-3); }
+  .progress-k b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .rec-swap {
+    display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+    gap: 12px; align-items: center; padding: 12px 14px;
+    border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line);
+  }
+  .rec-swap .rs-k { font-size: 10.5px; font-weight: 700; color: var(--ink-3); display: block; }
+  .rec-swap .rs-v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 22px; }
+  .rec-swap .rs-n { font-size: 11px; color: var(--ink-3); line-height: 1.5; display: block; }
+  .rec-swap .rs-d { font-family: var(--f-num); font-weight: 800; font-size: 20px; color: var(--under); white-space: nowrap; }
+  .rec-swap .rs-old .rs-v { color: var(--ink-3); }
+
+  .racenote { font-size: 12.5px; color: var(--ink-2); line-height: 1.7; }
+
+  /* ---------- 54ホールのスパイン ---------- */
+  .round-div { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 3; }
+  .tbd-band { fill: var(--surface-2); }
+  .rband-txt { font-family: var(--f-num); font-size: 9.5px; font-weight: 700; fill: var(--ink-3); letter-spacing: .04em; }
+  .trace-dim { fill: none; stroke: var(--ink-3); stroke-width: 1.4; stroke-linejoin: round; }
+  .ms-line { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 2 3; }
+  .ms-dot { fill: var(--under); stroke: var(--surface); stroke-width: 2; }
+  .ms-list { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; }
+  .ms-item { display: grid; grid-template-columns: minmax(0,auto) minmax(0,1fr); gap: 10px; font-size: 12.5px; align-items: baseline; }
+  .ms-item .ms-h { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-size: 11px; font-weight: 700; color: var(--ink-3); white-space: nowrap; }
+  .ms-item .ms-t { color: var(--ink-2); line-height: 1.6; }
+  .ms-item .ms-t sup a { color: var(--ink-3); text-decoration: none; font-size: 9px; }
+
+  .leadtrack { display: flex; gap: 8px; margin-top: 4px; }
+  .lt { flex: 1 1 0; display: flex; flex-direction: column; gap: 3px; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); }
+  .lt.todo { background: none; border: 1px dashed var(--line); }
+  .lt .lt-k { font-size: 10.5px; font-weight: 700; color: var(--ink-3); white-space: nowrap; }
+  .lt .lt-v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 18px; }
+  .lt.todo .lt-v { color: var(--ink-3); font-size: 14px; }
+
+  /* ---------- 章セレクタ ---------- */
+  .rtabs-label { font-size: 11px; font-weight: 700; color: var(--ink-3); white-space: nowrap; }
+  #chapters {
+    display: inline-flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory;
+    gap: 2px; padding: 3px; border-radius: 10px; background: var(--surface-2);
+    border: 1px solid var(--line); scrollbar-width: thin; max-width: 100%;
+  }
+  #chapters > button {
+    flex: 0 0 auto; scroll-snap-align: start; cursor: pointer; border: 0; border-radius: 8px;
+    background: none; color: var(--ink-2); font-family: var(--f-jp);
+    display: flex; flex-direction: column; gap: 1px; align-items: flex-start;
+    padding: 8px 13px; min-height: 52px; justify-content: center; text-align: left;
+  }
+  #chapters > button:hover { background: color-mix(in srgb, var(--ink-3) 12%, transparent); }
+  #chapters > button[aria-selected="true"] { background: var(--surface); box-shadow: var(--shadow); color: var(--under); }
+  #chapters .ch-k { font-size: 10.5px; font-weight: 700; white-space: nowrap; }
+  #chapters .ch-v { display: flex; align-items: baseline; gap: 5px; white-space: nowrap; }
+  #chapters .ch-s { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 17px; color: var(--ink); }
+  #chapters > button[aria-selected="true"] .ch-s { color: var(--under); }
+  #chapters .ch-p { font-family: var(--f-num); font-weight: 700; font-size: 11.5px; color: var(--under); }
+  #chapters .ch-new {
+    font-size: 9px; font-weight: 800; letter-spacing: .08em; padding: 0 4px; border-radius: 3px;
+    background: var(--ink-2); color: var(--surface); margin-left: 4px;
+  }
+  #chapters > button.todo .ch-s { color: var(--ink-3); font-size: 13px; }
+
+  .replay-now { font-size: 12.5px; color: var(--ink-2); margin-bottom: 6px; }
+  .replay-now .num { color: var(--ink); font-size: 17px; margin-right: 4px; }
+
+  .strip-rlabel { font-size: 11px; font-weight: 700; color: var(--ink-3); margin: 10px 0 4px; }
+  .strip-rlabel:first-child { margin-top: 0; }
+  .hcell.tbd { border: 1px dashed var(--line); background: none; opacity: .5; }
+  .tick-rhead { font-size: 11px; font-weight: 700; color: var(--ink-3); padding: 10px 2px 4px; border-bottom: 1px solid var(--line-2); }
+
+  /* ---------- 差のラダー ---------- */
+  .ladder { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-2); }
+  svg.ladder-svg { display: block; width: 100%; height: auto; }
+  .ld-stem { stroke: var(--line); stroke-width: 1.5; }
+  .ld-dot { fill: var(--ink-2); stroke: var(--surface); stroke-width: 1.5; }
+  .ld-dot.me { fill: var(--under); }
+  .ld-dot.watch { fill: var(--mark); }
+  .ld-txt { font-family: var(--f-jp); font-size: 10.5px; fill: var(--ink-2); }
+  .ld-cut { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; }
+  .ld-cut-txt { font-family: var(--f-jp); font-size: 10px; fill: var(--ink-3); }
+
+  /* ---------- 予測ドット ---------- */
+  .proj { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; }
+  .proj-rows { display: flex; flex-direction: column; gap: 6px; }
+  .proj-row { display: grid; grid-template-columns: 84px minmax(0,1fr) 62px; gap: 10px; align-items: center; font-size: 12.5px; }
+  .proj-row .pj-k { color: var(--ink-2); white-space: nowrap; }
+  .proj-row .pj-t { position: relative; height: 6px; border-radius: 999px; background: var(--par-fill); }
+  .proj-row .pj-t::after {
+    content: ""; position: absolute; top: 50%; transform: translateY(-50%);
+    width: 10px; height: 10px; border-radius: 50%; background: var(--mark);
+    border: 2px solid var(--surface); left: var(--p, 0%); margin-left: -5px;
+  }
+  .proj-row .pj-v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 14px; text-align: right; }
+
+  .tag.rd { border: 1px solid var(--line); border-radius: 3px; padding: 0 5px; margin-left: 6px; }
+
+  details.gearbox > summary {
+    cursor: pointer; font-size: 13.5px; font-weight: 700; color: var(--ink-2);
+    padding: 12px 0; list-style: none; display: flex; align-items: center; gap: 8px;
+  }
+  details.gearbox > summary::before { content: "▸"; color: var(--ink-3); }
+  details.gearbox[open] > summary::before { content: "▾"; }
+  details.gearbox > summary::-webkit-details-marker { display: none; }
+  details.gearbox > summary small { font-weight: 400; color: var(--ink-3); font-size: 11.5px; }
+
+  @media (max-width: 640px) {
+    .rec-swap { grid-template-columns: 1fr; gap: 8px; text-align: left; }
+    .rec-swap .rs-d { font-size: 17px; }
+    .leadtrack { flex-wrap: wrap; }
+    .ms-item { grid-template-columns: 1fr; gap: 1px; }
+    .proj-row { grid-template-columns: 76px minmax(0,1fr) 56px; }
+  }
+
   /* ---------- section nav ---------- */
   .secnav { display: flex; gap: 6px; overflow-x: auto; padding: 14px 0 2px; scrollbar-width: thin; }
   .secnav a {
@@ -504,7 +623,10 @@ __DATA__
 <main class="wrap" id="main">
 
   <nav class="secnav" aria-label="セクション">
+    <a href="#spine">54ホールの推移</a>
+    <a href="#replay">ラウンド別リプレイ</a>
     <a href="#leaderboard">リーダーボード</a>
+    <a href="#ins">読み解き</a>
     <a href="#stats">スタッツ</a>
     <a href="#form">直近の成績</a>
     <a href="#gear">クラブセッティング</a>
@@ -525,30 +647,39 @@ __DATA__
           </span>
         </h1>
         <div class="topar-block">
-          <span class="topar num" id="heroToPar">−11</span>
-          <span class="topar-cap">対パー</span>
+          <span class="topar num" id="heroToPar">—</span>
+          <span class="topar-cap">大会通算 対パー</span>
         </div>
         <div class="topar-legend">
-          <span class="kv"><span class="k">スコア</span><span class="v" id="heroScore">61</span></span>
-          <span class="kv"><span class="k">順位</span><span class="v" id="heroPos">1</span></span>
-          <span class="kv"><span class="k">2位との差</span><span class="v" id="heroLead">2打</span></span>
+          <span class="kv"><span class="k">スコア</span><span class="v" id="heroScore">—</span></span>
+          <span class="kv"><span class="k">順位</span><span class="v" id="heroPos">—</span></span>
+          <span class="kv"><span class="k">2位との差</span><span class="v" id="heroLead">—</span></span>
         </div>
-        <div class="rounds" id="rounds"></div>
+        <p class="racenote" id="raceNote"></p>
+        <div class="progress">
+          <div class="progress-bar" id="progressBar"></div>
+          <p class="progress-k" id="progressK"></p>
+        </div>
+        <div class="rec-swap" id="recSwap"></div>
         <p class="hero-meta" id="heroMeta"></p>
         <div class="pills" id="heroPills"></div>
       </div>
 
-      <div class="card">
-        <div class="card-head">
-          <span class="eyebrow" id="replayEyebrow"></span>
-          <div class="rtabs" id="rtabs" role="tablist" aria-label="表示するラウンド"></div>
+      <div class="card" id="replay">
+        <div class="card-head" style="flex-direction:column;align-items:stretch;gap:12px;">
+          <h2 id="replayTitle">ラウンド別リプレイ</h2>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <span class="rtabs-label">表示する区間</span>
+            <div id="chapters" role="tablist" aria-label="表示する区間"></div>
+          </div>
           <div class="controls">
             <button class="ctl primary" id="btnPlay" type="button" aria-pressed="false">▶ 再生</button>
             <button class="ctl" id="btnAll" type="button">全18ホールを表示</button>
             <button class="ctl" id="btnReset" type="button">最初から</button>
           </div>
         </div>
-        <div class="card-pad">
+        <div class="card-pad" role="tabpanel" id="replayPanel">
+          <p class="replay-now" id="replayNow"></p>
           <div class="chart-wrap">
             <svg class="chart" id="chart" viewBox="0 0 720 168" role="img"></svg>
           </div>
@@ -576,6 +707,22 @@ __DATA__
     </div>
   </div>
 
+  <section id="spine" aria-labelledby="h-spine">
+    <div class="sec-head">
+      <span class="eyebrow">The Spine ／ 大会全体</span>
+      <h2 id="h-spine">54ホールの推移</h2>
+      <p class="lede" id="spineLede"></p>
+    </div>
+    <div class="card card-pad">
+      <div class="chart-wrap">
+        <svg class="chart" id="spineChart" viewBox="0 0 960 260" role="img"></svg>
+      </div>
+      <div class="leadtrack" id="leadTrack"></div>
+      <div class="ms-list" id="msList"></div>
+      <p class="foot" id="spineFoot"></p>
+    </div>
+  </section>
+
   <section id="leaderboard" aria-labelledby="h-lb">
     <div class="two-col">
       <div class="col">
@@ -588,13 +735,15 @@ __DATA__
           <div class="card card-pad">
             <table class="lb">
               <caption class="visually-hidden" id="lbCaption">順位表</caption>
-              <thead><tr><th scope="col" style="width:56px;">順位</th><th scope="col">選手</th><th scope="col" class="r" style="width:64px;">対パー</th><th scope="col" class="r" style="width:64px;" id="lbColHead">R1</th></tr></thead>
+              <thead><tr><th scope="col" style="width:56px;">順位</th><th scope="col">選手</th><th scope="col" class="r" style="width:64px;">対パー</th><th scope="col" class="r" style="width:64px;" id="lbColHead"></th></tr></thead>
               <tbody id="lbBody"></tbody>
             </table>
             <p class="foot" id="lbFoot"></p>
+            <div class="ladder" id="ladder"></div>
           </div>
         </div>
-        <div class="card nextcard">
+        <div class="card proj" id="projection" hidden></div>
+        <div class="card nextcard" id="nextCard">
           <span class="k">次のラウンド</span>
           <span class="v" id="nextRound"></span>
           <span class="s" id="nextFormat"></span>
@@ -604,7 +753,7 @@ __DATA__
         <div class="sec-head">
           <span class="eyebrow">Insights ／ 何が起きたのか</span>
           <h2 id="h-ins"></h2>
-          <p class="lede">シーズンのスタッツと突き合わせると、この1ラウンドの異常値ぶりと、その裏にある準備が見えてきます。</p>
+          <p class="lede" id="insLede"></p>
         </div>
         <div class="card" style="display:flex;flex-direction:column;">
           <blockquote class="quote" id="quoteBlock"></blockquote>
@@ -660,7 +809,10 @@ __DATA__
       <h2 id="h-gear">2026年のクラブセッティング</h2>
       <p class="lede">今季の最大の変更はドライバーとシャフトの同時刷新。「替えない」で知られた選手が、3シーズン使ったエースを手放しました。</p>
     </div>
-    <div class="grid-3" id="gearList"></div>
+    <details class="gearbox">
+      <summary>クラブセッティングを開く <small id="gearAsOf"></small></summary>
+      <div class="grid-3" id="gearList" style="margin-top:8px;"></div>
+    </details>
   </section>
 
   <section id="cheer" aria-labelledby="h-cheer">
@@ -707,7 +859,6 @@ __DATA__
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
   var sign = function (n) { return n === 0 ? "E" : (n > 0 ? "+" + n : "−" + Math.abs(n)); };
 
-  /* ---- スコア種別。未知のキーは黙って par に落とさず、そのまま出して警告する ---- */
   var GLYPH = { eagle: "◎", birdie: "○", par: "−", bogey: "□", dbogey: "■" };
   var JA    = { eagle: "イーグル", birdie: "バーディ", par: "パー", bogey: "ボギー", dbogey: "ダブルボギー" };
   var ORDER = ["eagle", "birdie", "par", "bogey", "dbogey"];
@@ -715,167 +866,359 @@ __DATA__
   function glyphOf(r) { if (!GLYPH[r] && !seenUnknown[r]) { seenUnknown[r] = 1; console.warn("unknown result: " + r); } return GLYPH[r] || "?"; }
   function jaOf(r) { return JA[r] || r; }
 
-  /* ---- ラウンド ---- */
-  var PLAYED = D.rounds.filter(function (r) { return !r.pending; });
-  var PLAYABLE = PLAYED.filter(function (r) { return r.holes && r.holes.length; });
-  var R = PLAYABLE[PLAYABLE.length - 1];          // 既定は最新のラウンド
-  var lastRound = PLAYED[PLAYED.length - 1];
+  /* ======================================================================
+     derive() ── 画面に出る数値は rounds[].holes[] から必ず導出する。
+     data に直書きしてよいのは外部の参照記録・出典・散文だけ。
+     ====================================================================== */
+  function derive(D) {
+    var live = D.rounds.filter(function (r) { return !r.canceled; });
+    var played = live.filter(function (r) { return !r.pending; });
+    var holesTotal = live.length * 18;
+    var startCum = {}, acc = 0;
+    live.forEach(function (r) { startCum[r.n] = acc; if (!r.pending) acc += r.toPar; });
+
+    var series = [], gh = 0, streak = 0, best = 0, firstBogey = null;
+    live.forEach(function (r) {
+      for (var i = 0; i < 18; i++) {
+        gh++;
+        var h = r.holes && r.holes[i];
+        if (h) {
+          if (h.result === "bogey" || h.result === "dbogey") {
+            if (firstBogey === null) firstBogey = gh;
+            streak = 0;
+          } else { streak++; if (streak > best) best = streak; }
+        }
+        series.push(h
+          ? { n: r.n, h: h.h, gh: gh, result: h.result, cumR: h.cum, cumT: startCum[r.n] + h.cum, note: h.note }
+          : { n: r.n, h: i + 1, gh: gh, pending: true, cumT: null });
+      }
+    });
+
+    var strokes = played.reduce(function (a, r) { return a + r.score; }, 0);
+    return {
+      live: live, played: played, holesTotal: holesTotal,
+      holesPlayed: played.length * 18, holesLeft: holesTotal - played.length * 18,
+      startCum: startCum, series: series,
+      strokes: strokes, toPar: played.reduce(function (a, r) { return a + r.toPar; }, 0),
+      birdies: played.reduce(function (a, r) { return a + r.birdies; }, 0),
+      bogeys: played.reduce(function (a, r) { return a + r.bogeys; }, 0),
+      noBogeyStreak: best, firstBogeyGlobalHole: firstBogey,
+      lastRound: played[played.length - 1],
+      hasPending: live.some(function (r) { return r.pending; })
+    };
+  }
+  var DV = derive(D);
+  var lastRound = DV.lastRound;
+
+  /* 散文に数値を直書きさせない。esc の後に置換する。 */
+  var TOK = {
+    strokes: DV.strokes, toPar: sign(DV.toPar), margin: TT.margin, position: TT.position,
+    through: TT.through, holesPlayed: DV.holesPlayed, holesLeft: DV.holesLeft,
+    holesTotal: DV.holesTotal, roundStatusLabel: D.meta.roundStatusLabel
+  };
+  function fill(str) {
+    return esc(str).replace(/\{(\w+)\}/g, function (m, k) { return k in TOK ? esc(String(TOK[k])) : m; });
+  }
+  function fillText(el, str) { el.innerHTML = fill(str); }
 
   /* ---- rail ---- */
   $("railName").textContent = T.edition + " " + T.name;
   $("railVenue").textContent = T.course + "（Par " + T.par + " / " + T.yards.toLocaleString() + "yd）";
   $("railStatus").textContent = D.meta.roundStatusLabel;
   if (!/FINAL|終了/.test(D.meta.roundStatus)) $("railChip").classList.add("live");
-  $("railStamp").textContent = "更新 " + D.meta.generatedAtLabel.replace(/^\d+年/, "");
-  $("railStamp").title = D.meta.generatedAt;
-  $("liveBarText").innerHTML = "<b>" + esc(D.meta.roundStatusLabel) + "。</b>" + esc(D.meta.liveNote) +
-    "<br><span style=\"color:var(--ink-3)\">" + esc(D.meta.dataAsOf) + "／最終更新 " + esc(D.meta.generatedAtLabel) + "</span>";
+  $("railStamp").textContent = DV.holesPlayed + " / " + DV.holesTotal + "ホール";
+  $("railStamp").title = "更新 " + D.meta.generatedAtLabel;
+  $("liveBarText").innerHTML = "<b>" + esc(D.meta.roundStatusLabel) + "。</b>" + fill(D.meta.liveNote) +
+    (DV.hasPending ? "　" + fill(D.meta.nextRound) : "") +
+    "<br><span style=\"color:var(--ink-3)\">掲載データは" + esc(D.meta.roundStatusLabel) +
+    "時点／最終更新 " + esc(D.meta.generatedAtLabel) + "</span>";
 
   /* ---- hero ---- */
   $("heroEyebrow").textContent =
-    "Round " + lastRound.n + " / " + D.rounds.length + " · " + lastRound.short + " 終了 · " + TT.position;
+    "Round " + lastRound.n + " / " + DV.live.length + " · " + lastRound.short + " 終了 · " + TT.position;
   $("heroName").textContent = P.name;
   $("heroNameSub").textContent = P.kana + "（" + P.nickname + "）／ " + P.affiliation;
-  $("heroToPar").textContent = sign(TT.toPar);
-  $("heroScore").textContent = TT.strokes;
+  $("heroToPar").textContent = sign(DV.toPar);
+  $("heroScore").textContent = DV.strokes;
   var meRow = D.leaderboard.rows.filter(function (r) { return r.highlight; })[0];
   $("heroPos").textContent = (meRow ? meRow.pos : "?") + "位";
   $("heroLead").textContent = TT.margin + "打";
+  var marginTrail = DV.played.filter(function (r) { return r.margin != null; })
+    .map(function (r) { return r.tab + " " + r.margin + "打"; }).join(" → ");
+  if (marginTrail) $("heroLead").insertAdjacentHTML("afterend",
+    '<span class="k" style="margin-left:6px">（' + esc(marginTrail) + "）</span>");
+  fillText($("raceNote"), TT.raceNote);
   $("heroMeta").textContent = T.dates + "／" + T.format + "／" + T.course + "（Par " + T.par + " · " + T.yards.toLocaleString() + "yd）";
 
-  $("rounds").innerHTML = D.rounds.map(function (r) {
-    if (r.pending) {
-      return '<div class="rd pending"><span class="rd-k">' + esc(r.label) + " " + esc(r.short) + "</span>" +
-        '<span class="rd-v"><span class="rd-s">明日</span></span>' +
-        (r.headline ? '<span class="rd-n">' + esc(r.headline) + "</span>" : "") + "</div>";
-    }
-    return '<div class="rd"><span class="rd-k">' + esc(r.label) + " " + esc(r.short) + "</span>" +
-      '<span class="rd-v"><span class="rd-s">' + r.score + '</span><span class="rd-p">' + sign(r.toPar) + "</span></span>" +
-      '<span class="rd-n">' + r.birdies + "バーディ" + (r.bogeys ? " / " + r.bogeys + "ボギー" : " / ノーボギー") +
-      (r.headline ? "　" + esc(r.headline) : "") + "</span></div>";
+  /* 進行メーター */
+  $("progressBar").innerHTML = DV.live.map(function (r) {
+    return '<span class="progress-seg ' + (r.pending ? "todo" : "done") + '" title="' + esc(r.label) + '"></span>';
   }).join("");
+  $("progressK").innerHTML = "<b>" + DV.holesPlayed + "</b> / " + DV.holesTotal + "ホール終了" +
+    (DV.holesLeft ? "　残り <b>" + DV.holesLeft + "</b>ホール" : "　全ラウンド終了");
 
+  /* 記録置換帯：破った／並んだ記録のうち最も大きいものを1本だけ */
+  var srcById = {}; D.sources.forEach(function (s) { if (s.id) srcById[s.id] = s; });
+  var headline = (D.records || []).filter(function (r) { return r.status === "broken" && r.prev; })[0];
+  if (headline) {
+    var delta = headline.prev.value - headline.ours;
+    $("recSwap").innerHTML =
+      '<div class="rs-old"><span class="rs-k">従来の記録</span><span class="rs-v">' + headline.prev.value + "</span>" +
+      '<span class="rs-n">' + esc(headline.prev.holder) +
+      (headline.prev.year ? "　" + headline.prev.year + "年 " + esc(headline.prev.event || "") : "") + "</span></div>" +
+      '<div class="rs-d">−' + delta + "</div>" +
+      '<div><span class="rs-k">' + esc(headline.scopeLabel) + " ／ 今回</span>" +
+      '<span class="rs-v" style="color:var(--under)">' + headline.ours + "</span>" +
+      '<span class="rs-n">' + esc(P.name) + "　" + T.season + "年" +
+      (headline.sourceId && srcById[headline.sourceId] ? '　<a href="#src-' + esc(headline.sourceId) + '">出典</a>' : "") +
+      "</span></div>";
+  } else { $("recSwap").hidden = true; }
+
+  /* 記録タグ */
   $("heroPills").innerHTML = [{ t: TT.through, c: "" }]
-    .concat(TT.records.map(function (r) { return { t: r, c: "cool" }; }))
+    .concat((D.records || []).filter(function (r) { return r.status === "broken" || r.status === "tied"; })
+      .map(function (r) {
+        return { t: r.scopeLabel + " " + r.ours + (r.status === "tied" ? " タイ" : " 更新") +
+                    (r.pillNote ? "（" + r.pillNote + "）" : ""), c: "cool" };
+      }))
     .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }])
     .map(function (p) { return '<span class="pill ' + p.c + '">' + esc(p.t) + "</span>"; }).join("");
 
-  /* ---- ラウンド切替タブ ---- */
-  $("rtabs").innerHTML = PLAYABLE.map(function (r) {
-    return '<button class="rtab" type="button" role="tab" data-n="' + r.n + '" aria-selected="false">' +
-      esc(r.label.replace("ラウンド", "R")) + '<span class="rt-s">' + r.score + "</span></button>";
-  }).join("");
-  var tabs = Array.prototype.slice.call($("rtabs").children);
+  /* ======================================================================
+     54ホールのスパイン ── 大会全体を1本の線で
+     ====================================================================== */
+  var allCum = DV.series.filter(function (s) { return s.cumT != null; }).map(function (s) { return s.cumT; });
+  var SMIN = Math.min.apply(null, allCum.concat([0])) - 2;
+  var SMAX = 1;
 
-  /* ---- 以下、ラウンドごとに作り直す部分 ---- */
+  function buildSpine() {
+    var svg = $("spineChart");
+    var narrow = window.matchMedia("(max-width: 640px)").matches;
+    var W = narrow ? Math.max(280, svg.parentNode.clientWidth || 320) : 960;
+    var H = narrow ? 190 : 260;
+    var ML = 34, MR = 16, MT = 26, MB = 26;
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("aria-label", "大会" + DV.holesTotal + "ホールの通算スコア推移。" +
+      DV.holesPlayed + "ホールを終えて" + sign(DV.toPar) + "。残り" + DV.holesLeft + "ホールは未消化。");
+
+    var xAt = function (gh) { return ML + (W - ML - MR) * ((gh - 1) / (DV.holesTotal - 1)); };
+    var yAt = function (v) { return MT + (H - MT - MB) * ((SMAX - v) / (SMAX - SMIN)); };
+
+    var g = "";
+    // 未消化区間の帯
+    var firstPending = DV.series.filter(function (s) { return s.pending; })[0];
+    if (firstPending) {
+      var x0 = xAt(firstPending.gh);
+      g += '<rect class="tbd-band" x="' + x0.toFixed(1) + '" y="' + MT + '" width="' +
+           (W - MR - x0).toFixed(1) + '" height="' + (H - MT - MB) + '" rx="4"/>';
+    }
+    for (var v = 0; v >= Math.ceil(SMIN); v -= 3) {
+      g += '<line class="grid-line" x1="' + ML + '" y1="' + yAt(v).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(v).toFixed(1) + '"/>' +
+           '<text class="tick-txt" x="' + (ML - 8) + '" y="' + (yAt(v) + 3).toFixed(1) + '" text-anchor="end">' + sign(v) + "</text>";
+    }
+    g += '<line class="axis-line" x1="' + ML + '" y1="' + yAt(0).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(0).toFixed(1) + '"/>';
+    // ラウンドの切れ目と帯ラベル
+    DV.live.forEach(function (r, i) {
+      var gStart = i * 18 + 1, gEnd = gStart + 17;
+      if (i > 0) g += '<line class="round-div" x1="' + xAt(gStart).toFixed(1) + '" y1="' + MT + '" x2="' + xAt(gStart).toFixed(1) + '" y2="' + (H - MB) + '"/>';
+      var mid = (xAt(gStart) + xAt(gEnd)) / 2;
+      var lab = narrow ? r.tab : r.label + (r.pending ? "" : "　" + r.score + "（" + sign(r.toPar) + "）");
+      g += '<text class="rband-txt" x="' + mid.toFixed(1) + '" y="' + (MT - 9) + '" text-anchor="middle">' + esc(lab) + "</text>";
+      g += '<text class="tick-txt" x="' + xAt(gEnd).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + gEnd + "H</text>";
+    });
+    g += '<text class="tick-txt" x="' + xAt(1).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">1H</text>';
+
+    var pl = DV.series.filter(function (s) { return s.cumT != null; });
+    var dPath = pl.map(function (s, i) { return (i ? "L" : "M") + xAt(s.gh).toFixed(1) + " " + yAt(s.cumT).toFixed(1); }).join(" ");
+    g += '<path class="trace-fill" d="' + dPath + " L" + xAt(pl[pl.length - 1].gh).toFixed(1) + " " + yAt(0).toFixed(1) +
+         " L" + xAt(pl[0].gh).toFixed(1) + " " + yAt(0).toFixed(1) + ' Z"/>';
+    g += '<path class="trace" d="' + dPath + '"/>';
+
+    // マイルストーン
+    (D.milestones || []).forEach(function (m) {
+      var pt = pl.filter(function (s) { return s.n === m.round && s.h === m.hole; })[0];
+      if (!pt) return;
+      g += '<line class="ms-line" x1="' + xAt(pt.gh).toFixed(1) + '" y1="' + MT + '" x2="' + xAt(pt.gh).toFixed(1) + '" y2="' + yAt(pt.cumT).toFixed(1) + '"/>' +
+           '<circle class="ms-dot" cx="' + xAt(pt.gh).toFixed(1) + '" cy="' + yAt(pt.cumT).toFixed(1) + '" r="4"/>';
+    });
+    var last = pl[pl.length - 1];
+    g += '<circle class="endcap" cx="' + xAt(last.gh).toFixed(1) + '" cy="' + yAt(last.cumT).toFixed(1) + '" r="5"/>' +
+         '<text class="endlabel" x="' + Math.min(xAt(last.gh) + 10, W - 30).toFixed(1) + '" y="' + (yAt(last.cumT) + 4).toFixed(1) + '">' + sign(last.cumT) + "</text>";
+    svg.innerHTML = g;
+  }
+  buildSpine();
+  fillText($("spineLede"), TT.spineLede);
+
+  $("leadTrack").innerHTML = DV.live.map(function (r) {
+    if (r.pending) return '<div class="lt todo"><span class="lt-k">' + esc(r.tab) + " 終了時</span><span class=\"lt-v\">—</span></div>";
+    return '<div class="lt"><span class="lt-k">' + esc(r.tab) + ' 終了時の差</span><span class="lt-v">' +
+      (r.margin != null ? r.margin + "打" : "—") + "</span></div>";
+  }).join("");
+
+  $("msList").innerHTML = (D.milestones || []).map(function (m) {
+    var pt = DV.series.filter(function (s) { return s.n === m.round && s.h === m.hole; })[0];
+    var rec = (D.records || []).filter(function (r) { return r.id === m.recordId; })[0];
+    var sid = rec && rec.sourceId;
+    return '<div class="ms-item"><span class="ms-h">' + (pt ? pt.gh + "H ・ 第" + m.round + "R " + m.hole + "番" : "") + "</span>" +
+      '<span class="ms-t">' + esc(m.label) +
+      (sid ? ' <sup><a href="#src-' + esc(sid) + '">出典</a></sup>' : "") + "</span></div>";
+  }).join("");
+  $("spineFoot").textContent = "縦の点線はラウンドの区切り。右の網掛けは未消化の" + DV.holesLeft +
+    "ホールで、データが入り次第この線が伸びます。数値はすべて大会通算の対パーです。";
+
+  /* ======================================================================
+     ラウンド別リプレイ
+     ====================================================================== */
+  var AGG = { n: 0, label: "通算" + DV.holesTotal + "ホール", tab: "通算", short: "1–" + DV.holesTotal + "H",
+              agg: true, score: DV.strokes, toPar: DV.toPar, birdies: DV.birdies, bogeys: DV.bogeys,
+              holes: DV.series };
+  var CHAPTERS = [AGG].concat(DV.live.map(function (r) {
+    return r.pending ? r : Object.assign({}, r, {
+      holes: DV.series.filter(function (s) { return s.n === r.n; })
+    });
+  }));
+  var R = CHAPTERS.filter(function (c) { return c.n === lastRound.n; })[0];  // 既定は最新ラウンド
+
+  $("chapters").innerHTML = CHAPTERS.map(function (c) {
+    var isNew = !c.agg && !c.pending && c.n === lastRound.n;
+    return '<button type="button" role="tab" id="chap-' + c.n + '" aria-controls="replayPanel" ' +
+      'aria-selected="false" tabindex="-1" data-n="' + c.n + '" class="' + (c.pending ? "todo" : "") + '" ' +
+      'aria-label="' + esc(c.label) + (c.pending ? "" : " スコア" + c.score) + '">' +
+      '<span class="ch-k">' + esc(c.tab) + (isNew ? '<span class="ch-new">最新</span>' : "") + "</span>" +
+      '<span class="ch-v"><span class="ch-s">' + (c.pending ? esc(c.pendingLabel || "未実施") : c.score) + "</span>" +
+      (c.pending ? "" : '<span class="ch-p">' + sign(c.toPar) + "</span>") + "</span></button>";
+  }).join("");
+  var tabs = Array.prototype.slice.call($("chapters").children);
+
   var strip = $("strip"), svg = $("chart"), ticker = $("ticker"), tickJump = $("tickJump"), tickLive = $("tickLive");
-  var cells = [], pts = [], yAt = null, W = 0, H = 0;
+  var cells = [], pts = [], yAt = null, W = 0, H = 0, playable = [];
   var tFill, tLine, tCap, tLbl;
   var idx = -1, timer = null, playing = false, started = false, io = null, announce = false;
   var mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   var btnPlay = $("btnPlay");
 
   function buildStrip() {
-    strip.innerHTML = R.holes.map(function (h) {
-      return '<div class="hcell ' + esc(h.result) + '" role="listitem" ' +
-        'aria-label="' + h.h + "番 " + esc(jaOf(h.result)) + " 通算" + sign(h.cum) + '">' +
-        '<span class="hno">' + h.h + "</span>" +
-        '<span class="glyph">' + glyphOf(h.result) + "</span>" +
-        '<span class="cum">' + sign(h.cum) + "</span></div>";
-    }).join("");
-    cells = Array.prototype.slice.call(strip.children);
+    var html = "", lastN = null;
+    R.holes.forEach(function (h) {
+      if (R.agg && h.n !== lastN) {
+        lastN = h.n;
+        var r = DV.live.filter(function (x) { return x.n === h.n; })[0];
+        html += '<p class="strip-rlabel" style="grid-column:1/-1">' + esc(r.label) + " " + esc(r.short) +
+          (r.pending ? "（未消化）" : "　" + r.score + "（" + sign(r.toPar) + "）") + "</p>";
+      }
+      if (h.pending) {
+        html += '<div class="hcell tbd" role="listitem" aria-label="' + h.h + "番 未消化" + '">' +
+          '<span class="hno">' + h.h + '</span><span class="glyph">·</span><span class="cum">—</span></div>';
+      } else {
+        html += '<div class="hcell ' + esc(h.result) + '" role="listitem" ' +
+          'aria-label="' + h.h + "番 " + esc(jaOf(h.result)) + " 大会通算" + sign(h.cumT) + '">' +
+          '<span class="hno">' + h.h + '</span><span class="glyph">' + glyphOf(h.result) + "</span>" +
+          '<span class="cum">' + sign(h.cumT) + "</span></div>";
+      }
+    });
+    strip.innerHTML = html;
+    strip.setAttribute("aria-label", R.label + "のホール別結果");
+    cells = Array.prototype.slice.call(strip.querySelectorAll(".hcell"));
+    playable = R.holes.filter(function (h) { return !h.pending; });
 
     var kinds = [];
-    R.holes.forEach(function (h) { if (kinds.indexOf(h.result) === -1) kinds.push(h.result); });
+    playable.forEach(function (h) { if (kinds.indexOf(h.result) === -1) kinds.push(h.result); });
     kinds.sort(function (a, b) { return ORDER.indexOf(a) - ORDER.indexOf(b); });
     $("stripLegend").innerHTML = kinds.map(function (k) {
       return '<span><i class="swatch ' + esc(k) + '"></i>' + esc(jaOf(k)) + "（" + glyphOf(k) + "）</span>";
-    }).join("") + "<span>※ 日本のリーダーボード慣習に合わせ、アンダーパーを赤で表示</span>";
+    }).join("") + "<span>※ 数値は大会通算の対パー。アンダーパーを赤で表示</span>";
   }
 
   function buildChart() {
-    svg.setAttribute("aria-label",
-      R.label + "の累積スコア推移。1番から18番までの積み重ねで最終的に" + sign(R.toPar) + "。");
     var narrow = window.matchMedia("(max-width: 640px)").matches;
     W = narrow ? Math.max(280, svg.parentNode.clientWidth || 320) : 720;
     H = narrow ? 150 : 168;
     var ML = 34, MR = narrow ? 40 : 46, MT = 16, MB = 24;
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("aria-label", R.label + "の大会通算スコア推移。終了時点で" + sign(playable[playable.length - 1].cumT) + "。");
 
-    var cums = R.holes.map(function (h) { return h.cum; });
-    var minY = Math.min.apply(null, cums) - 1;
-    var maxY = Math.max(0.6, Math.max.apply(null, cums) + 0.6);
-    var xAt = function (i) { return ML + (W - ML - MR) * (i / (R.holes.length - 1)); };
-    yAt = function (v) { return MT + (H - MT - MB) * ((maxY - v) / (maxY - minY)); };
-    pts = R.holes.map(function (h, i) { return [xAt(i), yAt(h.cum)]; });
+    var n = R.holes.length;
+    var xAt = function (i) { return ML + (W - ML - MR) * (i / (n - 1)); };
+    yAt = function (v) { return MT + (H - MT - MB) * ((SMAX - v) / (SMAX - SMIN)); };
+    pts = R.holes.map(function (h, i) { return [xAt(i), h.cumT != null ? yAt(h.cumT) : null]; });
 
-    var chrome = "";
-    for (var v = 0; v >= Math.ceil(minY); v -= 3) {
-      chrome += '<line class="grid-line" x1="' + ML + '" y1="' + yAt(v).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(v).toFixed(1) + '"/>';
-      chrome += '<text class="tick-txt" x="' + (ML - 8) + '" y="' + (yAt(v) + 3).toFixed(1) + '" text-anchor="end">' + sign(v) + "</text>";
+    var g = "";
+    for (var v = 0; v >= Math.ceil(SMIN); v -= 3) {
+      g += '<line class="grid-line" x1="' + ML + '" y1="' + yAt(v).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(v).toFixed(1) + '"/>' +
+           '<text class="tick-txt" x="' + (ML - 8) + '" y="' + (yAt(v) + 3).toFixed(1) + '" text-anchor="end">' + sign(v) + "</text>";
     }
-    chrome += '<line class="axis-line" x1="' + ML + '" y1="' + yAt(0).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(0).toFixed(1) + '"/>';
-    (narrow ? [1, 9, 18] : [1, 5, 9, 14, 18]).forEach(function (n) {
-      chrome += '<text class="tick-txt" x="' + xAt(n - 1).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle">' + n + "H</text>";
+    g += '<line class="axis-line" x1="' + ML + '" y1="' + yAt(0).toFixed(1) + '" x2="' + (W - MR) + '" y2="' + yAt(0).toFixed(1) + '"/>';
+    var marks = narrow ? [1, Math.round(n / 2), n] : (n > 20 ? [1, 18, 36, n] : [1, 5, 9, 14, n]);
+    marks.filter(function (m, i, a) { return m >= 1 && m <= n && a.indexOf(m) === i; }).forEach(function (m) {
+      g += '<text class="tick-txt" x="' + xAt(m - 1).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle">' +
+        (R.agg ? m : R.holes[m - 1].h) + "H</text>";
     });
-    svg.innerHTML = chrome +
-      '<path class="trace-fill" id="tFill" d=""/>' +
-      '<path class="trace" id="tLine" d=""/>' +
+    svg.innerHTML = g +
+      '<path class="trace-fill" id="tFill" d=""/><path class="trace" id="tLine" d=""/>' +
       '<circle class="endcap" id="tCap" r="4.5" cx="0" cy="0" style="display:none"/>' +
       '<text class="endlabel" id="tLbl" x="0" y="0" style="display:none"></text>';
     tFill = $("tFill"); tLine = $("tLine"); tCap = $("tCap"); tLbl = $("tLbl");
   }
 
   function drawChart(upTo) {
-    if (upTo < 0) { tLine.setAttribute("d", ""); tFill.setAttribute("d", ""); tCap.style.display = "none"; tLbl.style.display = "none"; return; }
-    var seg = pts.slice(0, upTo + 1);
+    var seg = [];
+    for (var i = 0; i <= upTo && i < pts.length; i++) if (pts[i][1] != null) seg.push(pts[i]);
+    if (!seg.length) { tLine.setAttribute("d", ""); tFill.setAttribute("d", ""); tCap.style.display = "none"; tLbl.style.display = "none"; return; }
     var d = seg.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
     tLine.setAttribute("d", d);
     tFill.setAttribute("d", d + " L" + seg[seg.length - 1][0].toFixed(1) + " " + yAt(0).toFixed(1) + " L" + seg[0][0].toFixed(1) + " " + yAt(0).toFixed(1) + " Z");
     var last = seg[seg.length - 1];
     tCap.setAttribute("cx", last[0].toFixed(1)); tCap.setAttribute("cy", last[1].toFixed(1)); tCap.style.display = "";
     tLbl.setAttribute("x", Math.min(last[0] + 10, W - 4).toFixed(1)); tLbl.setAttribute("y", (last[1] + 4).toFixed(1));
-    tLbl.textContent = sign(R.holes[upTo].cum); tLbl.style.display = "";
+    tLbl.textContent = sign(R.holes[Math.min(upTo, R.holes.length - 1)].cumT);
+    tLbl.style.display = "";
   }
 
   /* ---- ticker ---- */
   function resetTicker() {
-    ticker.innerHTML = '<p class="empty">「再生」を押すと、1番から18番まで順に振り返ります。</p>';
+    ticker.innerHTML = '<p class="empty">「再生」を押すと、1番から順に振り返ります。</p>';
     tickJump.hidden = true;
   }
-  function pushTick(h, lead) {
-    if (ticker.querySelector(".empty")) ticker.innerHTML = "";
+  function rowFor(h) {
     var row = document.createElement("div");
     row.className = "tick";
-    row.innerHTML = '<span class="th">' + h.h + "H</span>" +
+    row.innerHTML = '<span class="th">' + (R.agg ? h.n + "R-" + h.h : h.h) + "H</span>" +
       '<span class="tr ' + esc(h.result) + '">' + esc(jaOf(h.result)) + "</span>" +
-      '<span class="tt">' + esc(h.note) + '　<b class="num" style="color:var(--under)">' + sign(h.cum) + "</b></span>";
+      '<span class="tt">' + esc(h.note) + '　<b class="num" style="color:var(--under)">' + sign(h.cumT) + "</b></span>";
+    return row;
+  }
+  function pushTick(h, lead) {
+    if (h.pending) return;
+    if (ticker.querySelector(".empty")) ticker.innerHTML = "";
     var stick = ticker.scrollTop < 8;
-    ticker.insertBefore(row, ticker.firstChild);
+    ticker.insertBefore(rowFor(h), ticker.firstChild);
     if (stick) { ticker.scrollTop = 0; tickJump.hidden = true; }
     else { tickJump.hidden = false; tickJump.textContent = "↑ 最新 " + h.h + "H"; }
     if (lead) {
       Array.prototype.slice.call(ticker.children).forEach(function (c, i) { c.classList.toggle("lead", i === 0); });
-      if (announce) tickLive.textContent = h.h + "番 " + jaOf(h.result) + "、通算" + sign(h.cum);
+      if (announce) tickLive.textContent = h.h + "番 " + jaOf(h.result) + "、大会通算" + sign(h.cumT);
     }
   }
-  tickJump.addEventListener("click", function () {
-    ticker.scrollTo({ top: 0, behavior: "smooth" });
-    tickJump.hidden = true;
-  });
+  tickJump.addEventListener("click", function () { ticker.scrollTo({ top: 0, behavior: "smooth" }); tickJump.hidden = true; });
 
   /* ---- replay engine ---- */
+  var LAST = function () { return R.holes.length - 1; };
   function tiles(i) {
-    var upto = i < 0 ? [] : R.holes.slice(0, i + 1);
-    var count = function (kind) { return upto.filter(function (h) { return h.result === kind; }).length; };
+    var upto = i < 0 ? [] : R.holes.slice(0, i + 1).filter(function (h) { return !h.pending; });
+    var count = function (k) { return upto.filter(function (h) { return h.result === k; }).length; };
     $("hBird").textContent = count("birdie") + count("eagle");
     $("hBog").textContent = count("bogey") + count("dbogey");
-    $("hOut").textContent = i >= 8 ? R.out : "—";
-    $("hIn").textContent = i >= 17 ? R.in : "—";
+    if (R.agg) {
+      $("hOut").textContent = upto.length; $("hIn").textContent = R.score;
+    } else {
+      $("hOut").textContent = i >= 8 ? R.out : "—";
+      $("hIn").textContent = i >= 17 ? R.in : "—";
+    }
   }
   function tilesFinal() {
     $("hBird").textContent = R.birdies; $("hBog").textContent = R.bogeys;
-    $("hOut").textContent = R.out; $("hIn").textContent = R.in;
+    if (R.agg) { $("hOut").textContent = DV.holesPlayed; $("hIn").textContent = R.score; }
+    else { $("hOut").textContent = R.out; $("hIn").textContent = R.in; }
   }
   function paint(i) {
     cells.forEach(function (c, k) {
@@ -883,110 +1226,202 @@ __DATA__
       c.classList.toggle("cur", k === i);
       c.classList.toggle("now", k === i && playing);
     });
-    drawChart(i);
-    tiles(i);
+    drawChart(i); tiles(i);
   }
   function delayFor(i) {
-    if (i === 17) return 1600;
+    var k = R.agg ? 0.45 : 1;
+    if (i === LAST()) return 1600 * k;
+    if (R.agg) { return (i + 1) % 18 === 0 ? 1300 * k : 520 * k; }
     if (i === 7 || i === 14) return 1300;
     var r = R.holes[i].result;
-    return r === "birdie" || r === "eagle" || r === "bogey" || r === "dbogey" ? 880 : 520;
+    return (r === "birdie" || r === "eagle" || r === "bogey" || r === "dbogey") ? 880 : 520;
   }
   function step() {
     idx++;
-    if (idx > 17) { stop(true); return; }
-    paint(idx);
-    pushTick(R.holes[idx], true);
+    if (idx > LAST()) { stop(true); return; }
+    paint(idx); pushTick(R.holes[idx], true);
     timer = setTimeout(step, delayFor(idx));
   }
   function stop(done) {
-    playing = false;
-    clearTimeout(timer); timer = null;
+    playing = false; clearTimeout(timer); timer = null;
     cells.forEach(function (c) { c.classList.remove("now"); });
     btnPlay.textContent = done ? "▶ もう一度" : "▶ 再生";
     btnPlay.setAttribute("aria-pressed", "false");
-    if (done) { idx = 17; tilesFinal(); }
+    if (done) { idx = LAST(); tilesFinal(); }
   }
   function play() {
     if (mqReduce.matches) { showAll(); return; }
-    if (idx >= 17) reset();
+    if (idx >= LAST()) reset();
     playing = true;
-    btnPlay.textContent = "❚❚ 一時停止";
-    btnPlay.setAttribute("aria-pressed", "true");
-    ticker.classList.remove("expanded");
-    step();
+    btnPlay.textContent = "❚❚ 一時停止"; btnPlay.setAttribute("aria-pressed", "true");
+    ticker.classList.remove("expanded"); step();
   }
-  function reset() {
-    stop(false); idx = -1; paint(-1); resetTicker();
-    ticker.classList.remove("expanded");
-  }
+  function reset() { stop(false); idx = -1; paint(-1); resetTicker(); ticker.classList.remove("expanded"); }
   function showAll() {
     stop(true); ticker.innerHTML = "";
-    R.holes.slice().reverse().forEach(function (h) { pushTick(h, false); });
-    ticker.classList.add("expanded");
-    tickJump.hidden = true;
-    idx = 17; paint(17); tilesFinal();
-    btnPlay.textContent = "▶ もう一度";
-    btnPlay.setAttribute("aria-pressed", "false");
-    if (announce) tickLive.textContent = "18ホール分を表示しました。" + R.label + "はトータル" + R.score + "、" + sign(R.toPar);
+    var lastN = null;
+    R.holes.slice().reverse().forEach(function (h) {
+      pushTick(h, false);
+      if (R.agg && h.n !== lastN && !h.pending) {
+        lastN = h.n;
+      }
+    });
+    if (R.agg) {
+      var seen = {};
+      Array.prototype.slice.call(ticker.children).forEach(function (row) {
+        var n = (row.querySelector(".th") || {}).textContent || "";
+        var m = /^(\d+)R/.exec(n);
+        if (m && !seen[m[1]]) {
+          seen[m[1]] = 1;
+          var r = DV.live.filter(function (x) { return x.n === +m[1]; })[0];
+          var head = document.createElement("p");
+          head.className = "tick-rhead";
+          head.textContent = r.label + "　" + r.score + "（" + sign(r.toPar) + "）";
+          ticker.insertBefore(head, row);
+        }
+      });
+    }
+    ticker.classList.add("expanded"); tickJump.hidden = true;
+    idx = LAST(); paint(idx); tilesFinal();
+    btnPlay.textContent = "▶ もう一度"; btnPlay.setAttribute("aria-pressed", "false");
+    if (announce) tickLive.textContent = R.label + "の全ホールを表示しました。" + R.score + "、" + sign(R.toPar);
   }
   function claimUserControl() { started = true; if (io) { io.disconnect(); io = null; } announce = true; }
 
-  /* ---- ラウンドの読み込み ---- */
   function loadRound(n, autoplay) {
     stop(false);
-    R = PLAYABLE.filter(function (r) { return r.n === n; })[0] || R;
-    tabs.forEach(function (t) { t.setAttribute("aria-selected", String(+t.dataset.n === R.n)); });
-    $("replayEyebrow").textContent = "Replay ／ " + R.label + "「" + R.score + "」のホールごとの振り返り";
+    var next = CHAPTERS.filter(function (c) { return c.n === n && !c.pending; })[0];
+    if (!next) return;
+    R = next;
+    tabs.forEach(function (t) {
+      var on = +t.dataset.n === R.n;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+    });
+    $("replayPanel").setAttribute("aria-labelledby", "chap-" + R.n);
+    $("replayNow").innerHTML = '<span class="num">' + R.score + "</span>" + esc(R.label) +
+      "　" + (R.agg ? DV.holesPlayed + "ホール終了" : R.birdies + "バーディ" + (R.bogeys ? " / " + R.bogeys + "ボギー" : " / ノーボギー")) +
+      "　" + sign(R.agg ? DV.toPar : R.toPar) + (R.agg ? "" : "（大会通算 " + sign(DV.startCum[R.n] + R.toPar) + "）");
     $("replayNote").textContent = R.holesNote || "";
+    $("replayNote").hidden = !R.holesNote;
     buildStrip(); buildChart();
     idx = -1; resetTicker(); paint(-1);
-    if (autoplay) { mqReduce.matches ? showAll() : play(); }
+    if (autoplay) { mqReduce.matches || R.agg ? showAll() : play(); }
   }
 
-  tabs.forEach(function (t) {
-    t.addEventListener("click", function () {
-      claimUserControl();
-      loadRound(+t.dataset.n, true);
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { claimUserControl(); loadRound(+t.dataset.n, true); });
+    t.addEventListener("keydown", function (e) {
+      var d = { ArrowRight: 1, ArrowLeft: -1, Home: "first", End: "last" }[e.key];
+      if (d == null) return;
+      e.preventDefault();
+      var sel = tabs.filter(function (x) { return !x.classList.contains("todo"); });
+      var cur = sel.indexOf(t);
+      var to = d === "first" ? sel[0] : d === "last" ? sel[sel.length - 1] : sel[(cur + d + sel.length) % sel.length];
+      to.focus(); claimUserControl(); loadRound(+to.dataset.n, false);
     });
   });
   btnPlay.addEventListener("click", function () { claimUserControl(); playing ? stop(false) : play(); });
   $("btnAll").addEventListener("click", function () { claimUserControl(); showAll(); });
   $("btnReset").addEventListener("click", function () { claimUserControl(); reset(); play(); });
+  $("btnAll").textContent = "全ホールを表示";
 
   loadRound(R.n, false);
-  if (mqReduce.matches) {
-    showAll();
-  } else if ("IntersectionObserver" in window) {
+  if (mqReduce.matches) { showAll(); }
+  else if ("IntersectionObserver" in window) {
     io = new IntersectionObserver(function (e) {
       if (e[0].isIntersecting && !started) { started = true; io.disconnect(); io = null; play(); }
     }, { threshold: 0.6 });
     io.observe(strip);
   } else { play(); }
 
+  window.addEventListener("resize", (function () {
+    var t = null, narrow = window.matchMedia("(max-width: 640px)").matches;
+    return function () {
+      clearTimeout(t);
+      t = setTimeout(function () {
+        var now = window.matchMedia("(max-width: 640px)").matches;
+        if (now === narrow) return;
+        narrow = now; buildSpine(); buildChart(); paint(idx);
+      }, 200);
+    };
+  })());
+
   /* ---- leaderboard ---- */
-  $("lbColHead").textContent = D.leaderboard.columnLabel || "R1";
-  $("lbLede").textContent = D.leaderboard.asOf + "時点。" + T.field + "人が出場し、" + T.cut +
-    "が決勝ラウンドへ進みました。優勝賞金" + T.winnerPrize + "、賞金総額" + T.purse + "。";
-  $("lbBody").innerHTML = D.leaderboard.rows.map(function (r) {
-    if (r.gap) return '<tr class="gap"><td colspan="4">' + esc(r.label) + "</td></tr>";
+  var CUT = T.cutLine;
+  $("lbColHead").textContent = "トータル";
+  $("lbLede").textContent = D.leaderboard.asOf + "時点。" + T.field + "人が出場し、通算" +
+    Math.abs(CUT.toPar) + "アンダーまでの" + CUT.advanced + "人が決勝ラウンドへ進みました。優勝賞金" +
+    T.winnerPrize + "、賞金総額" + T.purse + "。";
+  var rowsSorted = D.leaderboard.rows.slice().sort(function (a, b) { return a.toPar - b.toPar; });
+  var cutInserted = false;
+  $("lbBody").innerHTML = rowsSorted.map(function (r) {
+    var gapRow = "";
+    if (!cutInserted && lastRound.n >= CUT.appliesAfterRound && r.toPar >= CUT.toPar) {
+      cutInserted = true;
+      gapRow = '<tr class="gap"><td colspan="4">⋯ ' + esc(CUT.label) + " ＝ 通算" + sign(CUT.toPar) +
+        "（" + CUT.advanced + "人が決勝ラウンドへ）</td></tr>";
+    }
     var cls = (r.highlight ? "me " : "") + (r.watch ? "watch " : "") + (r.muted ? "mutedrow" : "");
-    return '<tr class="' + cls + '">' +
+    var row = '<tr class="' + cls + '">' +
       '<td><span class="pos' + (/^[0-9T]/.test(r.pos) ? "" : " word") + '">' + esc(r.pos) + "</span></td>" +
       '<td><span class="pname">' + esc(r.name) + "</span>" + (r.note ? '<span class="pnote">' + esc(r.note) + "</span>" : "") + "</td>" +
       '<td class="r"><span class="tp ' + (r.toPar < 0 ? "under" : "over") + '">' + sign(r.toPar) + "</span></td>" +
       '<td class="r"><span class="sc">' + r.score + "</span></td></tr>";
+    return gapRow + row;
   }).join("");
   $("lbFoot").innerHTML =
+    esc(D.leaderboard.excerptNote) + "<br>" +
     '<i class="legend-key me"></i> 安田 祐香　<i class="legend-key watch"></i> 注目選手（' +
-    esc(D.leaderboard.watchNote) + "）<br>※ " + esc(D.leaderboard.namesNote);
+    esc(D.leaderboard.watchNote) + "）<br>※ " + esc(D.leaderboard.namesNote) +
+    "<br>※ " + esc(D.leaderboard.movementNote);
 
-  $("nextRound").textContent = D.meta.nextRound;
-  $("nextFormat").textContent = T.format + "。" + T.cut + "。";
+  /* 差のラダー：首位からの距離を1本の軸に */
+  (function () {
+    var rows = rowsSorted.filter(function (r) { return !r.muted; });
+    var vals = D.leaderboard.rows.map(function (r) { return r.toPar; }).concat([CUT.toPar]);
+    var lo = Math.min.apply(null, vals) - 1, hi = Math.max.apply(null, vals) + 1;
+    var W = 700, ML = 8, MR = 8, rowH = 30, H = rows.length * rowH + 42;
+    var x = function (v) { return ML + (W - ML - MR) * ((v - lo) / (hi - lo)); };
+    var g = '<line class="ld-cut" x1="' + x(CUT.toPar).toFixed(1) + '" y1="14" x2="' + x(CUT.toPar).toFixed(1) + '" y2="' + (H - 22) + '"/>' +
+      '<text class="ld-cut-txt" x="' + x(CUT.toPar).toFixed(1) + '" y="10" text-anchor="middle">' + esc(CUT.label) + " " + sign(CUT.toPar) + "</text>";
+    rows.forEach(function (r, i) {
+      var y = 26 + i * rowH;
+      g += '<line class="ld-stem" x1="' + x(rows[0].toPar).toFixed(1) + '" y1="' + y + '" x2="' + x(r.toPar).toFixed(1) + '" y2="' + y + '"/>' +
+        '<circle class="ld-dot ' + (r.highlight ? "me" : r.watch ? "watch" : "") + '" cx="' + x(r.toPar).toFixed(1) + '" cy="' + y + '" r="5"/>' +
+        '<text class="ld-txt" x="' + (x(r.toPar) + 10).toFixed(1) + '" y="' + (y + 4) + '">' + esc(r.name) + " " + sign(r.toPar) +
+        (i ? "（首位と" + (r.toPar - rows[0].toPar) + "打差）" : "") + "</text>";
+    });
+    $("ladder").innerHTML = '<p class="eyebrow" style="margin-bottom:8px">首位からの距離</p>' +
+      '<svg class="ladder-svg" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="首位からの打差を1本の軸に並べた図。">' + g + "</svg>";
+  })();
+
+  /* 残りホールの足し算（未消化ラウンドがあるときだけ） */
+  if (DV.hasPending && TT.projection) {
+    var pj = TT.projection, base = DV.strokes;
+    var vals = pj.scores.map(function (v) { return base + v; });
+    var lo = Math.min.apply(null, vals) - 3, hi = Math.max.apply(null, vals) + 3;
+    $("projection").hidden = false;
+    $("projection").innerHTML =
+      '<span class="eyebrow">あと' + DV.holesLeft + "ホール</span>" +
+      "<h3>予想ではなく、足し算</h3>" +
+      '<div class="proj-rows">' + pj.scores.map(function (v, i) {
+        var p = ((vals[i] - lo) / (hi - lo)) * 100;
+        return '<div class="proj-row"><span class="pj-k">最終R ' + v + " なら</span>" +
+          '<span class="pj-t" style="--p:' + p.toFixed(1) + '%"></span>' +
+          '<span class="pj-v">' + vals[i] + "</span></div>";
+      }).join("") + "</div>" +
+      '<p class="foot">' + esc(pj.note) + "<br>" + esc(pj.unknownNote) + "</p>";
+  }
+
+  if (DV.hasPending) {
+    fillText($("nextRound"), D.meta.nextRound);
+    $("nextFormat").textContent = T.format + "。" + T.edition + " " + T.name + "。";
+  } else { $("nextCard").hidden = true; }
 
   /* ---- quote + insights ---- */
   var qSrc = D.sources.filter(function (s) { return s.quoteSource; })[0];
-  var Q = PLAYED.slice().reverse().filter(function (r) { return r.quote; })[0] || PLAYED[0];
+  var Q = DV.played.slice().reverse().filter(function (r) { return r.quote; })[0] || DV.played[0];
   var qLabel = (Q.label || "ラウンド") + "後";
   $("quoteBlock").innerHTML =
     '<span class="q">「' + esc(Q.quote) + '」</span>' +
@@ -994,13 +1429,18 @@ __DATA__
     (qSrc ? '　<a href="' + esc(qSrc.url) + '" target="_blank" rel="noopener noreferrer">出典</a>' : "") + "</span>";
 
   var kindLabel = { stat: "数字で見る", insight: "背景", gear: "ギア", warning: "留意点" };
-  $("insights").innerHTML = D.insights.map(function (i) {
-    return '<div class="ins ' + i.kind + '"><span class="tag">' + esc(kindLabel[i.kind] || "") + "</span>" +
-      "<h3>" + esc(i.title) + "</h3><p>" + esc(i.body) + "</p></div>";
-  }).join("");
+  fillText($("insLede"), TT.insightsLede);
+  $("insights").innerHTML = D.insights
+    .filter(function (i) { return !i.expiresAfterRound || i.expiresAfterRound >= lastRound.n; })
+    .map(function (i) {
+      return '<div class="ins ' + i.kind + '"><span class="tag">' + esc(kindLabel[i.kind] || "") +
+        (i.round ? '<span class="tag rd">第' + i.round + "R</span>" : '<span class="tag rd">大会全体</span>') + "</span>" +
+        "<h3>" + esc(i.title) + "</h3><p>" + fill(i.body) + "</p></div>";
+    }).join("");
 
   /* ---- stats ---- */
-  $("statsLede").textContent = D.stats2026.asOf + "。飛距離と平均バーディ数が上位、フェアウェイキープ率とパーセーブ率が下位という、はっきりした「攻撃型」のプロフィール。";
+  $("statsLede").textContent = D.stats2026.asOf + "。" + D.stats2026.summary +
+    "　※ この大会中のスタッツではなく、2026シーズン通年のツアー内順位です。";
   $("rails").innerHTML = D.stats2026.items.map(function (s) {
     var tag = s.rank <= 20 ? '<span class="rank-tag strong">強み</span>'
             : s.rank >= 45 ? '<span class="rank-tag weak">課題</span>' : "";
@@ -1013,7 +1453,15 @@ __DATA__
   }).join("");
 
   /* ---- recent form ---- */
-  $("formList").innerHTML = D.recentForm.map(function (f) {
+  var formRows = [{
+    date: lastRound.date.replace(/^\d+年/, "").replace(/\(.\)$/, ""),
+    event: T.name + "（" + lastRound.label + "終了）",
+    result: TT.position === "単独首位" ? "首位" : TT.position,
+    current: true,
+    note: DV.played.map(function (r) { return r.tab + " " + r.score; }).join(" / ") +
+      "　通算" + sign(DV.toPar) + "・" + DV.strokes + "ストローク" + (DV.hasPending ? "。残り" + DV.holesLeft + "ホール" : "")
+  }].concat(D.recentForm);
+  $("formList").innerHTML = formRows.map(function (f) {
     return '<div class="form-row' + (f.current ? " cur" : "") + '">' +
       '<span class="fd">' + esc(f.date) + "</span>" +
       '<span class="fe">' + esc(f.event) + (f.note ? "<small>" + esc(f.note) + "</small>" : "") + "</span>" +
@@ -1037,6 +1485,7 @@ __DATA__
   }).concat(P.amateur.map(function (a) { return "<li>" + esc(a) + "</li>"; })).join("");
 
   /* ---- gear ---- */
+  $("gearAsOf").textContent = "（" + D.equipment.asOf + "）";
   $("gearList").innerHTML = D.equipment.items.map(function (g) {
     return '<div class="card gear' + (g.unknown ? " unknown" : "") + '">' +
       '<span class="cat">' + esc(g.cat) + "</span>" +
@@ -1046,23 +1495,25 @@ __DATA__
   }).join("");
 
   /* ---- cheers ---- */
-  $("h-ins").textContent = TT.headline;
-  $("h-cheer").textContent = TT.cheerHeading;
+  fillText($("h-ins"), TT.headlineTemplate);
+  fillText($("h-cheer"), DV.holesLeft ? TT.cheerHeadingTemplate : TT.cheerHeadingClosed);
   $("lbEyebrow").textContent = "Leaderboard ／ " + D.leaderboard.asOf;
   $("lbCaption").textContent = D.leaderboard.asOf + "時点の順位表";
-  $("dataNotice").textContent = D.meta.dataNotice;
-  $("cheerLede").textContent = D.meta.nextRound;
+  $("dataNotice").textContent = "このページのデータは" + D.meta.roundStatusLabel + "時点のスナップショットです。" + D.meta.dataNoticeBody;
+  fillText($("cheerLede"), DV.hasPending ? D.meta.nextRound : TT.closingNote);
   $("cheers").innerHTML = D.cheers.map(function (c) {
-    return '<div class="card cheer"><span class="cg">' + esc(c.tag) + '</span><span class="ct">' + esc(c.text) + "</span></div>";
+    return '<div class="card cheer"><span class="cg">' + esc(c.tag) +
+      (c.round ? '<span class="tag rd">第' + c.round + "R</span>" : "") + '</span>' +
+      '<span class="ct">' + fill(c.text) + "</span></div>";
   }).join("");
 
   /* ---- sources ---- */
   $("sourceList").innerHTML = D.sources.map(function (s) {
-    return '<a href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.label) +
+    return '<a id="src-' + esc(s.id || "") + '" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.label) +
       '<span class="smeta">' + (s.date ? "（" + esc(s.date) + "）" : "") +
       '<span class="kind">' + esc(s.kind) + "</span></span></a>";
   }).join("");
 
-  $("footNote").textContent = "主催：" + T.host + "。" + D.meta.note + "　" + T.recordNote;
+  $("footNote").textContent = "主催：" + T.host + "。掲載内容は" + D.meta.roundStatusLabel + "時点のものです。　" + T.recordNote;
 })();
 </script>
