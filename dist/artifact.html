@@ -187,6 +187,19 @@
   .kv .k { font-size: 11px; font-weight: 700; color: var(--ink-3); }
   .kv .v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 24px; letter-spacing: -.02em; }
   .hero-meta { font-size: 12px; color: var(--ink-3); line-height: 1.7; }
+  .rounds { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+  .rd {
+    flex: 1 1 96px; display: flex; flex-direction: column; gap: 2px;
+    padding: 9px 12px; border-radius: 8px; background: var(--surface-2);
+    border: 1px solid var(--line-2);
+  }
+  .rd .rd-k { font-size: 10.5px; font-weight: 700; color: var(--ink-3); white-space: nowrap; }
+  .rd .rd-v { display: flex; align-items: baseline; gap: 6px; }
+  .rd .rd-s { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 20px; }
+  .rd .rd-p { font-family: var(--f-num); font-weight: 700; font-size: 12px; color: var(--under); }
+  .rd .rd-n { font-size: 10.5px; color: var(--ink-3); line-height: 1.5; }
+  .rd.pending { border-style: dashed; background: none; }
+  .rd.pending .rd-s { color: var(--ink-3); font-size: 15px; }
   .pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px; }
   .pill {
     font-size: 12px; font-weight: 700; padding: 4px 11px; border-radius: 999px;
@@ -310,7 +323,7 @@
   /* ---------- leaderboard ---------- */
   table.lb { width: 100%; border-collapse: collapse; font-size: 14px; }
   table.lb th {
-    font-size: 11px; font-weight: 700; color: var(--ink-3);
+    font-size: 11px; font-weight: 700; color: var(--ink-3); white-space: nowrap;
     text-align: left; padding: 0 10px 9px; border-bottom: 1px solid var(--line);
   }
   table.lb th.r, table.lb td.r { text-align: right; }
@@ -324,6 +337,8 @@
     font-size: 11.5px; border-top: 1px dashed var(--line); background: none;
   }
   .pos { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 15px; color: var(--ink-2); }
+  /* 「予選通過」のような和文の順位ラベルは、数字と同じ字送りだと詰まって見える */
+  .pos.word { font-family: var(--f-jp); font-size: 11.5px; letter-spacing: 0; line-height: 1.4; display: inline-block; }
   tr.me .pos { color: var(--under); }
   .pname { font-weight: 700; white-space: nowrap; }
   tr.mutedrow .pname { font-weight: 400; color: var(--ink-3); white-space: normal; }
@@ -441,8 +456,8 @@
   @media (max-width: 400px) {
     table.lb td, table.lb th { padding-left: 6px; padding-right: 6px; }
     table.lb th:nth-child(1), table.lb td:nth-child(1) { width: 38px; }
-    table.lb th:nth-child(3), table.lb td:nth-child(3) { width: 48px; }
-    table.lb th:nth-child(4), table.lb td:nth-child(4) { width: 32px; }
+    table.lb th:nth-child(3), table.lb td:nth-child(3) { width: 46px; }
+    table.lb th:nth-child(4), table.lb td:nth-child(4) { width: 44px; }
   }
   @media (max-width: 360px) {
     .form-row { grid-template-columns: minmax(0,1fr) auto; row-gap: 2px; }
@@ -459,14 +474,14 @@
 <script type="application/json" id="dataset">
 {
   "meta": {
-    "generatedAt": "2026-08-15T12:00+09:00",
-    "generatedAtLabel": "2026年8月15日(土) 12:00",
-    "roundStatus": "R2 IN PROGRESS",
-    "roundStatusLabel": "第2ラウンド 進行中",
-    "nextRound": "第2ラウンド（予選最終日）は本日8月15日(土)。最終ラウンドは8月16日(日)。",
-    "note": "掲載内容は第1ラウンド終了時点のものです。",
-    "dataAsOf": "掲載データは第1ラウンド終了時点",
-    "liveNote": "第2ラウンドは本日8月15日(土)に進行中です。第2ラウンドのスコアは、取得元サイトへのアクセスが遮断されているため、このダッシュボードにまだ反映できていません。最終ラウンドは8月16日(日)。"
+    "generatedAt": "2026-08-15T18:00+09:00",
+    "generatedAtLabel": "2026年8月15日(土) 18:00",
+    "roundStatus": "R2 FINAL",
+    "roundStatusLabel": "第2ラウンド終了",
+    "nextRound": "最終ラウンドは8月16日(日)。7打差の単独首位から、ツアー3勝目に挑みます。",
+    "note": "掲載内容は第2ラウンド終了時点のものです。",
+    "dataAsOf": "掲載データは第2ラウンド終了時点",
+    "liveNote": "第2ラウンドが終了し、安田祐香が通算19アンダーで7打差の単独首位。36ホール125ストロークはJLPGAツアー新記録です。最終ラウンドは明日8月16日(日)。"
   },
   "tournament": {
     "name": "NEC軽井沢72ゴルフトーナメント",
@@ -645,78 +660,51 @@
     ]
   },
   "leaderboard": {
-    "asOf": "第1ラウンド終了",
+    "asOf": "第2ラウンド終了",
+    "columnLabel": "トータル",
     "rows": [
       {
         "pos": "1",
         "name": "安田 祐香",
-        "toPar": -11,
-        "score": 61,
+        "toPar": -19,
+        "score": 125,
         "highlight": true,
-        "note": "NEC所属・ホステスプロ"
+        "note": "NEC所属・ホステスプロ。36ホール125はツアー新記録"
       },
       {
-        "pos": "2",
-        "name": "横峯 さくら",
-        "toPar": -9,
-        "score": 63,
-        "note": "40歳・エプソン。ツアー通算23勝、自己ベストに並ぶ63"
+        "pos": "T2",
+        "name": "菅 楓華",
+        "toPar": -12,
+        "score": 132
       },
       {
-        "pos": "T3",
-        "name": "佐久間 朱莉",
-        "toPar": -8,
-        "score": 64
+        "pos": "T2",
+        "name": "岡山 絵里",
+        "toPar": -12,
+        "score": 132
       },
       {
-        "pos": "T3",
-        "name": "イ・ミニョン",
-        "toPar": -8,
-        "score": 64
-      },
-      {
-        "pos": "T5",
-        "name": "吉澤 柚月",
-        "toPar": -7,
-        "score": 65,
-        "note": "前週・北海道meijiカップでツアー初優勝。7バーディ ノーボギー"
-      },
-      {
-        "pos": "T5",
-        "name": "ほか3名",
-        "toPar": -7,
-        "score": 65,
-        "muted": true
-      },
-      {
-        "pos": "T9",
-        "name": "吉田 鈴",
-        "toPar": -6,
-        "score": 66,
-        "note": "7バーディ1ボギー"
-      },
-      {
-        "pos": "T9",
-        "name": "ほか数名",
-        "toPar": -6,
-        "score": 66,
+        "pos": "T2",
+        "name": "ほか2名",
+        "toPar": -12,
+        "score": 132,
         "muted": true
       },
       {
         "gap": true,
-        "label": "⋯ 10位〜59位は省略 ／ カットライン＝2R終了時 上位50位タイまで"
+        "label": "⋯ カットライン＝通算2アンダー ／ 62人が決勝ラウンドへ進出"
       },
       {
-        "pos": "60",
+        "pos": "通過",
         "name": "桑木 志帆",
-        "toPar": 1,
-        "score": 73,
-        "note": "+1・60位発進。カット圏外からのスタート",
-        "watch": true
+        "toPar": -2,
+        "score": 142,
+        "watch": true,
+        "note": "AIG全英女子オープン覇者。カットライン上でぎりぎり予選通過"
       }
     ],
-    "namesNote": "-7／-6グループの一部選手は日本語表記を確認できなかったため人数表記にまとめています。",
-    "watchNote": "桑木 志帆はカット圏外の+1で発進"
+    "namesNote": "-12グループの残り2名は日本語表記を確認できなかったため人数表記にまとめています。ストローク数は par144 と対パーから算出しています。",
+    "watchNote": "桑木 志帆はカットライン上で予選通過"
   },
   "stats2026": {
     "asOf": "2026年8月（NEC軽井沢72 開幕前時点）",
@@ -768,11 +756,19 @@
   },
   "recentForm": [
     {
+      "date": "2026/08/15",
+      "event": "NEC軽井沢72（第2R終了）",
+      "result": "首位",
+      "toPar": -19,
+      "current": true,
+      "note": "64（9バーディ1ボギー）。7打差の単独首位で最終日へ"
+    },
+    {
       "date": "2026/08/14",
       "event": "NEC軽井沢72（第1R）",
       "result": "首位",
       "toPar": -11,
-      "current": true
+      "current": false
     },
     {
       "date": "2026/08/07-09",
@@ -844,6 +840,11 @@
   },
   "insights": [
     {
+      "kind": "stat",
+      "title": "36ホール125 ── 23年間破られなかった記録を1打更新",
+      "body": "2003年ミズノクラシックでアニカ・ソレンスタムがマークした126が、JLPGAツアーの36ホール最少ストロークだった。61+64=125。パー72換算で通算19アンダー、2位との差は7打。"
+    },
+    {
       "title": "シーズン平均から −11.7 打の外れ値",
       "body": "2026年の平均ストロークは72.7。この日の61は自身のシーズン平均を11.7打も下回る。1試合の中の1ラウンドとしては、統計的にほぼ“別人”の域。",
       "kind": "stat"
@@ -869,12 +870,16 @@
       "kind": "insight"
     },
     {
-      "title": "追う側も強い。2打差は安全圏ではない",
-      "body": "2位は通算23勝の横峯さくら（63、13年ぶりの自己ベストタイ）、5位に前週初優勝の吉澤柚月。54ホール大会で残り36ホール、2打差は“いつでもひっくり返る”距離。",
+      "title": "7打差でも、まだ18ホール残っている",
+      "body": "2位グループは通算12アンダーで4人。7打差は大きいが、初日に自身が11打伸ばしたコースでもある。本人も「最終日はまたイチから頑張りたい」と話しており、守りに入る位置ではない。",
       "kind": "warning"
     }
   ],
   "cheers": [
+    {
+      "tag": "ツアー新記録",
+      "text": "61 → 64。2日間で125ストローク。アニカの記録を23年ぶりに塗り替えた。"
+    },
     {
       "text": "ホステスプロが自社主催大会でコースレコードタイ。こんな筋書き、誰が書ける？",
       "tag": "NECの週"
@@ -901,6 +906,31 @@
     }
   ],
   "sources": [
+    {
+      "label": "GDO：「フフフ、うれしいです」安田祐香が“ツアー新記録”で7打差独走の最終日へ",
+      "url": "https://news.golfdigest.co.jp/news/results/jlpga/article/194033/1/",
+      "date": "2026-08-15",
+      "kind": "一次媒体",
+      "quoteSource": true
+    },
+    {
+      "label": "時事通信：安田祐香が首位キープ＝新記録36ホール125―NEC女子ゴルフ",
+      "url": "https://sp.m.jiji.com/article/show/3846239",
+      "date": "2026-08-15",
+      "kind": "一次媒体"
+    },
+    {
+      "label": "THE ANSWER：2日間で「-19」爆発 安田祐香が23年ぶり新記録、7打差首位独走で最終日へ",
+      "url": "https://news.yahoo.co.jp/articles/6d27f342158912bd169796d8a170d00673686bce",
+      "date": "2026-08-15",
+      "kind": "配信先"
+    },
+    {
+      "label": "ALBA Net：＜速報＞安田祐香が単独首位キープ 2位に佐久間朱莉と菅楓華らが続く",
+      "url": "https://www.alba.co.jp/articles/category/tour/jlpga/post/qmisn6ex-rb3/",
+      "date": "2026-08-15",
+      "kind": "一次媒体"
+    },
     {
       "label": "JLPGA 日本女子プロゴルフ協会：安田祐香 コースレコードタイ61で首位発進",
       "url": "https://www.lpga.or.jp/news/info/83086",
@@ -935,8 +965,7 @@
       "label": "中日スポーツ：「気付けば」大会コース記録に並ぶ『61』で首位発進",
       "url": "https://www.chunichi.co.jp/article/1296527",
       "date": "2026-08",
-      "kind": "一次媒体",
-      "quoteSource": true
+      "kind": "一次媒体"
     },
     {
       "label": "THE ANSWER（Yahoo!ニュース配信）：衝撃スコア「61」の裏にコーチの練習法",
@@ -998,7 +1027,60 @@
       "date": "2020-02",
       "kind": "主催者"
     }
-  ]
+  ],
+  "total": {
+    "through": "36ホール終了（第2ラウンド終了時点）",
+    "toPar": -19,
+    "strokes": 125,
+    "margin": 7,
+    "position": "単独首位",
+    "records": [
+      "36ホール125ストロークはJLPGAツアー新記録（2003年ミズノクラシックでアニカ・ソレンスタムがマークした126を23年ぶりに更新）",
+      "初日の61は大会コースレコードタイ（2023年 神谷そら）"
+    ]
+  },
+  "rounds": [
+    {
+      "n": 1,
+      "label": "第1ラウンド",
+      "date": "8/14(金)",
+      "score": 61,
+      "toPar": -11,
+      "birdies": 11,
+      "bogeys": 0,
+      "note": "大会コースレコードタイ",
+      "hasHoles": true
+    },
+    {
+      "n": 2,
+      "label": "第2ラウンド",
+      "date": "8/15(土)",
+      "score": 64,
+      "toPar": -8,
+      "birdies": 9,
+      "bogeys": 1,
+      "note": "36ホール125＝ツアー新記録",
+      "hasHoles": false
+    },
+    {
+      "n": 3,
+      "label": "最終ラウンド",
+      "date": "8/16(日)",
+      "pending": true,
+      "note": "7打差の単独首位から"
+    }
+  ],
+  "round2": {
+    "date": "2026年8月15日(土)",
+    "score": 64,
+    "toPar": -8,
+    "birdies": 9,
+    "bogeys": 1,
+    "position": "単独首位",
+    "quote": "フフフ、うれしいです",
+    "quoteExtra": "ショットがキレキレで、パットも入ってくれている。最終日はまたイチから頑張りたいです",
+    "holesNote": "第2ラウンドのホール別スコアは、参照できた公開ソースでは確認できませんでした。ホールごとのリプレイは第1ラウンドのものです。"
+  }
 }
 </script>
 
@@ -1046,13 +1128,14 @@
           <span class="kv"><span class="k">順位</span><span class="v" id="heroPos">1</span></span>
           <span class="kv"><span class="k">2位との差</span><span class="v" id="heroLead">2打</span></span>
         </div>
+        <div class="rounds" id="rounds"></div>
         <p class="hero-meta" id="heroMeta"></p>
         <div class="pills" id="heroPills"></div>
       </div>
 
       <div class="card">
         <div class="card-head">
-          <span class="eyebrow">Round 1 Replay ／ ホールごとの振り返り</span>
+          <span class="eyebrow" id="replayEyebrow"></span>
           <div class="controls">
             <button class="ctl primary" id="btnPlay" type="button" aria-pressed="false">▶ 再生</button>
             <button class="ctl" id="btnAll" type="button">全18ホールを表示</button>
@@ -1065,6 +1148,7 @@
           </div>
           <div class="replay-strip" id="strip" role="list" aria-label="1番から18番までのホール別結果"></div>
           <div class="strip-legend" id="stripLegend"></div>
+          <p class="foot" id="replayNote"></p>
           <div class="halves">
             <div class="half"><span class="k">OUT</span><span class="v num" id="hOut">—</span></div>
             <div class="half"><span class="k">IN</span><span class="v num" id="hIn">—</span></div>
@@ -1098,7 +1182,7 @@
           <div class="card card-pad">
             <table class="lb">
               <caption class="visually-hidden">第1ラウンド終了時点の順位表</caption>
-              <thead><tr><th scope="col" style="width:56px;">順位</th><th scope="col">選手</th><th scope="col" class="r" style="width:64px;">対パー</th><th scope="col" class="r" style="width:56px;">R1</th></tr></thead>
+              <thead><tr><th scope="col" style="width:56px;">順位</th><th scope="col">選手</th><th scope="col" class="r" style="width:64px;">対パー</th><th scope="col" class="r" style="width:64px;" id="lbColHead">R1</th></tr></thead>
               <tbody id="lbBody"></tbody>
             </table>
             <p class="foot" id="lbFoot"></p>
@@ -1235,19 +1319,34 @@
     "<br><span style=\"color:var(--ink-3)\">" + esc(D.meta.dataAsOf) + "／最終更新 " + esc(D.meta.generatedAtLabel) + "</span>";
 
   /* ---- hero ---- */
-  $("heroEyebrow").textContent = "Round 1 / 3 · " + R.date + " 終了 · " + R.position;
+  var TT = D.total;
+  var doneRounds = D.rounds.filter(function (r) { return !r.pending; });
+  var lastRound = doneRounds[doneRounds.length - 1];
+  $("heroEyebrow").textContent =
+    "Round " + lastRound.n + " / " + D.rounds.length + " · " + lastRound.date + " 終了 · " + TT.position;
   $("heroName").textContent = P.name;
   $("heroNameSub").textContent = P.kana + "（" + P.nickname + "）／ " + P.affiliation;
-  $("heroToPar").textContent = sign(R.toPar);
-  $("heroScore").textContent = R.score;
+  $("heroToPar").textContent = sign(TT.toPar);
+  $("heroScore").textContent = TT.strokes;
   var meRow = D.leaderboard.rows.filter(function (r) { return r.highlight; })[0];
   $("heroPos").textContent = (meRow ? meRow.pos : "?") + "位";
-  $("heroLead").textContent = R.margin + "打";
+  $("heroLead").textContent = TT.margin + "打";
   $("heroMeta").textContent = T.dates + "／" + T.format + "／" + T.course + "（Par " + T.par + " · " + T.yards.toLocaleString() + "yd）";
 
-  var pills = [{ t: R.birdies + "バーディ", c: "hot" },
-               { t: R.bogeys === 0 ? "ノーボギー" : R.bogeys + "ボギー", c: R.bogeys === 0 ? "hot" : "" }]
-    .concat(R.records.map(function (r) { return { t: r, c: "cool" }; }))
+  $("rounds").innerHTML = D.rounds.map(function (r) {
+    if (r.pending) {
+      return '<div class="rd pending"><span class="rd-k">' + esc(r.label) + " " + esc(r.date) + "</span>" +
+        '<span class="rd-v"><span class="rd-s">明日</span></span>' +
+        (r.note ? '<span class="rd-n">' + esc(r.note) + "</span>" : "") + "</div>";
+    }
+    return '<div class="rd"><span class="rd-k">' + esc(r.label) + " " + esc(r.date) + "</span>" +
+      '<span class="rd-v"><span class="rd-s">' + r.score + '</span><span class="rd-p">' + sign(r.toPar) + "</span></span>" +
+      '<span class="rd-n">' + r.birdies + "バーディ" + (r.bogeys ? " / " + r.bogeys + "ボギー" : " / ノーボギー") +
+      (r.note ? "　" + esc(r.note) : "") + "</span></div>";
+  }).join("");
+
+  var pills = [{ t: TT.through, c: "" }]
+    .concat(TT.records.map(function (r) { return { t: r, c: "cool" }; }))
     .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }]);
   $("heroPills").innerHTML = pills.map(function (p) { return '<span class="pill ' + p.c + '">' + esc(p.t) + "</span>"; }).join("");
 
@@ -1261,6 +1360,8 @@
       '<span class="cum">' + sign(h.cum) + "</span></div>";
   }).join("");
   var cells = Array.prototype.slice.call(strip.children);
+  $("replayEyebrow").textContent = "Round 1 Replay ／ 初日「" + R.score + "」のホールごとの振り返り";
+  $("replayNote").textContent = D.round2 && D.round2.holesNote ? D.round2.holesNote : "";
 
   /* 凡例はデータに実在する種別からだけ作る */
   var kinds = [];
@@ -1437,12 +1538,14 @@
   }
 
   /* ---- leaderboard ---- */
-  $("lbLede").textContent = T.field + "人が出場。" + T.cut + "が決勝ラウンドへ進みます。優勝賞金" + T.winnerPrize + "、賞金総額" + T.purse + "。";
+  $("lbColHead").textContent = D.leaderboard.columnLabel || "R1";
+  $("lbLede").textContent = D.leaderboard.asOf + "時点。" + T.field + "人が出場し、" + T.cut +
+    "が決勝ラウンドへ進みました。優勝賞金" + T.winnerPrize + "、賞金総額" + T.purse + "。";
   $("lbBody").innerHTML = D.leaderboard.rows.map(function (r) {
     if (r.gap) return '<tr class="gap"><td colspan="4">' + esc(r.label) + "</td></tr>";
     var cls = (r.highlight ? "me " : "") + (r.watch ? "watch " : "") + (r.muted ? "mutedrow" : "");
     return '<tr class="' + cls + '">' +
-      '<td><span class="pos">' + esc(r.pos) + "</span></td>" +
+      '<td><span class="pos' + (/^[0-9T]/.test(r.pos) ? "" : " word") + '">' + esc(r.pos) + "</span></td>" +
       '<td><span class="pname">' + esc(r.name) + "</span>" + (r.note ? '<span class="pnote">' + esc(r.note) + "</span>" : "") + "</td>" +
       '<td class="r"><span class="tp ' + (r.toPar < 0 ? "under" : "over") + '">' + sign(r.toPar) + "</span></td>" +
       '<td class="r"><span class="sc">' + r.score + "</span></td></tr>";
@@ -1456,9 +1559,11 @@
 
   /* ---- quote + insights ---- */
   var qSrc = D.sources.filter(function (s) { return s.quoteSource; })[0];
+  var Q = D.round2 && D.round2.quote ? D.round2 : R;
+  var qLabel = Q === R ? "第1ラウンド後" : "第2ラウンド後";
   $("quoteBlock").innerHTML =
-    '<span class="q">「' + esc(R.quote) + '」</span>' +
-    '<span class="attr">' + esc(P.name) + "　第1ラウンド後　" + esc(R.quoteExtra) +
+    '<span class="q">「' + esc(Q.quote) + '」</span>' +
+    '<span class="attr">' + esc(P.name) + "　" + qLabel + "　" + esc(Q.quoteExtra) +
     (qSrc ? '　<a href="' + esc(qSrc.url) + '" target="_blank" rel="noopener noreferrer">出典</a>' : "") + "</span>";
 
   var kindLabel = { stat: "数字で見る", insight: "背景", gear: "ギア", warning: "留意点" };
