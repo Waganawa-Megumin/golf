@@ -220,7 +220,8 @@
     font-size: 9px; font-weight: 800; letter-spacing: .08em; padding: 0 4px; border-radius: 3px;
     background: var(--ink-2); color: var(--surface); margin-left: 4px;
   }
-  #chapters > button.todo .ch-s { color: var(--ink-3); font-size: 13px; }
+  #chapters > button.todo { cursor: not-allowed; opacity: .72; }
+  #chapters > button.todo .ch-s { color: var(--ink-3); font-size: 14px; }
 
   .replay-now { font-size: 12.5px; color: var(--ink-2); margin-bottom: 6px; }
   .replay-now .num { color: var(--ink); font-size: 17px; margin-right: 4px; }
@@ -872,7 +873,9 @@ __DATA__
      ====================================================================== */
   function derive(D) {
     var live = D.rounds.filter(function (r) { return !r.canceled; });
-    var played = live.filter(function (r) { return !r.pending; });
+    var played = live.filter(function (r) { return !r.pending; });          // 進行中も含む
+    var done = played.filter(function (r) { return !r.inProgress; });        // 18ホール終えたもの
+    var running = played.filter(function (r) { return r.inProgress; })[0] || null;
     var holesTotal = live.length * 18;
     var startCum = {}, acc = 0;
     live.forEach(function (r) { startCum[r.n] = acc; if (!r.pending) acc += r.toPar; });
@@ -894,17 +897,18 @@ __DATA__
       }
     });
 
-    var strokes = played.reduce(function (a, r) { return a + r.score; }, 0);
+    var holesPlayed = done.length * 18 + (running ? running.through : 0);
     return {
-      live: live, played: played, holesTotal: holesTotal,
-      holesPlayed: played.length * 18, holesLeft: holesTotal - played.length * 18,
+      live: live, played: played, done: done, running: running, holesTotal: holesTotal,
+      holesPlayed: holesPlayed, holesLeft: holesTotal - holesPlayed,
       startCum: startCum, series: series,
-      strokes: strokes, toPar: played.reduce(function (a, r) { return a + r.toPar; }, 0),
-      birdies: played.reduce(function (a, r) { return a + r.birdies; }, 0),
-      bogeys: played.reduce(function (a, r) { return a + r.bogeys; }, 0),
+      strokes: done.reduce(function (a, r) { return a + r.score; }, 0),
+      toPar: played.reduce(function (a, r) { return a + r.toPar; }, 0),
+      birdies: done.reduce(function (a, r) { return a + r.birdies; }, 0),
+      bogeys: done.reduce(function (a, r) { return a + r.bogeys; }, 0),
       noBogeyStreak: best, firstBogeyGlobalHole: firstBogey,
-      lastRound: played[played.length - 1],
-      hasPending: live.some(function (r) { return r.pending; })
+      lastRound: done[done.length - 1] || played[played.length - 1],
+      hasPending: live.some(function (r) { return r.pending || r.inProgress; })
     };
   }
   var DV = derive(D);
@@ -934,12 +938,17 @@ __DATA__
     "時点／最終更新 " + esc(D.meta.generatedAtLabel) + "</span>";
 
   /* ---- hero ---- */
-  $("heroEyebrow").textContent =
-    "Round " + lastRound.n + " / " + DV.live.length + " · " + lastRound.short + " 終了 · " + TT.position;
+  $("heroEyebrow").textContent = DV.running
+    ? "Round " + DV.running.n + " / " + DV.live.length + " · " + DV.running.short + " 進行中 " + DV.running.through + "ホール終了 · " + TT.position
+    : "Round " + lastRound.n + " / " + DV.live.length + " · " + lastRound.short + " 終了 · " + TT.position;
   $("heroName").textContent = P.name;
   $("heroNameSub").textContent = P.kana + "（" + P.nickname + "）／ " + P.affiliation;
   $("heroToPar").textContent = sign(DV.toPar);
-  $("heroScore").textContent = DV.strokes;
+  if (DV.running) {
+    $("heroScore").textContent = DV.holesPlayed + "H";
+    $("heroScore").previousElementSibling.textContent = "スルー";
+    $("heroScore").title = TT.strokesNote || "";
+  } else { $("heroScore").textContent = DV.strokes; }
   var meRow = D.leaderboard.rows.filter(function (r) { return r.highlight; })[0];
   $("heroPos").textContent = (meRow ? meRow.pos : "?") + "位";
   $("heroLead").textContent = TT.margin + "打";
@@ -952,6 +961,11 @@ __DATA__
 
   /* 進行メーター */
   $("progressBar").innerHTML = DV.live.map(function (r) {
+    if (r.inProgress) {
+      return '<span class="progress-seg todo" title="' + esc(r.label) + " " + r.through + 'ホール終了">' +
+        '<i style="position:absolute;inset:0;width:' + ((r.through / 18) * 100).toFixed(1) +
+        '%;background:var(--under);border-radius:3px"></i></span>';
+    }
     return '<span class="progress-seg ' + (r.pending ? "todo" : "done") + '" title="' + esc(r.label) + '"></span>';
   }).join("");
   $("progressK").innerHTML = "<b>" + DV.holesPlayed + "</b> / " + DV.holesTotal + "ホール終了" +
@@ -988,7 +1002,7 @@ __DATA__
      54ホールのスパイン ── 大会全体を1本の線で
      ====================================================================== */
   var allCum = DV.series.filter(function (s) { return s.cumT != null; }).map(function (s) { return s.cumT; });
-  var SMIN = Math.min.apply(null, allCum.concat([0])) - 2;
+  var SMIN = Math.min.apply(null, allCum.concat([0, DV.toPar])) - 2;
   var SMAX = 1;
 
   function buildSpine() {
@@ -1006,9 +1020,8 @@ __DATA__
 
     var g = "";
     // 未消化区間の帯
-    var firstPending = DV.series.filter(function (s) { return s.pending; })[0];
-    if (firstPending) {
-      var x0 = xAt(firstPending.gh);
+    if (DV.holesLeft > 0) {
+      var x0 = xAt(DV.holesPlayed + 1);
       g += '<rect class="tbd-band" x="' + x0.toFixed(1) + '" y="' + MT + '" width="' +
            (W - MR - x0).toFixed(1) + '" height="' + (H - MT - MB) + '" rx="4"/>';
     }
@@ -1022,7 +1035,10 @@ __DATA__
       var gStart = i * 18 + 1, gEnd = gStart + 17;
       if (i > 0) g += '<line class="round-div" x1="' + xAt(gStart).toFixed(1) + '" y1="' + MT + '" x2="' + xAt(gStart).toFixed(1) + '" y2="' + (H - MB) + '"/>';
       var mid = (xAt(gStart) + xAt(gEnd)) / 2;
-      var lab = narrow ? r.tab : r.label + (r.pending ? "" : "　" + r.score + "（" + sign(r.toPar) + "）");
+      var lab = narrow ? r.tab
+        : r.label + (r.pending ? ""
+          : r.inProgress ? "　進行中 " + r.through + "H（" + sign(r.toPar) + "）"
+          : "　" + r.score + "（" + sign(r.toPar) + "）");
       g += '<text class="rband-txt" x="' + mid.toFixed(1) + '" y="' + (MT - 9) + '" text-anchor="middle">' + esc(lab) + "</text>";
       g += '<text class="tick-txt" x="' + xAt(gEnd).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + gEnd + "H</text>";
     });
@@ -1042,7 +1058,18 @@ __DATA__
            '<circle class="ms-dot" cx="' + xAt(pt.gh).toFixed(1) + '" cy="' + yAt(pt.cumT).toFixed(1) + '" r="4"/>';
     });
     var last = pl[pl.length - 1];
-    g += '<circle class="endcap" cx="' + xAt(last.gh).toFixed(1) + '" cy="' + yAt(last.cumT).toFixed(1) + '" r="5"/>' +
+    // ホール別が未取得の進行中ラウンドは、終点だけ分かっているので破線でつなぐ
+    if (DV.running && !(DV.running.holes && DV.running.holes.length)) {
+      var rg = (DV.running.n - 1) * 18 + DV.running.through;
+      var ry = yAt(DV.toPar);
+      g += '<path class="trace" style="stroke-dasharray:5 4;opacity:.85" d="M' + xAt(last.gh).toFixed(1) + " " + yAt(last.cumT).toFixed(1) +
+           " L" + xAt(rg).toFixed(1) + " " + ry.toFixed(1) + '"/>' +
+           '<circle class="endcap" cx="' + xAt(rg).toFixed(1) + '" cy="' + ry.toFixed(1) + '" r="5"/>' +
+           '<text class="endlabel" x="' + Math.min(xAt(rg) + 10, W - 34).toFixed(1) + '" y="' + (ry + 4).toFixed(1) + '">' + sign(DV.toPar) + "</text>" +
+           '<text class="rband-txt" x="' + xAt(rg).toFixed(1) + '" y="' + (ry - 12).toFixed(1) + '" text-anchor="middle">' + rg + "H 進行中</text>";
+      last = null;
+    }
+    if (last) g += '<circle class="endcap" cx="' + xAt(last.gh).toFixed(1) + '" cy="' + yAt(last.cumT).toFixed(1) + '" r="5"/>' +
          '<text class="endlabel" x="' + Math.min(xAt(last.gh) + 10, W - 30).toFixed(1) + '" y="' + (yAt(last.cumT) + 4).toFixed(1) + '">' + sign(last.cumT) + "</text>";
     svg.innerHTML = g;
   }
@@ -1050,8 +1077,9 @@ __DATA__
   fillText($("spineLede"), TT.spineLede);
 
   $("leadTrack").innerHTML = DV.live.map(function (r) {
-    if (r.pending) return '<div class="lt todo"><span class="lt-k">' + esc(r.tab) + " 終了時</span><span class=\"lt-v\">—</span></div>";
-    return '<div class="lt"><span class="lt-k">' + esc(r.tab) + ' 終了時の差</span><span class="lt-v">' +
+    if (r.pending) return '<div class="lt todo"><span class="lt-k">' + esc(r.tab) + ' 終了時</span><span class="lt-v">—</span></div>';
+    var k = r.inProgress ? r.through + "ホール終了時点の差" : r.tab + " 終了時の差";
+    return '<div class="lt"><span class="lt-k">' + esc(k) + '</span><span class="lt-v">' +
       (r.margin != null ? r.margin + "打" : "—") + "</span></div>";
   }).join("");
 
@@ -1073,19 +1101,24 @@ __DATA__
               agg: true, score: DV.strokes, toPar: DV.toPar, birdies: DV.birdies, bogeys: DV.bogeys,
               holes: DV.series };
   var CHAPTERS = [AGG].concat(DV.live.map(function (r) {
-    return r.pending ? r : Object.assign({}, r, {
+    var noHoles = !DV.series.some(function (s) { return s.n === r.n && !s.pending; });
+    return (r.pending || noHoles) ? r : Object.assign({}, r, {
       holes: DV.series.filter(function (s) { return s.n === r.n; })
     });
   }));
-  var R = CHAPTERS.filter(function (c) { return c.n === lastRound.n; })[0];  // 既定は最新ラウンド
+  var R = CHAPTERS.filter(function (c) { return c.n === lastRound.n && c.holes && c.holes.length; })[0] || AGG;
 
   $("chapters").innerHTML = CHAPTERS.map(function (c) {
-    var isNew = !c.agg && !c.pending && c.n === lastRound.n;
+    var openable = !!(c.holes && c.holes.length);
+    var isNew = openable && !c.agg && c.n === lastRound.n;
+    var big = c.agg ? (DV.running ? DV.holesPlayed + "H" : c.score)
+      : c.inProgress ? c.through + "H" : c.pending ? esc(c.pendingLabel || "未実施") : c.score;
     return '<button type="button" role="tab" id="chap-' + c.n + '" aria-controls="replayPanel" ' +
-      'aria-selected="false" tabindex="-1" data-n="' + c.n + '" class="' + (c.pending ? "todo" : "") + '" ' +
-      'aria-label="' + esc(c.label) + (c.pending ? "" : " スコア" + c.score) + '">' +
-      '<span class="ch-k">' + esc(c.tab) + (isNew ? '<span class="ch-new">最新</span>' : "") + "</span>" +
-      '<span class="ch-v"><span class="ch-s">' + (c.pending ? esc(c.pendingLabel || "未実施") : c.score) + "</span>" +
+      'aria-selected="false" tabindex="-1" data-n="' + c.n + '" class="' + (openable ? "" : "todo") + '" ' +
+      (openable ? "" : 'disabled aria-disabled="true" ') +
+      'aria-label="' + esc(c.label) + (c.inProgress ? " 進行中 " + c.through + "ホール終了" : openable ? " スコア" + c.score : "") + '">' +
+      '<span class="ch-k">' + esc(c.tab) + (isNew ? '<span class="ch-new">最新</span>' : c.inProgress ? '<span class="ch-new">進行中</span>' : "") + "</span>" +
+      '<span class="ch-v"><span class="ch-s">' + big + "</span>" +
       (c.pending ? "" : '<span class="ch-p">' + sign(c.toPar) + "</span>") + "</span></button>";
   }).join("");
   var tabs = Array.prototype.slice.call($("chapters").children);
@@ -1290,7 +1323,7 @@ __DATA__
 
   function loadRound(n, autoplay) {
     stop(false);
-    var next = CHAPTERS.filter(function (c) { return c.n === n && !c.pending; })[0];
+    var next = CHAPTERS.filter(function (c) { return c.n === n && c.holes && c.holes.length; })[0];
     if (!next) return;
     R = next;
     tabs.forEach(function (t) {
@@ -1299,7 +1332,7 @@ __DATA__
       t.tabIndex = on ? 0 : -1;
     });
     $("replayPanel").setAttribute("aria-labelledby", "chap-" + R.n);
-    $("replayNow").innerHTML = '<span class="num">' + R.score + "</span>" + esc(R.label) +
+    $("replayNow").innerHTML = '<span class="num">' + (R.agg && DV.running ? DV.holesPlayed + "H" : R.score) + "</span>" + esc(R.label) +
       "　" + (R.agg ? DV.holesPlayed + "ホール終了" : R.birdies + "バーディ" + (R.bogeys ? " / " + R.bogeys + "ボギー" : " / ノーボギー")) +
       "　" + sign(R.agg ? DV.toPar : R.toPar) + (R.agg ? "" : "（大会通算 " + sign(DV.startCum[R.n] + R.toPar) + "）");
     $("replayNote").textContent = R.holesNote || "";
@@ -1367,7 +1400,7 @@ __DATA__
       '<td><span class="pos' + (/^[0-9T]/.test(r.pos) ? "" : " word") + '">' + esc(r.pos) + "</span></td>" +
       '<td><span class="pname">' + esc(r.name) + "</span>" + (r.note ? '<span class="pnote">' + esc(r.note) + "</span>" : "") + "</td>" +
       '<td class="r"><span class="tp ' + (r.toPar < 0 ? "under" : "over") + '">' + sign(r.toPar) + "</span></td>" +
-      '<td class="r"><span class="sc">' + r.score + "</span></td></tr>";
+      '<td class="r"><span class="sc">' + (r.score == null ? "—" : r.score) + "</span></td></tr>";
     return gapRow + row;
   }).join("");
   $("lbFoot").innerHTML =
@@ -1397,7 +1430,7 @@ __DATA__
   })();
 
   /* 残りホールの足し算（未消化ラウンドがあるときだけ） */
-  if (DV.hasPending && TT.projection) {
+  if (DV.holesLeft >= 18 && TT.projection) {
     var pj = TT.projection, base = DV.strokes;
     var vals = pj.scores.map(function (v) { return base + v; });
     var lo = Math.min.apply(null, vals) - 3, hi = Math.max.apply(null, vals) + 3;
@@ -1455,11 +1488,11 @@ __DATA__
   /* ---- recent form ---- */
   var formRows = [{
     date: lastRound.date.replace(/^\d+年/, "").replace(/\(.\)$/, ""),
-    event: T.name + "（" + lastRound.label + "終了）",
+    event: T.name + "（" + (DV.running ? DV.running.label + " 進行中" : lastRound.label + "終了") + "）",
     result: TT.position === "単独首位" ? "首位" : TT.position,
     current: true,
-    note: DV.played.map(function (r) { return r.tab + " " + r.score; }).join(" / ") +
-      "　通算" + sign(DV.toPar) + "・" + DV.strokes + "ストローク" + (DV.hasPending ? "。残り" + DV.holesLeft + "ホール" : "")
+    note: DV.done.map(function (r) { return r.tab + " " + r.score; }).join(" / ") +
+      "　通算" + sign(DV.toPar) + "（" + DV.holesPlayed + "ホール終了）" + (DV.holesLeft ? "。残り" + DV.holesLeft + "ホール" : "")
   }].concat(D.recentForm);
   $("formList").innerHTML = formRows.map(function (f) {
     return '<div class="form-row' + (f.current ? " cur" : "") + '">' +
