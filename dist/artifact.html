@@ -199,9 +199,9 @@
   /* ---------- 章セレクタ ---------- */
   .rtabs-label { font-size: 11px; font-weight: 700; color: var(--ink-3); white-space: nowrap; }
   #chapters {
-    display: inline-flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory;
+    display: flex; flex: 0 1 auto; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory;
     gap: 2px; padding: 3px; border-radius: 10px; background: var(--surface-2);
-    border: 1px solid var(--line); scrollbar-width: thin; max-width: 100%;
+    border: 1px solid var(--line); scrollbar-width: thin; max-width: 100%; min-width: 0;
   }
   #chapters > button {
     flex: 0 0 auto; scroll-snap-align: start; cursor: pointer; border: 0; border-radius: 8px;
@@ -286,6 +286,7 @@
   /* ---------- hero ---------- */
   .hero { padding: clamp(18px, 3.5vw, 36px) 0 clamp(20px, 3vw, 32px); }
   .hero-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(20px, 3vw, 32px); }
+  .hero-grid > *, .two-col > *, .col > * { min-width: 0; }
   @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(300px, 380px) minmax(0,1fr); align-items: start; } }
 
   .slab { display: flex; flex-direction: column; gap: 10px; }
@@ -329,13 +330,16 @@
   .pill.cool { border-color: color-mix(in srgb, var(--green) 45%, transparent); color: var(--green); background: color-mix(in srgb, var(--green) 8%, var(--surface)); }
 
   /* ---------- card ---------- */
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); min-width: 0; }
   .card-pad { padding: clamp(16px, 2.4vw, 22px); }
   .card-head {
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     padding: 14px clamp(16px, 2.4vw, 22px); border-bottom: 1px solid var(--line-2);
   }
   .card-head .eyebrow { flex: 1 1 auto; }
+  .card-head.stacked { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 12px; }
+  .card-head.stacked > * { min-width: 0; }
+  .chapters-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
 
   /* ---------- replay ---------- */
   .replay-strip { display: grid; grid-template-columns: repeat(18, minmax(0, 1fr)); gap: 3px; }
@@ -608,12 +612,12 @@
 <script type="application/json" id="dataset">
 {
   "meta": {
-    "generatedAt": "2026-08-16T13:05+09:00",
-    "generatedAtLabel": "2026年8月16日(日) 13:05",
-    "roundStatus": "R3 IN PROGRESS",
-    "roundStatusLabel": "最終ラウンド 進行中",
-    "liveNote": "1番ボギー発進から立て直し、{holesPlayed}ホールを終えて通算{toPar}。2位に{margin}打差の独走で、ツアー3勝目が目前です。",
-    "nextRound": "残り{holesLeft}ホール。ホール別スコアは公開ソースで確認でき次第この線が伸びます。",
+    "generatedAt": "2026-08-16T21:05+09:00",
+    "generatedAtLabel": "2026年8月16日(日) 21:05",
+    "roundStatus": "FINAL",
+    "roundStatusLabel": "大会終了",
+    "liveNote": "安田祐香が通算{toPar}・{strokes}ストロークで優勝。2位に{margin}打差、初日から一度も首位を譲らない完全優勝で、ツアー3勝目です。",
+    "nextRound": "",
     "dataNoticeBody": "外部サイトへの通信は行っていません（公開ページのセキュリティ制約と、実行環境のネットワークポリシーの両方により、ライブ取得ができないため）。数値は data/tournament.json に集約してあり、以降のラウンドの結果はそのファイルを更新して再ビルド・再公開する運用です。"
   },
   "tournament": {
@@ -648,7 +652,7 @@
     "height": "164cm",
     "affiliation": "NEC",
     "turnedPro": "2020年（プロテスト合格）",
-    "tourWins": 2,
+    "tourWins": 3,
     "winList": [
       {
         "year": 2024,
@@ -659,6 +663,11 @@
         "year": 2025,
         "event": "富士フイルム・スタジオアリス女子オープン",
         "note": "ツアー2勝目"
+      },
+      {
+        "year": 2026,
+        "event": "NEC軽井沢72ゴルフトーナメント",
+        "note": "ツアー3勝目・完全優勝"
       }
     ],
     "amateur": [
@@ -670,28 +679,33 @@
     ]
   },
   "leaderboard": {
-    "asOf": "最終ラウンド 11ホール終了時点",
+    "asOf": "最終結果",
     "rows": [
       {
-        "pos": "1",
+        "pos": "優勝",
         "name": "安田 祐香",
-        "toPar": -21,
-        "score": null,
+        "toPar": -23,
+        "score": 193,
         "highlight": true,
-        "note": "NEC所属・ホステスプロ。36ホール125はツアー新記録"
+        "note": "NEC所属・ホステスプロ。61-64-68。初日から首位を譲らない完全優勝でツアー3勝目"
       },
       {
-        "pos": "2",
+        "pos": "T2",
         "name": "菅 楓華",
-        "toPar": -14,
-        "score": null,
-        "note": "7打差の2位で最終日を追う"
+        "toPar": -16,
+        "score": 200
+      },
+      {
+        "pos": "T2",
+        "name": "岡山 絵里",
+        "toPar": -16,
+        "score": 200
       }
     ],
-    "namesNote": "最終ラウンド進行中のため、上位2名のみ確認できた値を掲載しています。ストローク数は各選手のホール消化数が不明のため表示していません。",
-    "watchNote": "進行中のため注目選手の行は掲載していません",
-    "excerptNote": "最終ラウンド進行中の暫定順位です（出場108人／決勝ラウンド進出62人）。",
-    "movementNote": "他選手のラウンド別スコアと最終ラウンドの詳細は、公開情報から確認できませんでした。"
+    "namesNote": "3位以下は日本語表記を確認できなかったため掲載していません。2位タイのストローク数は par216 と対パーから算出しています。",
+    "watchNote": "最終結果のため注目選手の行は掲載していません",
+    "excerptNote": "優勝者と2位タイのみを掲載しています（出場108人／決勝ラウンド進出62人）。",
+    "movementNote": "3位以下の順位と、各選手のラウンド別スコアは公開情報から確認できませんでした。"
   },
   "stats2026": {
     "asOf": "2026年8月（NEC軽井沢72 開幕前時点）",
@@ -814,98 +828,141 @@
     {
       "kind": "stat",
       "round": 3,
-      "title": "ボギー発進から、それでも2つ伸ばした",
-      "body": "最終日の入りは1番ボギー。7打差の重圧が最初に出る場所で1打を落としたが、そこから11ホールで3つ伸ばし返して通算21アンダー。差は7打のまま動いていない。"
+      "title": "61 → 64 → 68 ── 3日間すべて自分より上",
+      "body": "シーズンの平均ストロークは72.7。3ラウンドすべてがそれを4打以上下回った。合計193は par216 に対して23アンダー。2008年に原江里菜がこの大会でマークした21アンダーを18年ぶりに更新し、ツアーの日本人最多アンダーパー記録になった。"
     },
     {
       "kind": "stat",
+      "round": 3,
+      "title": "26バーディ ── アニカの記録をもうひとつ塗り替えた",
+      "body": "11 + 9 + 6 で3日間26バーディ。2003年ミズノクラシックでアニカ・ソレンスタムが記録した54ホール最多バーディ優勝記録の24を上回った。この週、アニカの名前が2度出てくることになる（36ホール最少ストロークと、この最多バーディ）。"
+    },
+    {
+      "kind": "insight",
+      "title": "バッグを担いだのは姉・美祐さん",
+      "body": "この週キャディを務めたのは姉の美祐さん。初日18番のバーディ後にはグータッチを交わし、最終18番のあとは2人で抱き合った。本人いわく「お姉ちゃんが長く抱き合ってきて、いつ離すんだろうと」。姉妹タッグでの初優勝。"
+    },
+    {
+      "kind": "stat",
+      "round": 2,
       "title": "36ホール125 ── 23年間破られなかった記録を1打更新",
-      "body": "2003年ミズノクラシックでアニカ・ソレンスタムがマークした126が、JLPGAツアーの36ホール最少ストロークだった。61+64=125。パー72換算で通算19アンダー、2位との差は7打。",
-      "round": 2
+      "body": "2003年ミズノクラシックでアニカ・ソレンスタムがマークした126が、JLPGAツアーの36ホール最少ストロークだった。61+64=125。パー72換算で通算19アンダー、この時点で2位との差は7打。"
     },
     {
       "kind": "insight",
-      "title": "バッグを担ぐのは姉・安田美有さん",
-      "body": "この週、キャディを務めているのは姉の安田美有さん。初日18番のバーディ後には2人でグータッチを交わした。“姉妹タッグ”で、自社主催大会での完全優勝に7打差のリードを持って最終日を迎える。"
-    },
-    {
-      "title": "シーズン平均から −11.7 打の外れ値",
-      "body": "2026年の平均ストロークは72.7。第1ラウンドの61は自身のシーズン平均を11.7打も下回る。1試合の中の1ラウンドとしては、統計的にほぼ“別人”の域。",
-      "kind": "stat",
-      "round": 1
-    },
-    {
-      "title": "バーディ数はシーズン平均の3.8倍",
-      "body": "平均バーディ数は2.91／R（ツアー15位）。第1ラウンドは11バーディ。得意な数字をさらに3.8倍に伸ばした形で、ストレングスが極大化した1日だった。",
-      "kind": "stat",
-      "round": 1
-    },
-    {
       "title": "21ホール、ひとつも落とさなかった",
-      "body": "パーセーブ率80.9%（ツアー49位）は今季の課題ポイント。その課題を抱えたまま、初日18ホールと2日目3ホールの計21ホールを無失点で通過した。今大会初のボギーは2日目の4番＝通算22ホール目。しかもその1打は、次の5番のバーディで即座に取り返している。",
-      "kind": "insight"
+      "body": "パーセーブ率80.9%（ツアー49位）は今季の課題ポイント。その課題を抱えたまま、初日18ホールと2日目3ホールの計21ホールを無失点で通過した。今大会初のボギーは2日目の4番＝通算22ホール目。しかもその1打は、次の5番のバーディで即座に取り返している。"
     },
     {
+      "kind": "stat",
+      "round": 1,
+      "title": "シーズン平均から −11.7 打の外れ値",
+      "body": "2026年の平均ストロークは72.7。第1ラウンドの61は自身のシーズン平均を11.7打も下回る。1試合の中の1ラウンドとしては、統計的にほぼ“別人”の域。"
+    },
+    {
+      "kind": "gear",
       "title": "ドライバー刷新が効いている",
-      "body": "ZX5 Mk II → ZXi、ATTAS KING → スピーダーNX ゴールドへの大刷新で平均飛距離は約4yd増の242-243yd（20位）。軽井沢の標高と涼しい空気の中で、距離のジャッジが決め手になる週にプラス材料。",
-      "kind": "gear"
+      "body": "ZX5 Mk II → ZXi、ATTAS KING → スピーダーNX ゴールドへの大刷新で平均飛距離は約4yd増の242-243yd（20位）。軽井沢の標高と涼しい空気の中で、距離のジャッジが決め手になる週にプラス材料。"
     },
     {
-      "title": "前日の“距離合わせ”ドリルが一撃修正",
-      "body": "前日にコーチ・大西翔太へ「右に出る」と相談。トラックマンで狙った距離に合わせる練習に切り替えた。ショットの不安がその日のうちに消え、初日の11バーディにつながった。",
       "kind": "insight",
-      "round": 1
-    },
-    {
-      "title": "7打差でも、まだ18ホール残っている",
-      "body": "2位グループは通算12アンダーで4人。7打差は大きいが、初日に自身が11打伸ばしたコースでもある。本人も「最終日はまたイチから頑張りたい」と話しており、守りに入る位置ではない。",
-      "kind": "warning",
-      "expiresAfterRound": 2
+      "round": 1,
+      "title": "前日の“距離合わせ”ドリルが一撃修正",
+      "body": "開幕前日にコーチ・大西翔太へ「右に出る」と相談。トラックマンで狙った距離に合わせる練習に切り替えた。ショットの不安がその日のうちに消え、初日の11バーディにつながった。"
     }
   ],
   "cheers": [
     {
-      "tag": "ツアー新記録",
-      "text": "61 → 64。2日間で125ストローク。アニカの記録を23年ぶりに塗り替えた。",
-      "round": 2
+      "tag": "優勝",
+      "round": 3,
+      "text": "61 → 64 → 68。初日から一度も首位を譲らず、23アンダーで完全優勝。"
     },
     {
-      "text": "ホステスプロが自社主催大会でコースレコードタイ。こんな筋書き、誰が書ける？",
+      "tag": "記録ずくめ",
+      "round": 3,
+      "text": "36ホール最少ストローク、54ホール最多バーディ、大会記録。1週間で3つ塗り替えた。"
+    },
+    {
       "tag": "NECの週",
-      "round": 1
+      "round": 1,
+      "text": "ホステスプロが自社主催大会で完全優勝。こんな筋書き、誰が書ける？"
     },
     {
-      "text": "11バーディ・ノーボギー。攻めきって、しかも1つも落とさない。",
+      "tag": "姉妹タッグ",
+      "round": 3,
+      "text": "18番のあと、姉の美祐さんが長く離してくれなかったそうです。"
+    },
+    {
       "tag": "完璧な1日",
-      "round": 1
+      "round": 1,
+      "text": "11バーディ・ノーボギー。攻めきって、しかも1つも落とさない。"
     },
     {
-      "text": "11番から15番、5連続。軽井沢の空気が変わった時間帯。",
       "tag": "怒濤の5連続",
-      "round": 1
+      "round": 1,
+      "text": "11番から15番、5連続。軽井沢の空気が変わった時間帯。"
     },
     {
-      "text": "自己採点は99点。あと1点の行方は。",
-      "tag": "編集部より",
-      "round": 1
-    },
-    {
-      "text": "OUT 31 → IN 30。後半でさらにギアを上げられる選手が、強い。",
-      "tag": "尻上がり",
-      "round": 1
-    },
-    {
-      "text": "ゆかちー、軽井沢の主役はあなたです。あと{holesLeft}ホール、いってらっしゃい！",
-      "tag": "応援"
+      "tag": "ゆかちー",
+      "text": "ゆかちー、優勝おめでとう。軽井沢の主役は、最初から最後まであなたでした。"
     }
   ],
   "sources": [
+    {
+      "id": "src-gdo-194064",
+      "label": "GDO：安田祐香が“アニカ超え”26バーディ奪取Vで完全優勝 通算23アンダーも“日本人最多アンダーパー新記録”",
+      "url": "https://news.golfdigest.co.jp/news/results/jlpga/article/194064/1/",
+      "date": "2026-08-16",
+      "kind": "一次媒体",
+      "quoteSource": true
+    },
+    {
+      "id": "src-jlpga-final",
+      "label": "JLPGA 日本女子プロゴルフ協会：安田祐香 記録尽くしの完全Vで通算3勝目",
+      "url": "https://www.lpga.or.jp/news/info/83109",
+      "date": "2026-08-16",
+      "kind": "主催団体"
+    },
+    {
+      "id": "src-alba-final",
+      "label": "ALBA Net：安田祐香がホステス大会で完全V アニカ超えの最多26バーディ",
+      "url": "https://news.yahoo.co.jp/articles/3e20df086aa719df5c7ac778ae038b931b8663da",
+      "date": "2026-08-16",
+      "kind": "配信先"
+    },
+    {
+      "id": "src-ans-716400",
+      "label": "THE ANSWER：記録ずくめの衝撃V、安田祐香が伝説ソレンスタム超え達成 -23でぶっちぎり完全優勝",
+      "url": "https://the-ans.jp/news/716400/",
+      "date": "2026-08-16",
+      "kind": "一次媒体"
+    },
+    {
+      "id": "src-chunichi-final",
+      "label": "中日スポーツ：大会記録更新の通算23アンダーで逃げ切りV！ キャディーの姉・美祐さんと抱き合い",
+      "url": "https://news.yahoo.co.jp/articles/483d71a955d6b77f6964b79e9b994ef261ae6e71",
+      "date": "2026-08-16",
+      "kind": "配信先"
+    },
+    {
+      "id": "src-hochi-final",
+      "label": "スポーツ報知：安田祐香「お姉ちゃんが長く抱き合ってきて、いつ離すんだろうと」 驚異の通算23アンダーで3勝目",
+      "url": "https://news.yahoo.co.jp/articles/a93ad20c6b50742439410289fdc21bf9b275cee9",
+      "date": "2026-08-16",
+      "kind": "配信先"
+    },
+    {
+      "id": "src-gnw-final",
+      "label": "ゴルフネットワーク：安田祐香がホステス大会で今季初V 7打差圧勝",
+      "url": "https://www.golfnetwork.co.jp/news/detail/41275",
+      "date": "2026-08-16",
+      "kind": "一次媒体"
+    },
     {
       "label": "GDO：「フフフ、うれしいです」安田祐香が“ツアー新記録”で7打差独走の最終日へ",
       "url": "https://news.golfdigest.co.jp/news/results/jlpga/article/194033/1/",
       "date": "2026-08-15",
       "kind": "一次媒体",
-      "quoteSource": true,
       "id": "src-gdo-194033"
     },
     {
@@ -1044,18 +1101,18 @@
     }
   ],
   "total": {
-    "through": "47ホール終了（最終ラウンド 11ホール終了時点）",
-    "toPar": -21,
-    "strokes": 125,
+    "through": "54ホール終了（大会終了）",
+    "toPar": -23,
+    "strokes": 193,
     "margin": 7,
-    "position": "単独首位",
+    "position": "優勝",
     "headlineTemplate": "この「{strokes}」をどう読むか",
     "cheerHeadingTemplate": "あと{holesLeft}ホール ─ 応援メッセージ",
     "cheerHeadingClosed": "{holesTotal}ホールを終えて ─ 応援メッセージ",
-    "spineLede": "61と64、そして最終日。1番から47番まで積み上がった線です。右の7ホールぶんが、まだ空いています。",
-    "insightsLede": "61と64で125、最終日も伸ばして通算21アンダー。シーズンのスタッツと突き合わせると、この3日間の異常値ぶりが見えてきます。",
-    "raceNote": "2位グループは残り{holesLeft}ホールで{margin}打。1ホールあたり1打ずつ詰めないと届きません。",
-    "closingNote": "3日間{holesTotal}ホールが終わりました。ここまでの全ラウンドを、リプレイのタブから振り返れます。",
+    "spineLede": "61、64、68。1番から54番まで、一度も首位を譲らずに積み上がった線です。",
+    "insightsLede": "61・64・68で193。3日間26バーディ、通算23アンダー。シーズンのスタッツと突き合わせると、この1週間の異常値ぶりが見えてきます。",
+    "raceNote": "2位に7打差。初日から一度も首位を譲らない完全優勝でした。",
+    "closingNote": "3日間{holesTotal}ホールが終わりました。全ラウンドを、リプレイのタブから振り返れます。",
     "projection": {
       "scores": [
         61,
@@ -1065,8 +1122,7 @@
       ],
       "note": "最終ラウンドのスコアを、いまの合計に足しただけの数字です。予測ではありません。",
       "unknownNote": "54ホール最少ストロークの参照記録は公開情報なし。"
-    },
-    "strokesNote": "125（36ホール終了時）"
+    }
   },
   "rounds": [
     {
@@ -1342,24 +1398,61 @@
       "tab": "最終R",
       "short": "8/16(日)",
       "date": "2026年8月16日(日)",
-      "inProgress": true,
-      "through": 11,
-      "toPar": -2,
-      "position": "単独首位",
+      "score": 68,
+      "toPar": -4,
+      "birdies": 6,
+      "bogeys": 2,
+      "position": "優勝",
       "margin": 7,
-      "headline": "ツアー3勝目へ",
-      "lede": "1番でボギー発進。それでも11ホールを終えて通算21アンダー、2位に7打差の独走。",
-      "holesNote": "最終ラウンドのホール別スコアは、参照できた公開ソースでは確認できませんでした。判明しているのは1番のボギーと、11ホール終了時点の通算21アンダーです。",
-      "known": [
-        {
-          "h": 1,
-          "result": "bogey",
-          "note": "1番でボギー発進。7打差の余裕があるぶん、動じない。"
-        }
-      ]
+      "headline": "通算23アンダーで完全優勝",
+      "holesUnknown": true,
+      "lede": "1番ボギー発進から6バーディ2ボギーの68。初日から一度も首位を譲らない完全優勝で、ツアー3勝目。",
+      "records": [
+        "通算23アンダーは大会記録（2008年 原江里菜の21アンダー）を更新",
+        "3日間26バーディは54ホール最多バーディ優勝記録"
+      ],
+      "quote": "世界のトッププロを上回れ嬉しい",
+      "quoteExtra": "自分が何位かあまり把握していなかった",
+      "holesNote": "最終ラウンドのホール別スコアは、参照できた公開ソースでは確認できませんでした。判明しているのは1番のボギーと、6バーディ2ボギーの68という内訳です。"
     }
   ],
   "records": [
+    {
+      "id": "rec-54h",
+      "scopeLabel": "大会記録・日本人最多アンダーパー",
+      "title": "NEC軽井沢72 大会記録／ツアーの日本人最多アンダーパー",
+      "prev": {
+        "value": null,
+        "toPar": -21,
+        "holder": "原 江里菜",
+        "year": 2008,
+        "event": "NEC軽井沢72ゴルフトーナメント"
+      },
+      "ours": 193,
+      "oursToPar": -23,
+      "status": "broken",
+      "atRound": 3,
+      "atHole": 54,
+      "pillNote": "18年ぶりに更新",
+      "sourceId": "src-gdo-194064"
+    },
+    {
+      "id": "rec-birdies",
+      "scopeLabel": "54ホール最多バーディ優勝",
+      "title": "3日間大会の最多バーディ優勝記録",
+      "prev": {
+        "value": 24,
+        "holder": "アニカ・ソレンスタム",
+        "year": 2003,
+        "event": "ミズノクラシック"
+      },
+      "ours": 26,
+      "status": "broken",
+      "atRound": 3,
+      "atHole": 54,
+      "pillNote": "23年ぶりに更新",
+      "sourceId": "src-alba-final"
+    },
     {
       "id": "rec-36h",
       "scopeLabel": "36ホール最少ストローク",
@@ -1412,14 +1505,6 @@
       "atHole": 18,
       "pillNote": "4打短縮",
       "sourceId": "src-gdo-193996"
-    },
-    {
-      "id": "rec-54h",
-      "scopeLabel": "54ホール最少ストローク",
-      "title": "JLPGAツアー 54ホール最少ストローク",
-      "prev": null,
-      "status": "unknown",
-      "note": "参照記録は公開情報なし"
     }
   ],
   "milestones": [
@@ -1441,13 +1526,7 @@
       "hole": 17,
       "kind": "record",
       "recordId": "rec-36h",
-      "label": "通算19アンダー ─ ツアー新記録"
-    },
-    {
-      "round": 3,
-      "hole": 1,
-      "kind": "first",
-      "label": "1番でボギー発進。それでも7打差は動かなかった"
+      "label": "通算19アンダー ─ 36ホール最少ストロークのツアー新記録"
     }
   ]
 }
@@ -1511,9 +1590,9 @@
       </div>
 
       <div class="card" id="replay">
-        <div class="card-head" style="flex-direction:column;align-items:stretch;gap:12px;">
+        <div class="card-head stacked">
           <h2 id="replayTitle">ラウンド別リプレイ</h2>
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="chapters-row">
             <span class="rtabs-label">表示する区間</span>
             <div id="chapters" role="tablist" aria-label="表示する区間"></div>
           </div>
@@ -1742,7 +1821,9 @@
     });
 
     var holesPlayed = done.length * 18 + (running ? running.through : 0);
+    var known = series.filter(function (s) { return s.cumT != null; });
     return {
+      lastKnownGh: known.length ? known[known.length - 1].gh : 0,
       live: live, played: played, done: done, running: running, holesTotal: holesTotal,
       holesPlayed: holesPlayed, holesLeft: holesTotal - holesPlayed,
       startCum: startCum, series: series,
@@ -1794,7 +1875,8 @@
     $("heroScore").title = TT.strokesNote || "";
   } else { $("heroScore").textContent = DV.strokes; }
   var meRow = D.leaderboard.rows.filter(function (r) { return r.highlight; })[0];
-  $("heroPos").textContent = (meRow ? meRow.pos : "?") + "位";
+  var posTxt = meRow ? meRow.pos : "?";
+  $("heroPos").textContent = /^[0-9]+$/.test(posTxt) ? posTxt + "位" : posTxt;
   $("heroLead").textContent = TT.margin + "打";
   var marginTrail = DV.played.filter(function (r) { return r.margin != null; })
     .map(function (r) { return r.tab + " " + r.margin + "打"; }).join(" → ");
@@ -1817,16 +1899,25 @@
 
   /* 記録置換帯：破った／並んだ記録のうち最も大きいものを1本だけ */
   var srcById = {}; D.sources.forEach(function (s) { if (s.id) srcById[s.id] = s; });
-  var headline = (D.records || []).filter(function (r) { return r.status === "broken" && r.prev; })[0];
+  /* 記録はストローク基準（少ないほど良い）と対パー基準（深いほど良い）の2種類がある */
+  function recFace(r) {
+    var byStroke = r.prev && r.prev.value != null && r.ours != null;
+    if (byStroke) return { old: String(r.prev.value), now: String(r.ours), delta: "−" + (r.prev.value - r.ours), unit: "打" };
+    if (r.prev && r.prev.toPar != null && r.oursToPar != null)
+      return { old: sign(r.prev.toPar), now: sign(r.oursToPar), delta: "+" + (r.prev.toPar - r.oursToPar), unit: "打" };
+    if (r.prev && r.prev.value != null) return { old: String(r.prev.value), now: String(r.ours), delta: "+" + (r.ours - r.prev.value), unit: "" };
+    return null;
+  }
+  var headline = (D.records || []).filter(function (r) { return r.status === "broken" && recFace(r); })[0];
   if (headline) {
-    var delta = headline.prev.value - headline.ours;
+    var f = recFace(headline);
     $("recSwap").innerHTML =
-      '<div class="rs-old"><span class="rs-k">従来の記録</span><span class="rs-v">' + headline.prev.value + "</span>" +
+      '<div class="rs-old"><span class="rs-k">従来の記録</span><span class="rs-v">' + esc(f.old) + "</span>" +
       '<span class="rs-n">' + esc(headline.prev.holder) +
       (headline.prev.year ? "　" + headline.prev.year + "年 " + esc(headline.prev.event || "") : "") + "</span></div>" +
-      '<div class="rs-d">−' + delta + "</div>" +
+      '<div class="rs-d">' + esc(f.delta) + esc(f.unit) + "</div>" +
       '<div><span class="rs-k">' + esc(headline.scopeLabel) + " ／ 今回</span>" +
-      '<span class="rs-v" style="color:var(--under)">' + headline.ours + "</span>" +
+      '<span class="rs-v" style="color:var(--under)">' + esc(f.now) + "</span>" +
       '<span class="rs-n">' + esc(P.name) + "　" + T.season + "年" +
       (headline.sourceId && srcById[headline.sourceId] ? '　<a href="#src-' + esc(headline.sourceId) + '">出典</a>' : "") +
       "</span></div>";
@@ -1836,7 +1927,8 @@
   $("heroPills").innerHTML = [{ t: TT.through, c: "" }]
     .concat((D.records || []).filter(function (r) { return r.status === "broken" || r.status === "tied"; })
       .map(function (r) {
-        return { t: r.scopeLabel + " " + r.ours + (r.status === "tied" ? " タイ" : " 更新") +
+        var f = recFace(r);
+        return { t: r.scopeLabel + " " + (f ? f.now : r.ours) + (r.status === "tied" ? " タイ" : " 更新") +
                     (r.pillNote ? "（" + r.pillNote + "）" : ""), c: "cool" };
       }))
     .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }])
@@ -1903,18 +1995,26 @@
     });
     var last = pl[pl.length - 1];
     // ホール別が未取得の進行中ラウンドは、終点だけ分かっているので破線でつなぐ
-    if (DV.running && !(DV.running.holes && DV.running.holes.length)) {
-      var rg = (DV.running.n - 1) * 18 + DV.running.through;
+    if (DV.holesPlayed > DV.lastKnownGh) {
+      var rg = DV.holesPlayed;
       var ry = yAt(DV.toPar);
+      var ex = xAt(rg), flip = ex > W - 70;   // 右端に来たらラベルを左側へ
       g += '<path class="trace" style="stroke-dasharray:5 4;opacity:.85" d="M' + xAt(last.gh).toFixed(1) + " " + yAt(last.cumT).toFixed(1) +
-           " L" + xAt(rg).toFixed(1) + " " + ry.toFixed(1) + '"/>' +
-           '<circle class="endcap" cx="' + xAt(rg).toFixed(1) + '" cy="' + ry.toFixed(1) + '" r="5"/>' +
-           '<text class="endlabel" x="' + Math.min(xAt(rg) + 10, W - 34).toFixed(1) + '" y="' + (ry + 4).toFixed(1) + '">' + sign(DV.toPar) + "</text>" +
-           '<text class="rband-txt" x="' + xAt(rg).toFixed(1) + '" y="' + (ry - 12).toFixed(1) + '" text-anchor="middle">' + rg + "H 進行中</text>";
+           " L" + ex.toFixed(1) + " " + ry.toFixed(1) + '"/>' +
+           '<circle class="endcap" cx="' + ex.toFixed(1) + '" cy="' + ry.toFixed(1) + '" r="5"/>' +
+           '<text class="endlabel" x="' + (flip ? ex - 10 : ex + 10).toFixed(1) + '" y="' + (ry + 4).toFixed(1) +
+             '" text-anchor="' + (flip ? "end" : "start") + '">' + sign(DV.toPar) + "</text>" +
+           '<text class="rband-txt" x="' + (flip ? ex - 4 : ex).toFixed(1) + '" y="' + (ry - 13).toFixed(1) +
+             '" text-anchor="' + (flip ? "end" : "middle") + '">' +
+             (DV.running ? rg + "H 進行中" : "ホール別は未取得") + "</text>";
       last = null;
     }
-    if (last) g += '<circle class="endcap" cx="' + xAt(last.gh).toFixed(1) + '" cy="' + yAt(last.cumT).toFixed(1) + '" r="5"/>' +
-         '<text class="endlabel" x="' + Math.min(xAt(last.gh) + 10, W - 30).toFixed(1) + '" y="' + (yAt(last.cumT) + 4).toFixed(1) + '">' + sign(last.cumT) + "</text>";
+    if (last) {
+      var lx = xAt(last.gh), lf = lx > W - 50;
+      g += '<circle class="endcap" cx="' + lx.toFixed(1) + '" cy="' + yAt(last.cumT).toFixed(1) + '" r="5"/>' +
+        '<text class="endlabel" x="' + (lf ? lx - 10 : lx + 10).toFixed(1) + '" y="' + (yAt(last.cumT) + 4).toFixed(1) +
+        '" text-anchor="' + (lf ? "end" : "start") + '">' + sign(last.cumT) + "</text>";
+    }
     svg.innerHTML = g;
   }
   buildSpine();
@@ -1935,8 +2035,12 @@
       '<span class="ms-t">' + esc(m.label) +
       (sid ? ' <sup><a href="#src-' + esc(sid) + '">出典</a></sup>' : "") + "</span></div>";
   }).join("");
-  $("spineFoot").textContent = "縦の点線はラウンドの区切り。右の網掛けは未消化の" + DV.holesLeft +
-    "ホールで、データが入り次第この線が伸びます。数値はすべて大会通算の対パーです。";
+  var unknownRounds = DV.live.filter(function (r) { return r.holesUnknown || (r.inProgress && !(r.holes && r.holes.length)); });
+  $("spineFoot").textContent = "縦の点線はラウンドの区切り。" +
+    (DV.holesLeft > 0 ? "右の網掛けは未消化の" + DV.holesLeft + "ホールで、データが入り次第この線が伸びます。" : "") +
+    (unknownRounds.length ? "破線の区間は" + unknownRounds.map(function (r) { return r.label; }).join("・") +
+      "で、ホール別スコアが公開ソースで確認できなかったため、始点と終点だけを結んでいます。" : "") +
+    "数値はすべて大会通算の対パーです。";
 
   /* ======================================================================
      ラウンド別リプレイ
@@ -1950,18 +2054,26 @@
       holes: DV.series.filter(function (s) { return s.n === r.n; })
     });
   }));
-  var R = CHAPTERS.filter(function (c) { return c.n === lastRound.n && c.holes && c.holes.length; })[0] || AGG;
+  var OPENABLE = CHAPTERS.filter(function (c) { return !c.agg && c.holes && c.holes.length; });
+  var newestOpenable = OPENABLE[OPENABLE.length - 1];
+  var R = newestOpenable || AGG;   // 既定はリプレイを開ける最新ラウンド
 
   $("chapters").innerHTML = CHAPTERS.map(function (c) {
     var openable = !!(c.holes && c.holes.length);
-    var isNew = openable && !c.agg && c.n === lastRound.n;
+    var isNew = openable && !c.agg && newestOpenable && c.n === newestOpenable.n;
     var big = c.agg ? (DV.running ? DV.holesPlayed + "H" : c.score)
       : c.inProgress ? c.through + "H" : c.pending ? esc(c.pendingLabel || "未実施") : c.score;
     return '<button type="button" role="tab" id="chap-' + c.n + '" aria-controls="replayPanel" ' +
       'aria-selected="false" tabindex="-1" data-n="' + c.n + '" class="' + (openable ? "" : "todo") + '" ' +
       (openable ? "" : 'disabled aria-disabled="true" ') +
-      'aria-label="' + esc(c.label) + (c.inProgress ? " 進行中 " + c.through + "ホール終了" : openable ? " スコア" + c.score : "") + '">' +
-      '<span class="ch-k">' + esc(c.tab) + (isNew ? '<span class="ch-new">最新</span>' : c.inProgress ? '<span class="ch-new">進行中</span>' : "") + "</span>" +
+      'aria-label="' + esc(c.label) +
+        (c.inProgress ? " 進行中 " + c.through + "ホール終了"
+         : c.holesUnknown ? " スコア" + c.score + "。ホール別データなし"
+         : openable ? " スコア" + c.score : "") + '">' +
+      '<span class="ch-k">' + esc(c.tab) +
+        (isNew ? '<span class="ch-new">最新</span>'
+         : c.inProgress ? '<span class="ch-new">進行中</span>'
+         : c.holesUnknown ? '<span class="ch-new">ホール別なし</span>' : "") + "</span>" +
       '<span class="ch-v"><span class="ch-s">' + big + "</span>" +
       (c.pending ? "" : '<span class="ch-p">' + sign(c.toPar) + "</span>") + "</span></button>";
   }).join("");
@@ -2179,8 +2291,12 @@
     $("replayNow").innerHTML = '<span class="num">' + (R.agg && DV.running ? DV.holesPlayed + "H" : R.score) + "</span>" + esc(R.label) +
       "　" + (R.agg ? DV.holesPlayed + "ホール終了" : R.birdies + "バーディ" + (R.bogeys ? " / " + R.bogeys + "ボギー" : " / ノーボギー")) +
       "　" + sign(R.agg ? DV.toPar : R.toPar) + (R.agg ? "" : "（大会通算 " + sign(DV.startCum[R.n] + R.toPar) + "）");
-    $("replayNote").textContent = R.holesNote || "";
-    $("replayNote").hidden = !R.holesNote;
+    var unknown = DV.live.filter(function (r) { return r.holesUnknown || (r.inProgress && !(r.holes && r.holes.length)); });
+    var note = R.holesNote || (unknown.length
+      ? unknown.map(function (r) { return r.label; }).join("・") + "のホール別スコアは公開ソースで確認できなかったため、この区間はリプレイできません。"
+      : "");
+    $("replayNote").textContent = note;
+    $("replayNote").hidden = !note;
     buildStrip(); buildChart();
     idx = -1; resetTicker(); paint(-1);
     if (autoplay) { mqReduce.matches || R.agg ? showAll() : play(); }

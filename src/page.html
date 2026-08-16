@@ -199,9 +199,9 @@
   /* ---------- 章セレクタ ---------- */
   .rtabs-label { font-size: 11px; font-weight: 700; color: var(--ink-3); white-space: nowrap; }
   #chapters {
-    display: inline-flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory;
+    display: flex; flex: 0 1 auto; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory;
     gap: 2px; padding: 3px; border-radius: 10px; background: var(--surface-2);
-    border: 1px solid var(--line); scrollbar-width: thin; max-width: 100%;
+    border: 1px solid var(--line); scrollbar-width: thin; max-width: 100%; min-width: 0;
   }
   #chapters > button {
     flex: 0 0 auto; scroll-snap-align: start; cursor: pointer; border: 0; border-radius: 8px;
@@ -286,6 +286,7 @@
   /* ---------- hero ---------- */
   .hero { padding: clamp(18px, 3.5vw, 36px) 0 clamp(20px, 3vw, 32px); }
   .hero-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(20px, 3vw, 32px); }
+  .hero-grid > *, .two-col > *, .col > * { min-width: 0; }
   @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(300px, 380px) minmax(0,1fr); align-items: start; } }
 
   .slab { display: flex; flex-direction: column; gap: 10px; }
@@ -329,13 +330,16 @@
   .pill.cool { border-color: color-mix(in srgb, var(--green) 45%, transparent); color: var(--green); background: color-mix(in srgb, var(--green) 8%, var(--surface)); }
 
   /* ---------- card ---------- */
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); min-width: 0; }
   .card-pad { padding: clamp(16px, 2.4vw, 22px); }
   .card-head {
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     padding: 14px clamp(16px, 2.4vw, 22px); border-bottom: 1px solid var(--line-2);
   }
   .card-head .eyebrow { flex: 1 1 auto; }
+  .card-head.stacked { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 12px; }
+  .card-head.stacked > * { min-width: 0; }
+  .chapters-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
 
   /* ---------- replay ---------- */
   .replay-strip { display: grid; grid-template-columns: repeat(18, minmax(0, 1fr)); gap: 3px; }
@@ -667,9 +671,9 @@ __DATA__
       </div>
 
       <div class="card" id="replay">
-        <div class="card-head" style="flex-direction:column;align-items:stretch;gap:12px;">
+        <div class="card-head stacked">
           <h2 id="replayTitle">ラウンド別リプレイ</h2>
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="chapters-row">
             <span class="rtabs-label">表示する区間</span>
             <div id="chapters" role="tablist" aria-label="表示する区間"></div>
           </div>
@@ -898,7 +902,9 @@ __DATA__
     });
 
     var holesPlayed = done.length * 18 + (running ? running.through : 0);
+    var known = series.filter(function (s) { return s.cumT != null; });
     return {
+      lastKnownGh: known.length ? known[known.length - 1].gh : 0,
       live: live, played: played, done: done, running: running, holesTotal: holesTotal,
       holesPlayed: holesPlayed, holesLeft: holesTotal - holesPlayed,
       startCum: startCum, series: series,
@@ -950,7 +956,8 @@ __DATA__
     $("heroScore").title = TT.strokesNote || "";
   } else { $("heroScore").textContent = DV.strokes; }
   var meRow = D.leaderboard.rows.filter(function (r) { return r.highlight; })[0];
-  $("heroPos").textContent = (meRow ? meRow.pos : "?") + "位";
+  var posTxt = meRow ? meRow.pos : "?";
+  $("heroPos").textContent = /^[0-9]+$/.test(posTxt) ? posTxt + "位" : posTxt;
   $("heroLead").textContent = TT.margin + "打";
   var marginTrail = DV.played.filter(function (r) { return r.margin != null; })
     .map(function (r) { return r.tab + " " + r.margin + "打"; }).join(" → ");
@@ -973,16 +980,25 @@ __DATA__
 
   /* 記録置換帯：破った／並んだ記録のうち最も大きいものを1本だけ */
   var srcById = {}; D.sources.forEach(function (s) { if (s.id) srcById[s.id] = s; });
-  var headline = (D.records || []).filter(function (r) { return r.status === "broken" && r.prev; })[0];
+  /* 記録はストローク基準（少ないほど良い）と対パー基準（深いほど良い）の2種類がある */
+  function recFace(r) {
+    var byStroke = r.prev && r.prev.value != null && r.ours != null;
+    if (byStroke) return { old: String(r.prev.value), now: String(r.ours), delta: "−" + (r.prev.value - r.ours), unit: "打" };
+    if (r.prev && r.prev.toPar != null && r.oursToPar != null)
+      return { old: sign(r.prev.toPar), now: sign(r.oursToPar), delta: "+" + (r.prev.toPar - r.oursToPar), unit: "打" };
+    if (r.prev && r.prev.value != null) return { old: String(r.prev.value), now: String(r.ours), delta: "+" + (r.ours - r.prev.value), unit: "" };
+    return null;
+  }
+  var headline = (D.records || []).filter(function (r) { return r.status === "broken" && recFace(r); })[0];
   if (headline) {
-    var delta = headline.prev.value - headline.ours;
+    var f = recFace(headline);
     $("recSwap").innerHTML =
-      '<div class="rs-old"><span class="rs-k">従来の記録</span><span class="rs-v">' + headline.prev.value + "</span>" +
+      '<div class="rs-old"><span class="rs-k">従来の記録</span><span class="rs-v">' + esc(f.old) + "</span>" +
       '<span class="rs-n">' + esc(headline.prev.holder) +
       (headline.prev.year ? "　" + headline.prev.year + "年 " + esc(headline.prev.event || "") : "") + "</span></div>" +
-      '<div class="rs-d">−' + delta + "</div>" +
+      '<div class="rs-d">' + esc(f.delta) + esc(f.unit) + "</div>" +
       '<div><span class="rs-k">' + esc(headline.scopeLabel) + " ／ 今回</span>" +
-      '<span class="rs-v" style="color:var(--under)">' + headline.ours + "</span>" +
+      '<span class="rs-v" style="color:var(--under)">' + esc(f.now) + "</span>" +
       '<span class="rs-n">' + esc(P.name) + "　" + T.season + "年" +
       (headline.sourceId && srcById[headline.sourceId] ? '　<a href="#src-' + esc(headline.sourceId) + '">出典</a>' : "") +
       "</span></div>";
@@ -992,7 +1008,8 @@ __DATA__
   $("heroPills").innerHTML = [{ t: TT.through, c: "" }]
     .concat((D.records || []).filter(function (r) { return r.status === "broken" || r.status === "tied"; })
       .map(function (r) {
-        return { t: r.scopeLabel + " " + r.ours + (r.status === "tied" ? " タイ" : " 更新") +
+        var f = recFace(r);
+        return { t: r.scopeLabel + " " + (f ? f.now : r.ours) + (r.status === "tied" ? " タイ" : " 更新") +
                     (r.pillNote ? "（" + r.pillNote + "）" : ""), c: "cool" };
       }))
     .concat([{ t: P.affiliation + "所属ホステスプロ", c: "" }])
@@ -1059,18 +1076,26 @@ __DATA__
     });
     var last = pl[pl.length - 1];
     // ホール別が未取得の進行中ラウンドは、終点だけ分かっているので破線でつなぐ
-    if (DV.running && !(DV.running.holes && DV.running.holes.length)) {
-      var rg = (DV.running.n - 1) * 18 + DV.running.through;
+    if (DV.holesPlayed > DV.lastKnownGh) {
+      var rg = DV.holesPlayed;
       var ry = yAt(DV.toPar);
+      var ex = xAt(rg), flip = ex > W - 70;   // 右端に来たらラベルを左側へ
       g += '<path class="trace" style="stroke-dasharray:5 4;opacity:.85" d="M' + xAt(last.gh).toFixed(1) + " " + yAt(last.cumT).toFixed(1) +
-           " L" + xAt(rg).toFixed(1) + " " + ry.toFixed(1) + '"/>' +
-           '<circle class="endcap" cx="' + xAt(rg).toFixed(1) + '" cy="' + ry.toFixed(1) + '" r="5"/>' +
-           '<text class="endlabel" x="' + Math.min(xAt(rg) + 10, W - 34).toFixed(1) + '" y="' + (ry + 4).toFixed(1) + '">' + sign(DV.toPar) + "</text>" +
-           '<text class="rband-txt" x="' + xAt(rg).toFixed(1) + '" y="' + (ry - 12).toFixed(1) + '" text-anchor="middle">' + rg + "H 進行中</text>";
+           " L" + ex.toFixed(1) + " " + ry.toFixed(1) + '"/>' +
+           '<circle class="endcap" cx="' + ex.toFixed(1) + '" cy="' + ry.toFixed(1) + '" r="5"/>' +
+           '<text class="endlabel" x="' + (flip ? ex - 10 : ex + 10).toFixed(1) + '" y="' + (ry + 4).toFixed(1) +
+             '" text-anchor="' + (flip ? "end" : "start") + '">' + sign(DV.toPar) + "</text>" +
+           '<text class="rband-txt" x="' + (flip ? ex - 4 : ex).toFixed(1) + '" y="' + (ry - 13).toFixed(1) +
+             '" text-anchor="' + (flip ? "end" : "middle") + '">' +
+             (DV.running ? rg + "H 進行中" : "ホール別は未取得") + "</text>";
       last = null;
     }
-    if (last) g += '<circle class="endcap" cx="' + xAt(last.gh).toFixed(1) + '" cy="' + yAt(last.cumT).toFixed(1) + '" r="5"/>' +
-         '<text class="endlabel" x="' + Math.min(xAt(last.gh) + 10, W - 30).toFixed(1) + '" y="' + (yAt(last.cumT) + 4).toFixed(1) + '">' + sign(last.cumT) + "</text>";
+    if (last) {
+      var lx = xAt(last.gh), lf = lx > W - 50;
+      g += '<circle class="endcap" cx="' + lx.toFixed(1) + '" cy="' + yAt(last.cumT).toFixed(1) + '" r="5"/>' +
+        '<text class="endlabel" x="' + (lf ? lx - 10 : lx + 10).toFixed(1) + '" y="' + (yAt(last.cumT) + 4).toFixed(1) +
+        '" text-anchor="' + (lf ? "end" : "start") + '">' + sign(last.cumT) + "</text>";
+    }
     svg.innerHTML = g;
   }
   buildSpine();
@@ -1091,8 +1116,12 @@ __DATA__
       '<span class="ms-t">' + esc(m.label) +
       (sid ? ' <sup><a href="#src-' + esc(sid) + '">出典</a></sup>' : "") + "</span></div>";
   }).join("");
-  $("spineFoot").textContent = "縦の点線はラウンドの区切り。右の網掛けは未消化の" + DV.holesLeft +
-    "ホールで、データが入り次第この線が伸びます。数値はすべて大会通算の対パーです。";
+  var unknownRounds = DV.live.filter(function (r) { return r.holesUnknown || (r.inProgress && !(r.holes && r.holes.length)); });
+  $("spineFoot").textContent = "縦の点線はラウンドの区切り。" +
+    (DV.holesLeft > 0 ? "右の網掛けは未消化の" + DV.holesLeft + "ホールで、データが入り次第この線が伸びます。" : "") +
+    (unknownRounds.length ? "破線の区間は" + unknownRounds.map(function (r) { return r.label; }).join("・") +
+      "で、ホール別スコアが公開ソースで確認できなかったため、始点と終点だけを結んでいます。" : "") +
+    "数値はすべて大会通算の対パーです。";
 
   /* ======================================================================
      ラウンド別リプレイ
@@ -1106,18 +1135,26 @@ __DATA__
       holes: DV.series.filter(function (s) { return s.n === r.n; })
     });
   }));
-  var R = CHAPTERS.filter(function (c) { return c.n === lastRound.n && c.holes && c.holes.length; })[0] || AGG;
+  var OPENABLE = CHAPTERS.filter(function (c) { return !c.agg && c.holes && c.holes.length; });
+  var newestOpenable = OPENABLE[OPENABLE.length - 1];
+  var R = newestOpenable || AGG;   // 既定はリプレイを開ける最新ラウンド
 
   $("chapters").innerHTML = CHAPTERS.map(function (c) {
     var openable = !!(c.holes && c.holes.length);
-    var isNew = openable && !c.agg && c.n === lastRound.n;
+    var isNew = openable && !c.agg && newestOpenable && c.n === newestOpenable.n;
     var big = c.agg ? (DV.running ? DV.holesPlayed + "H" : c.score)
       : c.inProgress ? c.through + "H" : c.pending ? esc(c.pendingLabel || "未実施") : c.score;
     return '<button type="button" role="tab" id="chap-' + c.n + '" aria-controls="replayPanel" ' +
       'aria-selected="false" tabindex="-1" data-n="' + c.n + '" class="' + (openable ? "" : "todo") + '" ' +
       (openable ? "" : 'disabled aria-disabled="true" ') +
-      'aria-label="' + esc(c.label) + (c.inProgress ? " 進行中 " + c.through + "ホール終了" : openable ? " スコア" + c.score : "") + '">' +
-      '<span class="ch-k">' + esc(c.tab) + (isNew ? '<span class="ch-new">最新</span>' : c.inProgress ? '<span class="ch-new">進行中</span>' : "") + "</span>" +
+      'aria-label="' + esc(c.label) +
+        (c.inProgress ? " 進行中 " + c.through + "ホール終了"
+         : c.holesUnknown ? " スコア" + c.score + "。ホール別データなし"
+         : openable ? " スコア" + c.score : "") + '">' +
+      '<span class="ch-k">' + esc(c.tab) +
+        (isNew ? '<span class="ch-new">最新</span>'
+         : c.inProgress ? '<span class="ch-new">進行中</span>'
+         : c.holesUnknown ? '<span class="ch-new">ホール別なし</span>' : "") + "</span>" +
       '<span class="ch-v"><span class="ch-s">' + big + "</span>" +
       (c.pending ? "" : '<span class="ch-p">' + sign(c.toPar) + "</span>") + "</span></button>";
   }).join("");
@@ -1335,8 +1372,12 @@ __DATA__
     $("replayNow").innerHTML = '<span class="num">' + (R.agg && DV.running ? DV.holesPlayed + "H" : R.score) + "</span>" + esc(R.label) +
       "　" + (R.agg ? DV.holesPlayed + "ホール終了" : R.birdies + "バーディ" + (R.bogeys ? " / " + R.bogeys + "ボギー" : " / ノーボギー")) +
       "　" + sign(R.agg ? DV.toPar : R.toPar) + (R.agg ? "" : "（大会通算 " + sign(DV.startCum[R.n] + R.toPar) + "）");
-    $("replayNote").textContent = R.holesNote || "";
-    $("replayNote").hidden = !R.holesNote;
+    var unknown = DV.live.filter(function (r) { return r.holesUnknown || (r.inProgress && !(r.holes && r.holes.length)); });
+    var note = R.holesNote || (unknown.length
+      ? unknown.map(function (r) { return r.label; }).join("・") + "のホール別スコアは公開ソースで確認できなかったため、この区間はリプレイできません。"
+      : "");
+    $("replayNote").textContent = note;
+    $("replayNote").hidden = !note;
     buildStrip(); buildChart();
     idx = -1; resetTicker(); paint(-1);
     if (autoplay) { mqReduce.matches || R.agg ? showAll() : play(); }
